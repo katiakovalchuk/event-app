@@ -1,0 +1,21 @@
+.profileImg {
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 1;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 7px solid #fff;
+  margin-top: -80px;
+}
+
+.profileImg:hover {
+  border-color: darkcyan;
+  transition: 0.7s;
+}
+
+label {
+  cursor: pointer;
+}
