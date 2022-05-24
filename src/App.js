@@ -12,11 +12,11 @@ function App() {
     return (
         <AuthContextProvider>
           <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/login' element={<LoginPage />} />
-              <Route path='/recovery' element={<RecoveryPage />} />
-              <Route path='/profile' element={<ProfilePage />} />
-              <Route path='/members' element={<MembersPage />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/recovery" element={<RecoveryPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/members" element={<MembersPage />} />
           </Routes>
         </AuthContextProvider>
     )
