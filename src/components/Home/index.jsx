@@ -1,11 +1,10 @@
-import { Button } from "react-bootstrap";
+import EventTable from "../EventTable/EventTable";
 
 const Home = () => {
   return (
-    <>
-      <h1>Home</h1>
-      <div>Page</div>
-    </>
+    <div className="home_page">
+      <EventTable />
+    </div>
   );
 };
 
