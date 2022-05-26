@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "eventName": "First Event",
+    "date": "2022-05-25T10:30:22.450Z"
+  },
+  {
+    "id": 2,
+    "eventName": "Next Event",
+    "date": "2022-06-25T11:00:21.806Z"
+  },
+  {
+    "id": 3,
+    "eventName": "Very Important Event",
+    "date": "2022-08-25T10:30:21.806Z"
+  },
+  {
+    "id": 4,
+    "eventName": "Old Event",
+    "date": "2021-08-25T12:00:21.806Z"
+  }
+]
