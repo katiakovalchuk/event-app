@@ -16,10 +16,10 @@ const LoginTemplate = () => {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        setError("");
+        setError("/");
         try {
             await login(email, password);
-            navigate("/profile");
+            navigate("/");
         } catch (err) {
             setError(err);
         }
