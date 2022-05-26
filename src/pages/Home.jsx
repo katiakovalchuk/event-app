@@ -1,4 +1,4 @@
-import EventTable from "../EventTable/EventTable";
+import EventTable from "../components/EventTable/EventTable";
 
 const Home = () => {
   return (
