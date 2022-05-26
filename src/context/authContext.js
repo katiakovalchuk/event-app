@@ -12,7 +12,10 @@ export const AuthContextProvider = ({children}) => {
     const logout = () => signOut(auth);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => setUser(currentUser));
+        const unsubscribe = onAuthStateChanged(auth, currentUser => {
+            localStorage.setItem('user', JSON.stringify(currentUser));
+            setUser(currentUser);
+        });
 
         return () => unsubscribe();
     }, [])
