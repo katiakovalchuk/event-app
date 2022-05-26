@@ -5,20 +5,17 @@ import {auth} from '../firebase-config';
 const authContext = createContext();
 
 export const AuthContextProvider = ({children}) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({});
 
     const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
 
     const logout = () => signOut(auth);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            localStorage.setItem('user', JSON.stringify(currentUser));
-            setUser(currentUser);
-        });
+        const unsubscribe = onAuthStateChanged(auth, currentUser => setUser(currentUser));
 
         return () => unsubscribe();
-    }, [])
+    }, []);
 
     return (
         <authContext.Provider value={{user, login, logout}}>

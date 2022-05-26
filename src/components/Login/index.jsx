@@ -19,7 +19,7 @@ const LoginTemplate = () => {
         setError("");
         try {
             await login(email, password);
-            navigate("/profile");
+            navigate("/");
         } catch (err) {
             setError(err);
         }
