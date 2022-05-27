@@ -40,6 +40,7 @@ const ProfilePage = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log(downloadURL);
             setData((prev) => ({ ...prev, img: downloadURL }));
           });
         }
