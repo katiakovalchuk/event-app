@@ -8,6 +8,8 @@ import {
   MembersPage,
   ProfilePage,
   RecoveryPage,
+  EventsList,
+  EventsItem,
 } from "./pages";
 
 import "./App.css";
@@ -23,6 +25,8 @@ function App() {
         <Route path="/recovery" element={<RecoveryPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/members" element={<MembersPage />} />
+        <Route path="/events" element={<EventsList />} />
+        <Route path="/events/:id" element={<EventsItem />} />
       </Routes>
     </AuthContextProvider>
   );
