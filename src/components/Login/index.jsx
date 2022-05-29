@@ -10,6 +10,7 @@ const LoginTemplate = () => {
         email: "",
         password: ""
     });
+   
     const [error, setError] = useState("");
     const {login} = useUserAuth();
     const navigate = useNavigate();

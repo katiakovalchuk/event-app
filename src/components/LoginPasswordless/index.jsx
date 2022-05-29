@@ -8,15 +8,20 @@ const ConfirmTemplate = () => {
     email: "",
   });
   const [error, setError] = useState("");
-  const { sendLink } = useUserAuth();
+  const { sendLink, users } = useUserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("/");
-    try {
-      await sendLink(email);
-    } catch (err) {
-      setError(err);
+    console.log("press submit");
+    let isUserEmail = users.some((user) => user.email === email);
+    if (isUserEmail) {
+      try {
+        await sendLink(email);
+      } catch (err) {
+        setError(err);
+      }
+    } else {
+      console.log("Sorry. You should first be registered by the admin or manager.");
     }
   };
 

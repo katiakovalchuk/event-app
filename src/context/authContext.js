@@ -40,6 +40,7 @@ export const AuthContextProvider = ({ children }) => {
   }
 
   function sendLink(email) {
+    console.log("send link");
     return sendSignInLinkToEmail(auth, email, {
       url: "http://localhost:3000/confirm",
       handleCodeInApp: true,
@@ -66,6 +67,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const values = {
     user,
+    users,
     sendLink,
     signin,
     logout,
