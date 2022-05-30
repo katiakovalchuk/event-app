@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, signInWithEmailAndPassword, signOut, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
+import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
 import { getDocs, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,8 @@ export const AuthContextProvider = ({ children }) => {
       navigate("/loginpasswordless");
     });
   }
+
+  const sendResetEmail = (email) => sendPasswordResetEmail(auth, email);
 
   function signin(email, code) {
     return signInWithEmailLink(auth, email, code).then((result) => {

@@ -1,0 +1,27 @@
+.Recovery{
+  &-inner{
+    min-height: 550px;
+    min-width: 500px;
+    max-width: 800px;
+    background-color: #4285f4;
+  }
+  &-content{
+    max-width: 400px;
+  }
+  &-btn{
+    color: #4285f4 !important;
+    background-color: #ffffff !important;
+    font-size: 18px !important;
+    max-width: var(--max-block-width);
+  }
+  &-input{
+    background-color: #4285f4 !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+    font-size: 18px !important;
+    max-width: var(--max-block-width);
+  }
+  &-input::placeholder{
+    color: #ffffff;
+  }
+}
