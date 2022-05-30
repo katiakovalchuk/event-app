@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {IconContext} from "react-icons";
 import {FaUserLock} from "react-icons/fa";
 
@@ -61,7 +61,7 @@ const PasswordRecovery = () => {
                             </IconContext.Provider>
                         </div>
                         <form
-                            className="d-flex flex-column py-5 px-4 align-items-center text-center text-white"
+                            className="d-flex flex-column pt-5 px-4 align-items-center text-center text-white"
                             onSubmit={handleSubmit}
                         >
                             <h2 className="fw-bold mb-5">Forgot Password?</h2>
@@ -75,12 +75,15 @@ const PasswordRecovery = () => {
                                 onChange={handleEmailChange}
                             />
                             <button
-                                className="Recovery-btn btn w-100 mt-1 mb-3 rounded-3"
+                                className="Recovery-btn btn w-100 mt-1 mb-2 rounded-3"
                                 type="submit"
                             >
                                 Send password reset link
                             </button>
                         </form>
+                        <div className="text-end px-4 pb-5" onClick={hideToast}>
+                            <Link className="link-light text-decoration-none" to="/login">Already have an account? Login!</Link>
+                        </div>
                     </div>
                 </div>
             </div>
