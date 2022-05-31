@@ -132,7 +132,7 @@ const ProfilePage = () => {
 
               <div className="mb-4 text-center">
                 <button disabled={per !== null && per < 100} type="submit" className="btn btn-secondary">
-                  Submit
+                  Save
                 </button>
               </div>
             </form>
