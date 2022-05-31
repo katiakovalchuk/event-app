@@ -1,5 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { LoginPage, RecoveryPage, ConfirmLoginPage, LoginPasswordless, TestPage } from "../pages";
+import {
+  LoginPage,
+  RecoveryPage,
+  ConfirmLoginPage,
+  LoginPasswordless,
+  TestPage,
+} from "../pages";
 
 export const AuthStack = () => {
   return (

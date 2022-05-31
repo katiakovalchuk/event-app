@@ -15,6 +15,7 @@
   "rules": {
     "semi": ["error", "always"],
     "quotes": ["error", "double"],
-    "indent": ["error", 2]
+    "prefer-const": "warn",
+    "react/react-in-jsx-scope": "off"
   }
 }

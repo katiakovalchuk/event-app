@@ -1,7 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 
 import Layout from "../components/Layout";
-import { EventsItem, EventsList, Home, MembersPage, NotFoundPage, ProfilePage, TestPage } from "../pages";
+import {
+  EventsItem,
+  EventsList,
+  Home,
+  MembersPage,
+  NotFoundPage,
+  ProfilePage,
+  TestPage,
+} from "../pages";
 
 export const AppStack = () => {
   return (
