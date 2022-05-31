@@ -12,6 +12,8 @@ const LoginTemplate = () => {
         email: "",
         password: ""
     });
+   
+    
     const {login} = useUserAuth();
     const {isToastShown, showToast, hideToast, updateToastContent} = useToast();
     const [error, setError] = useState("");
