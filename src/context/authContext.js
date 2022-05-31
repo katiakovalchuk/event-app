@@ -74,6 +74,7 @@ export const AuthContextProvider = ({ children }) => {
     signin,
     logout,
     login,
+    sendResetEmail,
   };
 
   return <authContext.Provider value={values}>{children}</authContext.Provider>;
