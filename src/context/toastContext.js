@@ -37,7 +37,6 @@ export const ToastContextProvider = ({ children }) => {
     </toastContext.Provider>
   );
 };
+/*eslint react/prop-types: 0 */
 
 export const useToast = () => useContext(toastContext);
-
-/*eslint react/prop-types: 0 */

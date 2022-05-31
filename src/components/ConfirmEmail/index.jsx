@@ -10,7 +10,7 @@ const LoginPasswordlessTemplate = () => {
     email: "",
   });
   const navigate = useNavigate();
-  /* eslint-disable */
+  // eslint-disable-next-line
   const [error, setError] = useState("");
   const { signin } = useUserAuth();
 

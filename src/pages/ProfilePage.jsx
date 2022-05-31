@@ -10,7 +10,7 @@ import styles from "../styles/Profile.module.scss";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");
-  /* eslint-disable */
+  // eslint-disable-next-line
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const { user } = useUserAuth();
@@ -208,7 +208,7 @@ const ProfilePage = () => {
           <Col md={4} className="">
             <div className="card text-center align-items-center shadow rounded">
               <img
-                /* eslint-disable */
+                // eslint-disable-next-line
                 src={require("../assets/images/profile-3.jpg")}
                 className="card-img-top"
                 alt="profile"
@@ -218,7 +218,7 @@ const ProfilePage = () => {
                 src={
                   file
                     ? URL.createObjectURL(file)
-                    : /* eslint-disable */
+                    : // eslint-disable-next-line
                       require("../assets/images/profile-1.png")
                 }
                 alt="profile"
@@ -239,7 +239,7 @@ const ProfilePage = () => {
                   <label htmlFor="file">
                     <img
                       className="icon"
-                      /* eslint-disable */
+                      // eslint-disable-next-line
                       src={require("../assets/images/folder-upload.png")}
                       alt="upload"
                       height={64}

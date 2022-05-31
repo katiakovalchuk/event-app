@@ -7,7 +7,7 @@ const ConfirmTemplate = () => {
   const [{ email }, setCredentials] = useState({
     email: "",
   });
-  /* eslint-disable */
+  // eslint-disable-next-line
   const [error, setError] = useState("");
   const { sendLink, users } = useUserAuth();
 
