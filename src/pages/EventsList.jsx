@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Table, Container } from "react-bootstrap";
 
 import eventsList from "../data/eventsList.json";
+import EventForm from "../components/forms/EventForm";
 
 const EventsList = () => {
   const oderedEvents = [...eventsList].sort((a, b) =>
@@ -34,6 +35,7 @@ const EventsList = () => {
           <p>No Events</p>
         )}
       </Table>
+      <EventForm />
     </Container>
   );
 };
