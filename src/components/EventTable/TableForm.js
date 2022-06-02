@@ -22,4 +22,6 @@ const TableForm = ({ data }) => {
   );
 };
 
+/*eslint react/prop-types: 0 */
+
 export default TableForm;
