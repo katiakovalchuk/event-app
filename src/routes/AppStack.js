@@ -1,7 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 
 import Layout from "../components/Layout";
-import { EventsItem, EventsList, Home, MembersPage, NotFoundPage, ProfilePage, TestPage } from "../pages";
+import {
+  EventsItem,
+  EventsList,
+  Home,
+  MembersPage,
+  NotFoundPage,
+  ProfilePage,
+  TestPage,
+} from "../pages";
 
 export const AppStack = () => {
   return (
@@ -13,8 +21,8 @@ export const AppStack = () => {
         <Route path="members" element={<MembersPage />} />
         <Route path="events" element={<EventsList />} />
         <Route path="events/:id" element={<EventsItem />} />
-        <Route path="*" element={<NotFoundPage />} />
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

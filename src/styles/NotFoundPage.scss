@@ -1,0 +1,54 @@
+@import "./scss/variable";
+
+.wrapper {
+	height: 100vh;
+	width: 100%;
+}
+
+.page-container {
+	position: absolute;
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: url(../../src/assets/images/p404.png), $primary-color;
+	box-shadow: 0 15px 30px rgba(0,0,0.5);
+}
+
+.page-container .content {
+	max-width: 600px;
+	text-align: center;
+	h2 {
+		font-size: 18vw;
+		color: $white;
+		line-height: 1em;
+	}
+	h4 {
+		position: relative;
+		font-size: 1.5em;
+		margin-bottom: 20px;
+		color: #111;
+		background: #fff;
+		font-weight: 300;
+		padding: 10px 20px;
+		display: inline-block;
+	}
+	p {
+		font-size: 1.2em;
+		color: $white;
+	}
+
+	a {
+		position: relative;
+		display: inline-block;
+		padding: 10px 25px;
+		background: #059bff;
+		color: $white;
+		text-decoration: none;
+		margin-top: 25px;
+		border-radius: 25px;
+		border-bottom: 4px solid #0592f0;
+		font-size: 1.2em;
+	}
+}

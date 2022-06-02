@@ -14,12 +14,19 @@ function Navbar() {
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
         <div className="navbar">
-          <Link to="#" className="menu-bars">
-            <FaIcons.FaBars onClick={showSidebar} />
-          </Link>
-          <Link to="#" className="menu-prof">
-            <CgIcons.CgProfile />
-          </Link>
+          <div className="navbar-menu">
+            <Link to="#" className="menu-bars">
+              <FaIcons.FaBars onClick={showSidebar} />
+            </Link>
+          </div>
+          <div className="menu-profile">
+            <Link to="/profile" className="menu-prof">
+              <CgIcons.CgProfile />
+            </Link>
+            <Link to="#" className="logout-btn">
+              <AiIcons.AiOutlineLogout />
+            </Link>
+          </div>
         </div>
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
           <ul className="nav-menu-items" onClick={showSidebar}>
