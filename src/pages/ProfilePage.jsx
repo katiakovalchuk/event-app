@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { auth, db } from "../firebase-config";
+import { auth, db, storage } from "../lib/init-firebase.js";
 import { Container, Row, Col } from "react-bootstrap";
 import { getDocs, collection, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
-import { storage } from "../firebase-config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useUserAuth } from "../context/authContext";
 import styles from "../styles/Profile.module.scss";
@@ -139,8 +138,8 @@ const ProfilePage = () => {
           </Col>
           <Col md={4} className="">
             <div className="card text-center align-items-center shadow rounded">
-              <img src={require("../assets/images/profile-3.jpg")} className="card-img-top" alt="profile" />
-              <img className={styles.profileImg} src={file ? URL.createObjectURL(file) : require("../assets/images/profile-1.png")} alt="profile" />
+              <img src={require("../assets/images/profile/profile-3.jpg")} className="card-img-top" alt="profile" />
+              <img className={styles.profileImg} src={file ? URL.createObjectURL(file) : require("../assets/images/profile/profile-1.png")} alt="profile" />
               <div className="card-body ">
                 <h5 className="card-title">admin</h5>
                 <p>Rank: 3</p>
@@ -155,7 +154,7 @@ const ProfilePage = () => {
               <div className="d-flex flex-row m-2 p-2">
                 <div className="p-1">
                   <label htmlFor="file">
-                    <img className="icon" src={require("../assets/images/folder-upload.png")} alt="upload" height={64} />
+                    <img className="icon" src={require("../assets/images/profile/folder-upload.png")} alt="upload" height={64} />
                   </label>
                   <input type="file" id="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }} />
                 </div>

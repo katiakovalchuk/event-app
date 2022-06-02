@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
 import { getDocs, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase-config";
+import { auth, db } from "../lib/init-firebase";
 import { useNavigate } from "react-router-dom";
 
 const authContext = createContext();
@@ -53,7 +53,7 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const getUsers = () => {
-      getDocs(collection(db, "users")).then((data) => {
+      getDocs(collection(db, "users_test")).then((data) => {
         setUsers(
           data.docs.map((item) => {
             return { ...item.data(), id: item.id };
