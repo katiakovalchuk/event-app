@@ -18,6 +18,13 @@
   background: none;
 }
 
+.logout-btn {
+  margin-right: 2rem;
+  font-size: 2rem;
+  background: none;
+}
+
+
 .nav-menu {
   background-color: #060b26;
   width: 250px;
@@ -28,11 +35,13 @@
   top: 0;
   left: -100%;
   transition: 850ms;
+  z-index: 333;
 }
 
 .nav-menu.active {
   left: 0;
   transition: 350ms;
+  z-index: 333;
 }
 
 .nav-text {
