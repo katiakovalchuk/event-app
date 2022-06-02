@@ -6,10 +6,12 @@ import * as CgIcons from "react-icons/cg";
 import { SidebarData } from "./SidebarData";
 import "./Navbar.css";
 import { IconContext } from "react-icons";
+import { useUserAuth } from "../../context/authContext";
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
+  const { logout } = useUserAuth();
   return (
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
@@ -23,9 +25,9 @@ function Navbar() {
             <Link to="/profile" className="menu-prof">
               <CgIcons.CgProfile />
             </Link>
-            <Link to="#" className="logout-btn">
-              <AiIcons.AiOutlineLogout />
-            </Link>
+            <span className="logout-btn">
+              <AiIcons.AiOutlineLogout onClick={logout} />
+            </span>
           </div>
         </div>
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>

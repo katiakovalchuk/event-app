@@ -30,7 +30,7 @@ export const AuthContextProvider = ({ children }) => {
   function logout() {
     return signOut(auth).then(() => {
       setUser(null);
-      navigate("/loginpasswordless");
+      navigate("/login");
     });
   }
 

@@ -80,7 +80,7 @@ const LoginTemplate = () => {
                 className="login-form-btn btn w-100 mt-1 rounded-3"
                 type="submit"
               >
-                Submit
+                Login
               </button>
               <div
                 className="forgot-password text-end w-100 mt-1"
@@ -91,6 +91,12 @@ const LoginTemplate = () => {
                   to="/recovery"
                 >
                   Forgot password?
+                </Link>
+                <Link
+                  className="link-light text-decoration-none"
+                  to="/loginpasswordless"
+                >
+                  Login without password
                 </Link>
               </div>
             </form>

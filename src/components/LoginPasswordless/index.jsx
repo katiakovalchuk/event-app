@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useUserAuth } from "../../context/authContext";
-
+import { Link } from "react-router-dom";
 import "./style.scss";
 
 const ConfirmTemplate = () => {
@@ -57,9 +57,14 @@ const ConfirmTemplate = () => {
               className="login-form-btn btn w-100 mt-1 rounded-3"
               type="submit"
             >
-              Submit
+              Login
             </button>
           </form>
+          <div className="text-end pb-5">
+            <Link className="link-light text-decoration-none" to="/login">
+              Login with password!
+            </Link>
+          </div>
         </div>
       </div>
     </div>
