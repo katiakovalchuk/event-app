@@ -15,7 +15,7 @@ export const getUsers = createAsyncThunk(
         try {
             const res = await getDocs(collection(db, "users"));
             return res.docs.map(doc => ({...doc.data(), id: doc.id}));
-        } catch (err){
+        } catch (err) {
             return rejectWithValue(err.message);
         }
     }
@@ -35,11 +35,11 @@ export const addNewUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
     "usersSlice/updateUser",
-    async ({id, ...rest}, {rejectWithValue, dispatch}) => {
+    async (updatedUser, {rejectWithValue}) => {
+        const {id, ...rest} = updatedUser;
         try {
-            await updateDoc(doc(db, "users", id), {...rest}, {merge: true});
-            dispatch(getUsers());
-            return {id, ...rest};
+            await updateDoc(doc(db, "users", id), {...rest});
+            return updatedUser;
         } catch (err) {
             return rejectWithValue(err.message);
         }
@@ -48,10 +48,9 @@ export const updateUser = createAsyncThunk(
 
 export const deleteUser = createAsyncThunk(
     "usersSlice/deleteUser",
-    async (id, {rejectWithValue, dispatch}) => {
+    async (id, {rejectWithValue}) => {
         try {
             await deleteDoc(doc(db, "users", id));
-            dispatch(getUsers());
             return id;
         } catch (err) {
             rejectWithValue(err.message);
@@ -86,15 +85,12 @@ const usersSlice = createSlice({
             state.status = "succeeded";
             state.users = state.users.map(user => {
                 state.status = "succeeded";
-                if (user.id === action.payload.id) {
-                    return {...user, ...action.payload.rest};
-                }
-                return user;
+                return user.id === action.payload.id ? {...user, ...action.payload} : user;
             });
         },
         [deleteUser.fulfilled]: (state, action) => {
             state.status = "succeeded";
-            state.users = state.users.filter(user => user.id !== action.payload.id);
+            state.users = state.users.filter(user => user.id !== action.payload);
         },
         [getUsers.pending]: removeError,
         [addNewUser.pending]: removeError,
