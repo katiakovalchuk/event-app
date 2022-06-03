@@ -1,15 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../store/slices/usersSlice";
 
 
 const List = () => {
     const dispatch = useDispatch();
-    const { users, status, error } = useSelector(state => state.usersSlice);
+    const { users } = useSelector(state => state.usersSlice);
 
     useEffect(() => {
         dispatch(getUsers());
-    }, [dispatch])
+    }, [dispatch]);
 
     return (
         <>
@@ -21,7 +21,7 @@ const List = () => {
                 }
             </ul>
         </>
-    )
-}
+    );
+};
 
 export default List;

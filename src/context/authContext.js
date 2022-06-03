@@ -1,29 +1,100 @@
-import {createContext, useContext, useEffect, useState} from "react";
-import {onAuthStateChanged, signInWithEmailAndPassword, signOut, sendPasswordResetEmail} from "firebase/auth";
-import {auth} from '../firebase-config';
+import { createContext, useContext, useEffect, useState } from "react";
+import {
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+  sendSignInLinkToEmail,
+  signInWithEmailLink,
+} from "firebase/auth";
+import {
+  getDocs,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { auth, db } from "../firebase-config";
+import { useNavigate } from "react-router-dom";
 
 const authContext = createContext();
 
-export const AuthContextProvider = ({children}) => {
-    const [user, setUser] = useState({});
+export const AuthContextProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState({});
+  const [users, setUsers] = useState([]);
 
-    const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const login = (email, password) =>
+    signInWithEmailAndPassword(auth, email, password);
 
-    const logout = () => signOut(auth);
+  function logout() {
+    return signOut(auth).then(() => {
+      setUser(null);
+      navigate("/login");
+    });
+  }
 
-    const sendResetEmail = email => sendPasswordResetEmail(auth, email);
+  const sendResetEmail = (email) => sendPasswordResetEmail(auth, email);
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => setUser(currentUser));
+  function signin(email, code) {
+    return signInWithEmailLink(auth, email, code).then((result) => {
+      setUser(result.user);
 
-        return () => unsubscribe();
-    }, []);
+      let isUserEmail = users.some((user) => user.email === email);
+      if (!isUserEmail) {
+        setDoc(doc(db, "users", result.user.uid), {
+          name: email,
+          id: result.user.uid,
+          email,
+          userImage:
+            "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/profile-1.png?alt=media&token=6e911220-745f-4fab-918d-497af8aa1566",
+          timeStamp: serverTimestamp(),
+        });
+      }
+      return true;
+    });
+  }
 
-    return (
-        <authContext.Provider value={{user, login, logout, sendResetEmail}}>
-            {children}
-        </authContext.Provider>
-    )
-}
+  function sendLink(email) {
+    console.log("send link");
+    return sendSignInLinkToEmail(auth, email, {
+      url: "http://localhost:3000/confirm",
+      handleCodeInApp: true,
+    }).then(() => {
+      return true;
+    });
+  }
+
+  useEffect(() => {
+    const getUsers = () => {
+      getDocs(collection(db, "users")).then((data) => {
+        setUsers(
+          data.docs.map((item) => {
+            return { ...item.data(), id: item.id };
+          })
+        );
+      });
+    };
+    getUsers();
+
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) =>
+      setUser(currentUser)
+    );
+    return () => unsubscribe();
+  }, []);
+
+  const values = {
+    user,
+    users,
+    sendLink,
+    signin,
+    logout,
+    login,
+    sendResetEmail,
+  };
+
+  return <authContext.Provider value={values}>{children}</authContext.Provider>;
+};
+/*eslint react/prop-types: 0 */
 
 export const useUserAuth = () => useContext(authContext);

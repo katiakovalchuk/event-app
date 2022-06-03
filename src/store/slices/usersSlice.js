@@ -7,7 +7,7 @@ const initialState = {
     status: null,
     error: null,
     users: []
-}
+};
 
 export const getUsers = createAsyncThunk(
     "usersSlice/getUsers",
@@ -23,7 +23,7 @@ export const getUsers = createAsyncThunk(
 
 export const addNewUser = createAsyncThunk(
     "usersSlice/addNewUser",
-    async (newUser, {rejectWithValue, dispatch}) => {
+    async (newUser, {rejectWithValue}) => {
         try {
             const docRef = await addDoc(collection(db, "users"), newUser);
             return {...newUser, id: docRef.id};
@@ -31,11 +31,11 @@ export const addNewUser = createAsyncThunk(
             return rejectWithValue(err.message);
         }
     }
-)
+);
 
 export const updateUser = createAsyncThunk(
     "usersSlice/updateUser",
-    async ({id, ...rest}, {rejectWithValue, dispatch, getState}) => {
+    async ({id, ...rest}, {rejectWithValue, dispatch}) => {
         try {
             await updateDoc(doc(db, "users", id), {...rest}, {merge: true});
             dispatch(getUsers());
@@ -44,7 +44,7 @@ export const updateUser = createAsyncThunk(
             return rejectWithValue(err.message);
         }
     }
-)
+);
 
 export const deleteUser = createAsyncThunk(
     "usersSlice/deleteUser",
@@ -62,20 +62,20 @@ export const deleteUser = createAsyncThunk(
 const setError = (state, action) => {
     state.status = "rejected";
     state.error = action.payload;
-}
+};
 
 const removeError = state => {
     state.status = "pending";
     state.error = null;
-}
+};
 
 const usersSlice = createSlice({
     name: "usersSlice",
     initialState,
     extraReducers: {
         [getUsers.fulfilled]: (state, action) => {
-            state.status = 'succeeded';
-            state.users = action.payload
+            state.status = "succeeded";
+            state.users = action.payload;
 
         },
         [addNewUser.fulfilled]: (state, action) => {
@@ -87,10 +87,10 @@ const usersSlice = createSlice({
             state.users = state.users.map(user => {
                 state.status = "succeeded";
                 if (user.id === action.payload.id) {
-                    return {...user, ...action.payload.rest}
+                    return {...user, ...action.payload.rest};
                 }
                 return user;
-            })
+            });
         },
         [deleteUser.fulfilled]: (state, action) => {
             state.status = "succeeded";
@@ -105,6 +105,6 @@ const usersSlice = createSlice({
         [updateUser.rejected]: setError,
         [deleteUser.rejected]: setError
     }
-})
+});
 
 export default usersSlice.reducer;
