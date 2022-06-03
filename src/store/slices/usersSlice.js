@@ -6,7 +6,7 @@ import {db} from "../../firebase-config";
 const initialState = {
     status: null,
     error: null,
-    data: []
+    users: []
 }
 
 export const getUsers = createAsyncThunk(
@@ -38,6 +38,7 @@ export const updateUser = createAsyncThunk(
     async ({id, ...rest}, {rejectWithValue, dispatch, getState}) => {
         try {
             await updateDoc(doc(db, "users", id), {...rest}, {merge: true});
+            dispatch(getUsers());
             return {id, ...rest};
         } catch (err) {
             return rejectWithValue(err.message);
@@ -50,6 +51,7 @@ export const deleteUser = createAsyncThunk(
     async (id, {rejectWithValue, dispatch}) => {
         try {
             await deleteDoc(doc(db, "users", id));
+            dispatch(getUsers());
             return id;
         } catch (err) {
             rejectWithValue(err.message);
@@ -72,17 +74,17 @@ const usersSlice = createSlice({
     initialState,
     extraReducers: {
         [getUsers.fulfilled]: (state, action) => {
-            state.status = 'succeeded'
-            state.data = action.payload
+            state.status = 'succeeded';
+            state.users = action.payload
 
         },
         [addNewUser.fulfilled]: (state, action) => {
             state.status = "succeeded";
-            state.data.push(action.payload);
+            state.users.push(action.payload);
         },
         [updateUser.fulfilled]: (state, action) => {
             state.status = "succeeded";
-            state.data = state.data.map(user => {
+            state.users = state.users.map(user => {
                 state.status = "succeeded";
                 if (user.id === action.payload.id) {
                     return {...user, ...action.payload.rest}
@@ -92,7 +94,7 @@ const usersSlice = createSlice({
         },
         [deleteUser.fulfilled]: (state, action) => {
             state.status = "succeeded";
-            state.data = state.data.filter(user => user.id !== action.payload.id);
+            state.users = state.users.filter(user => user.id !== action.payload.id);
         },
         [getUsers.pending]: removeError,
         [addNewUser.pending]: removeError,
