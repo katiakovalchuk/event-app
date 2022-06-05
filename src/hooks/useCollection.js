@@ -2,33 +2,22 @@ import { useState, useEffect } from "react";
 import { db } from "../lib/init-firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 
-export const useCollection = (c) => {
+export const useCollection = (col) => {
   const [documents, setDocuments] = useState(null);
 
   useEffect(() => {
-    let colRef = collection(db, c);
-
-    // if (q) {
-    //   ref = query(ref, where(...q));
-    // }
-
-    // let endQuery;
-    // if (select === "all") {
-    //   endQuery = query(ref, orderBy("title"));
-    // } else {
-    //   endQuery = query(ref, orderBy("title"), where("completed", "==", select === "complete"));
-    // }
+    let colRef = collection(db, col);
 
     const unsub = onSnapshot(colRef, (querySnapshot) => {
       let results = [];
       querySnapshot.forEach((doc) => {
         results.push({ ...doc.data(), id: doc.id });
       });
-      
+
       setDocuments(results);
     });
     return () => unsub();
-  }, [c]);
+  }, [col]);
 
   return { documents };
 };

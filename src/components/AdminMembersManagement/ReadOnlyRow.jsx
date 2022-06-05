@@ -1,6 +1,7 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 
-const ReadOnlyRow = ({ data, columns, handleDeleteClick }) => {
+const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
   return (
     <tr key={data.id}>
       {columns.map(({ accessor }) => {
@@ -8,12 +9,12 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick }) => {
         if (accessor === "action") {
           return (
             <td key={accessor}>
-              <button type="button" onClick={() => handleDeleteClick(data.id)}>
-                Delete
-              </button>{" "}
-              <button type="button" onClick={() => handleDeleteClick(data.id)}>
+              <Button className="btn me-2" type="button" onClick={(event) => handleEditClick(event, data)} variant="warning" size="sm">
                 Edit
-              </button>
+              </Button>
+              <Button type="button" onClick={() => handleDeleteClick(data.id)} variant="danger" size="sm">
+                Delete
+              </Button>
             </td>
           );
         } else {
