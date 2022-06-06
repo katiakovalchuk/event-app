@@ -16,7 +16,16 @@
   margin-right: 2rem;
   font-size: 2rem;
   background: none;
+  cursor: pointer;
 }
+
+.logout-btn {
+  margin-right: 2rem;
+  font-size: 2rem;
+  background: none;
+  cursor: pointer;
+}
+
 
 .nav-menu {
   background-color: #060b26;
@@ -28,11 +37,13 @@
   top: 0;
   left: -100%;
   transition: 850ms;
+  z-index: 333;
 }
 
 .nav-menu.active {
   left: 0;
   transition: 350ms;
+  z-index: 333;
 }
 
 .nav-text {

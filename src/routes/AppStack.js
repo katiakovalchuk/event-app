@@ -14,8 +14,8 @@ export const AppStack = () => {
         <Route path="members" element={<MembersPage />} />
         <Route path="events" element={<EventsList />} />
         <Route path="events/:id" element={<EventsItem />} />
-        <Route path="*" element={<NotFoundPage />} />
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

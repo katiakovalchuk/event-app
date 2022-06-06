@@ -18,7 +18,7 @@ export const AuthContextProvider = ({ children }) => {
   function logout() {
     return signOut(auth).then(() => {
       setUser(null);
-      navigate("/loginpasswordless");
+      navigate("/login");
     });
   }
 
@@ -81,5 +81,6 @@ export const AuthContextProvider = ({ children }) => {
 
   return <authContext.Provider value={values}>{children}</authContext.Provider>;
 };
+/*eslint react/prop-types: 0 */
 
 export const useUserAuth = () => useContext(authContext);

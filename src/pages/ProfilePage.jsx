@@ -1,14 +1,16 @@
+/* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { auth, db, storage } from "../lib/init-firebase.js";
+import { db, storage } from "../lib/init-firebase.js";
 import { Container, Row, Col } from "react-bootstrap";
-import { getDocs, collection, doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useUserAuth } from "../context/authContext";
 import styles from "../styles/Profile.module.scss";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");
+  // eslint-disable-next-line
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const { user } = useUserAuth();
@@ -34,7 +36,9 @@ const ProfilePage = () => {
               break;
           }
         },
-        (error) => {},
+        // (error) => {
+        //   console.log(error);
+        // },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setData((prev) => ({ ...prev, img: downloadURL }));

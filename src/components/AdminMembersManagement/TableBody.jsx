@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import ReadOnlyRow from "./ReadOnlyRow";
 import EditableRow from "./EditableRow";
 
