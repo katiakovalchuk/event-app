@@ -1,8 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
-import { getDocs, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { auth, db } from "../lib/init-firebase";
 import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
+import { getDocs, doc, serverTimestamp, setDoc } from "firebase/firestore";
+
+import { auth } from "../lib/init-firebase";
+import { usersCollectionRef } from "../lib/firestore.collections.js";
 
 const authContext = createContext();
 
@@ -28,7 +30,7 @@ export const AuthContextProvider = ({ children }) => {
 
       let isUserEmail = users.some((user) => user.email === email);
       if (!isUserEmail) {
-        setDoc(doc(db, "users", result.user.uid), {
+        setDoc(doc(usersCollectionRef, result.user.uid), {
           name: email,
           id: result.user.uid,
           email,
@@ -53,7 +55,7 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const getUsers = () => {
-      getDocs(collection(db, "users_test")).then((data) => {
+      getDocs(usersCollectionRef).then((data) => {
         setUsers(
           data.docs.map((item) => {
             return { ...item.data(), id: item.id };
@@ -74,6 +76,7 @@ export const AuthContextProvider = ({ children }) => {
     signin,
     logout,
     login,
+    sendResetEmail,
   };
 
   return <authContext.Provider value={values}>{children}</authContext.Provider>;

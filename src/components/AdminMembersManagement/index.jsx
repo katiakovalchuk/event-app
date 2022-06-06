@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { doc, collection, addDoc, serverTimestamp, deleteDoc, updateDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, serverTimestamp, deleteDoc, updateDoc } from "firebase/firestore";
 
 import AddUser from "./AddUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
 
-import { db } from "../../lib/init-firebase.js";
-import { useCollection } from "../../hooks/useCollection";
+import { auth } from "../../lib/init-firebase.js";
 import { useUserAuth } from "../../context/authContext";
+import { useCollection } from "../../hooks/useCollection";
+import { usersCollectionRef } from "../../lib/firestore.collections.js";
 
 import "./style.scss";
 
 const Table = () => {
-  const { documents: users_live } = useCollection("users_test");
-  const { users } = useUserAuth();
+  const { documents: users_live } = useCollection("users");
+  const { users, sendResetEmail } = useUserAuth();
   const [tableData, setTableData] = useState(users);
   const [show, setShow] = useState(false);
 
@@ -75,8 +77,8 @@ const Table = () => {
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
-
-    await addDoc(collection(db, "users_test"), {
+    const res = await createUserWithEmailAndPassword(auth, addFormData.email, "123456");
+    await setDoc(doc(usersCollectionRef, res.user.uid), {
       fullName: addFormData.fullName,
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
@@ -86,11 +88,11 @@ const Table = () => {
       role: addFormData.role,
       createdAt: serverTimestamp(),
     });
+    await sendResetEmail(addFormData.email);
   };
 
   const handleDeleteClick = async (id) => {
-    const colRef = collection(db, "users_test"); // import
-    await deleteDoc(doc(colRef, id));
+    await deleteDoc(doc(usersCollectionRef, id));
   };
 
   const handleCancelClick = () => {
@@ -99,7 +101,7 @@ const Table = () => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
-    const docRef = doc(db, "users_test", editContactId);
+    const docRef = doc(usersCollectionRef, editContactId);
     updateDoc(docRef, {
       fullName: editFormData.fullName,
       phoneNumber: editFormData.phoneNumber,
