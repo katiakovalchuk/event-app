@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
+import { sendPasswordResetEmail, signInWithEmailAndPassword, signOut, sendSignInLinkToEmail, signInWithEmailLink, onAuthStateChanged } from "firebase/auth";
 import { getDocs, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 import { auth } from "../lib/init-firebase";
@@ -28,7 +28,7 @@ export const AuthContextProvider = ({ children }) => {
     return signInWithEmailLink(auth, email, code).then((result) => {
       setUser(result.user);
 
-      let isUserEmail = users.some((user) => user.email === email);
+      const isUserEmail = users.some((user) => user.email === email);
       if (!isUserEmail) {
         setDoc(doc(usersCollectionRef, result.user.uid), {
           name: email,
@@ -53,16 +53,17 @@ export const AuthContextProvider = ({ children }) => {
     });
   }
 
+  const getUsers = () => {
+    getDocs(usersCollectionRef).then((data) => {
+      setUsers(
+        data.docs.map((item) => {
+          return { ...item.data(), id: item.id };
+        })
+      );
+    });
+  };
+
   useEffect(() => {
-    const getUsers = () => {
-      getDocs(usersCollectionRef).then((data) => {
-        setUsers(
-          data.docs.map((item) => {
-            return { ...item.data(), id: item.id };
-          })
-        );
-      });
-    };
     getUsers();
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
