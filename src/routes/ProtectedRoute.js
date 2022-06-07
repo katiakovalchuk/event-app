@@ -6,10 +6,10 @@ const ProtectedRoute = ({
                             children
                         }) => {
     if (!isAllowed) {
-        return <Navigate to={redirectPath} replace/>
+        return <Navigate to={redirectPath} replace/>;
     }
 
-    return children ? children : <Outlet />
-}
+    return children ? children : <Outlet />;
+};
 
 export default ProtectedRoute;

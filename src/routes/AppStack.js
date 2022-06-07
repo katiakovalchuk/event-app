@@ -1,7 +1,7 @@
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
-import Layout from "../components/Layout";
 import {EventsItem, EventsList, Home, MembersPage, NotFoundPage, ProfilePage} from "../pages";
+import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 
 export const AppStack = () => {
@@ -28,5 +28,5 @@ export const AppStack = () => {
             </Route>
             <Route path="*" element={<NotFoundPage/>}/>
         </Routes>
-    )
-}
+    );
+};
