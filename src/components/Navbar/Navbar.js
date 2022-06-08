@@ -6,20 +6,29 @@ import * as CgIcons from "react-icons/cg";
 import { SidebarData } from "./SidebarData";
 import "./Navbar.css";
 import { IconContext } from "react-icons";
+import { useUserAuth } from "../../context/authContext";
 
 function Navbar() {
   const [sidebar, setSidebar] = useState(false);
   const showSidebar = () => setSidebar(!sidebar);
+  const { logout } = useUserAuth();
   return (
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
         <div className="navbar">
-          <Link to="#" className="menu-bars">
-            <FaIcons.FaBars onClick={showSidebar} />
-          </Link>
-          <Link to="#" className="menu-prof">
-            <CgIcons.CgProfile />
-          </Link>
+          <div className="navbar-menu">
+            <Link to="#" className="menu-bars">
+              <FaIcons.FaBars onClick={showSidebar} />
+            </Link>
+          </div>
+          <div className="menu-profile">
+            <Link to="/profile" className="menu-prof">
+              <CgIcons.CgProfile />
+            </Link>
+            <span className="logout-btn">
+              <AiIcons.AiOutlineLogout onClick={logout} />
+            </span>
+          </div>
         </div>
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
           <ul className="nav-menu-items" onClick={showSidebar}>

@@ -4,15 +4,21 @@ import { Link } from "react-router-dom";
 import { Table, Container } from "react-bootstrap";
 
 import eventsList from "../data/eventsList.json";
-import EventForm from "../components/forms/EventForm";
+import { useToast } from "../context/toastContext";
+
+import { CustomButton } from "../components/elements";
+import EventModal from "../components/modals/EventModal";
 
 const EventsList = () => {
   const oderedEvents = [...eventsList].sort((a, b) =>
     b.date.localeCompare(a.date)
   );
+  const { showToast } = useToast();
   return (
     <Container>
-      {/* Button */}
+      <CustomButton variant="primary" size="lg" onClick={showToast}>
+        Add a new Event
+      </CustomButton>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -35,7 +41,7 @@ const EventsList = () => {
           <p>No Events</p>
         )}
       </Table>
-      <EventForm />
+      <EventModal />
     </Container>
   );
 };

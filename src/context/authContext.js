@@ -1,6 +1,19 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, sendSignInLinkToEmail, signInWithEmailLink } from "firebase/auth";
-import { getDocs, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+  sendSignInLinkToEmail,
+  signInWithEmailLink,
+} from "firebase/auth";
+import {
+  getDocs,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { auth, db } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 
@@ -11,12 +24,13 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [users, setUsers] = useState([]);
 
-  const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const login = (email, password) =>
+    signInWithEmailAndPassword(auth, email, password);
 
   function logout() {
     return signOut(auth).then(() => {
       setUser(null);
-      navigate("/loginpasswordless");
+      navigate("/login");
     });
   }
 
@@ -63,7 +77,9 @@ export const AuthContextProvider = ({ children }) => {
     };
     getUsers();
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) =>
+      setUser(currentUser)
+    );
     return () => unsubscribe();
   }, []);
 
@@ -79,5 +95,6 @@ export const AuthContextProvider = ({ children }) => {
 
   return <authContext.Provider value={values}>{children}</authContext.Provider>;
 };
+/*eslint react/prop-types: 0 */
 
 export const useUserAuth = () => useContext(authContext);

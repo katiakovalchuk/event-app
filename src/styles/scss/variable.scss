@@ -1,0 +1,42 @@
+$primary-color: #060b26;
+$font: "Fira Sans", sans-serif;
+$white: #f5f6fa;
+$black: #0c0e10;
+$gray: #202425;
+$blue: #446182;
+
+$button-gray: #2b3133;
+
+$error: #bc3e3e;
+
+%fira-400 {
+  font-family: $font;
+  font-weight: 400;
+}
+
+%fira-500 {
+  font-family: $font;
+  font-weight: 500;
+}
+
+%fira-600 {
+  font-family: $font;
+  font-weight: 600;
+}
+
+%checkbox-hidden,
+%radio-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+%absolute-50 {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
