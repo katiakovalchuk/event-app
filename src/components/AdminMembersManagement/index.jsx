@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 
 import AddUser from "./AddUser";
+import EditUser from "./EditUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
 
@@ -16,13 +17,19 @@ import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import "./style.scss";
 
 const Table = () => {
-  const { documents: users_live } = useCollection("users");
+  const [query, setQuery] = useState("");
+  const { documents: users_live } = useCollection("users", query);
   const { users, sendResetEmail } = useUserAuth();
+
   const [tableData, setTableData] = useState(users);
   const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const handleClose = () => setShow(false);
+  const handleCloseEdit = () => setShowEdit(false);
   const handleShow = () => setShow(true);
+  const handleShowEdit = () => setShowEdit(true);
+
   const [editContactId, setEditContactId] = useState(null);
 
   const [addFormData, setAddFormData] = useState({ role: "user" });
@@ -103,6 +110,7 @@ const Table = () => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
+    handleCloseEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     updateDoc(docRef, {
       fullName: editFormData.fullName,
@@ -117,11 +125,15 @@ const Table = () => {
       })
       .catch((err) => console.log(err.message));
     setEditContactId(null);
+    console.log("showEdit in handleEditFormSubmit", showEdit);
   };
 
   const handleEditClick = (event, contact) => {
-    event.preventDefault();
+    // event.preventDefault();
     setEditContactId(contact.id);
+    handleShowEdit();
+    console.log("lol", contact.id);
+
     const formValues = {
       fullName: contact.fullName,
       phoneNumber: contact.phoneNumber,
@@ -132,14 +144,26 @@ const Table = () => {
     };
     setEditFormData(formValues);
   };
+
+  function search(e) {
+    console.log(e.target.value);
+    setQuery(e.target.value);
+  }
+
   return (
     <Container>
       <Row>
         <Col md={12}>
-          <Button variant="primary" className="btn btn-primary mt-5" onClick={handleShow}>
-            Add user
-          </Button>
+          <div className="mt-5 d-flex justify-content-between">
+            <Button variant="primary" className="btn btn-primary " onClick={handleShow}>
+              Add user
+            </Button>
+            <input className="search" placeholder="Search..." onChange={search} />
+          </div>
+
           <AddUser {...{ show, handleClose, handleAddFormSubmit, handleAddFormChange, addFormData }} />
+          {showEdit && <EditUser {...{ showEdit, editContactId, handleCloseEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
+
           <form onSubmit={handleEditFormSubmit}>
             <table className="table">
               <TableHead {...{ columns, handleSorting }} />
