@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
@@ -34,6 +34,10 @@ const Table = () => {
   const [editContactId, setEditContactId] = useState(null);
 
   const [addFormData, setAddFormData] = useState({ role: "user" });
+
+  useEffect(() => {
+    document.title = "Admin members management";
+  });
 
   const [editFormData, setEditFormData] = useState({
     fullName: "",
@@ -131,14 +135,12 @@ const Table = () => {
       })
       .catch((err) => console.log(err.message));
     setEditContactId(null);
-    console.log("showEdit in handleEditFormSubmit", showEdit);
   };
 
   const handleEditClick = (event, contact) => {
     // event.preventDefault();
     setEditContactId(contact.id);
     handleShowEdit();
-    console.log("lol", contact.id);
 
     const formValues = {
       fullName: contact.fullName,

@@ -19,12 +19,10 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
   };
 
   function getIndex(_user) {
-    console.log("id", _user);
     return users.findIndex((user) => user.id === _user);
   }
 
   useEffect(() => {
-    console.log("editContactId useeffect", editContactId);
     getUsers();
   }, []);
 
@@ -150,41 +148,8 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
             <input name="birth" id="startDate" className="form-control " type="date" onChange={handleEditFormChange} />
           </div>
 
-          {/* <fieldset className="form-group mb-2">
-            <legend>User status:</legend>
-
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                name="role"
-                type="radio"
-                id="user"
-                value="user"
-                checked={addFormData.role === "user"}
-                onChange={handleAddFormChange}
-              />
-              <label className="form-check-label" htmlFor="user">
-                User
-              </label>
-            </div>
-
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                name="role"
-                type="radio"
-                id="manager"
-                value="manager"
-                checked={addFormData.role === "manager"}
-                onChange={handleAddFormChange}
-              />
-              <label className="form-check-label" htmlFor="manager">
-                Manager
-              </label>
-            </div>
-          </fieldset> */}
           <div className="container  text-center">
-            <Button type="submit" variant="success">
+            <Button type="submit" variant="success" className="mt-4">
               Save Changes
             </Button>
           </div>
