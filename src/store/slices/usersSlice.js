@@ -1,11 +1,15 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {addDoc, collection, deleteDoc, doc, getDocs, updateDoc} from "firebase/firestore";
+import {collection, doc, getDocs, addDoc, setDoc, updateDoc, deleteDoc,} from "firebase/firestore";
 
 import {db} from "../../lib/init-firebase";
 
+const STATUSES = {
+    succeeded: "succeeded",
+    failed: "failed",
+    pending: "pending"
+};
 const initialState = {
     status: null,
-    error: null,
     users: []
 };
 
@@ -16,19 +20,19 @@ export const getUsers = createAsyncThunk(
             const res = await getDocs(collection(db, "users"));
             return res.docs.map(doc => ({...doc.data(), id: doc.id}));
         } catch (err) {
-            return rejectWithValue(err.message);
+            return rejectWithValue(STATUSES.failed);
         }
     }
 );
 
-export const addNewUser = createAsyncThunk(
+export const addNewUserWithAutoId = createAsyncThunk(
     "usersSlice/addNewUser",
     async (newUser, {rejectWithValue}) => {
         try {
             const docRef = await addDoc(collection(db, "users"), newUser);
             return {...newUser, id: docRef.id};
         } catch (err) {
-            return rejectWithValue(err.message);
+            return rejectWithValue(STATUSES.failed);
         }
     }
 );
@@ -41,7 +45,20 @@ export const updateUser = createAsyncThunk(
             await updateDoc(doc(db, "users", id), {...rest});
             return updatedUser;
         } catch (err) {
-            return rejectWithValue(err.message);
+            return rejectWithValue(STATUSES.failed);
+        }
+    }
+);
+
+export const setUserWithCustomId = createAsyncThunk(
+    "usersSlice/addNewUser",
+    async (newUser, {rejectWithValue}) => {
+        const {id, ...userData} = newUser;
+        try {
+            await setDoc(doc(db, "users", id), userData, { merge: true});
+            return newUser;
+        } catch (err) {
+            return rejectWithValue(STATUSES.failed);
         }
     }
 );
@@ -53,19 +70,17 @@ export const deleteUser = createAsyncThunk(
             await deleteDoc(doc(db, "users", id));
             return id;
         } catch (err) {
-            rejectWithValue(err.message);
+            return rejectWithValue(STATUSES.failed);
         }
     }
 );
 
 const setError = (state, action) => {
-    state.status = "rejected";
-    state.error = action.payload;
+    state.status = action.payload;
 };
 
-const removeError = state => {
-    state.status = "pending";
-    state.error = null;
+const setPending = state => {
+    state.status = STATUSES.pending;
 };
 
 const usersSlice = createSlice({
@@ -73,32 +88,49 @@ const usersSlice = createSlice({
     initialState,
     extraReducers: {
         [getUsers.fulfilled]: (state, action) => {
-            state.status = "succeeded";
+            state.status = STATUSES.succeeded;
             state.users = action.payload;
 
         },
-        [addNewUser.fulfilled]: (state, action) => {
-            state.status = "succeeded";
+        [addNewUserWithAutoId.fulfilled]: (state, action) => {
+            state.status = STATUSES.succeeded;
             state.users.push(action.payload);
         },
         [updateUser.fulfilled]: (state, action) => {
-            state.status = "succeeded";
+            state.status = STATUSES.succeeded;
             state.users = state.users.map(user => {
-                state.status = "succeeded";
+                state.status = STATUSES.succeeded;
                 return user.id === action.payload.id ? {...user, ...action.payload} : user;
             });
         },
+        [setUserWithCustomId.fulfilled]: (state, action) => {
+            let isSet = false;
+            state.status = STATUSES.succeeded;
+            state.users = state.users.map(user => {
+                if (user.id === action.payload.id){
+                    isSet = true;
+                    return {...user, ...action.payload};
+                } else {
+                    return user;
+                }
+            });
+            if (!isSet){
+                state.users.push(action.payload);
+            }
+        },
         [deleteUser.fulfilled]: (state, action) => {
-            state.status = "succeeded";
+            state.status = STATUSES.succeeded;
             state.users = state.users.filter(user => user.id !== action.payload);
         },
-        [getUsers.pending]: removeError,
-        [addNewUser.pending]: removeError,
-        [updateUser.pending]: removeError,
-        [deleteUser.pending]: removeError,
+        [getUsers.pending]: setPending,
+        [addNewUserWithAutoId.pending]: setPending,
+        [updateUser.pending]: setPending,
+        [setUserWithCustomId]: setPending,
+        [deleteUser.pending]: setPending,
         [getUsers.rejected]: setError,
-        [addNewUser.rejected]: setError,
+        [addNewUserWithAutoId.rejected]: setError,
         [updateUser.rejected]: setError,
+        [setUserWithCustomId]: setError,
         [deleteUser.rejected]: setError
     }
 });
