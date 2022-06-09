@@ -10,7 +10,8 @@ import {
     ManagersManagement,
     MembersPage,
     NotFoundPage,
-    ProfilePage
+    ProfilePage,
+    TestPage
 } from "../pages";
 import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -60,6 +61,9 @@ export const AppStack = () => {
                     <Route path="members" element={<MembersPage/>}/>
                     <Route path="events" element={<EventsList/>}/>
                     <Route path="events/:id" element={<EventsItem/>}/>
+
+                    //remove later
+                    <Route path="test" element={<TestPage />} />
                 </Route>
                 <Route element={<ProtectedRoute isAllowed={userRole === "manager"}/>}>
                     <Route path="event-page"/>

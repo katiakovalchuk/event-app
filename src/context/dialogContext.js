@@ -1,16 +1,16 @@
 import { createContext, useContext, useState } from "react";
 
-const toastContext = createContext();
+const DialogContext = createContext();
 
-export const ToastContextProvider = ({ children }) => {
-  const [isToastShown, setIsToastShown] = useState(false);
+export const DialogContextProvider = ({ children }) => {
+  const [show, setShow] = useState(false);
   const [toastContent, setToastContent] = useState({
     heading: "Inner error",
     body: "Please contact our support team for additional information!",
   });
 
-  const showToast = () => setIsToastShown(true);
-  const hideToast = () => setIsToastShown(false);
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   const updateToastContent = (
     toastHeading = toastContent.heading,
@@ -24,19 +24,19 @@ export const ToastContextProvider = ({ children }) => {
   };
 
   return (
-    <toastContext.Provider
+    <DialogContext.Provider
       value={{
-        isToastShown,
-        showToast,
-        hideToast,
+        show,
         toastContent,
+        handleShow,
+        handleClose,
         updateToastContent,
       }}
     >
       {children}
-    </toastContext.Provider>
+    </DialogContext.Provider>
   );
 };
 /*eslint react/prop-types: 0 */
 
-export const useToast = () => useContext(toastContext);
+export const useDialog = () => useContext(DialogContext);

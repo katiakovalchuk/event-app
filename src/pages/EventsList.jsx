@@ -4,14 +4,21 @@ import { Link } from "react-router-dom";
 import { Table, Container } from "react-bootstrap";
 
 import eventsList from "../data/eventsList.json";
+import { useDialog } from "../context/dialogContext";
+
+import { CustomButton, ModalForm } from "../components/elements";
+import EventForm from "../components/forms/EventForm";
 
 const EventsList = () => {
   const oderedEvents = [...eventsList].sort((a, b) =>
     b.date.localeCompare(a.date)
   );
+  const { handleShow } = useDialog();
   return (
     <Container>
-      {/* Button */}
+      <CustomButton variant="primary" size="lg" onClick={handleShow}>
+        Add a new Event
+      </CustomButton>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -34,6 +41,7 @@ const EventsList = () => {
           <p>No Events</p>
         )}
       </Table>
+      <ModalForm title="Add a new Event" form={<EventForm />} />
     </Container>
   );
 };

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, serverTimestamp, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 
 import AddUser from "./AddUser";
 import TableBody from "./TableBody";
@@ -87,7 +87,8 @@ const Table = () => {
       scores: addFormData.scores,
       birth: addFormData.birth,
       role: addFormData.role,
-      createdAt: serverTimestamp(),
+      rank: 0,
+      image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     });
     await sendResetEmail(addFormData.email);
   };

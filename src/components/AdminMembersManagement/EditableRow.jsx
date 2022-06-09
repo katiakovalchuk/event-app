@@ -46,7 +46,7 @@ const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick }) 
       </td>
 
       <td>
-        <input type="date" name="birth" required="required" placeholder="Enter a birth date..." onChange={handleEditFormChange} />
+        <input type="date" name="birth" required="required" value={editFormData.birth} onChange={handleEditFormChange} />
       </td>
 
       <td>
