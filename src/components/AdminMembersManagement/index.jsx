@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import ReactPaginate from "react-paginate";
 
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
@@ -18,7 +19,7 @@ import "./style.scss";
 
 const Table = () => {
   const [query, setQuery] = useState("");
-  const { documents: users_live } = useCollection("users", query);
+  const { documents: users_live } = useCollection("users_test", query);
   const { users, sendResetEmail } = useUserAuth();
 
   const [tableData, setTableData] = useState(users);
@@ -42,6 +43,11 @@ const Table = () => {
     scores: "",
     birth: "",
   });
+
+  const [pageNumber, setPageNumber] = useState(0);
+
+  const usersPerPage = 5;
+  const pagesVisited = pageNumber * usersPerPage;
 
   const columns = [
     { label: "Full Name", accessor: "fullName", sortable: false },
@@ -169,7 +175,18 @@ const Table = () => {
               <TableHead {...{ columns, handleSorting }} />
               <TableBody
                 tableData={users_live}
-                {...{ editContactId, editFormData, columns, handleDeleteClick, handleEditClick, handleEditFormChange, handleCancelClick }}
+                {...{
+                  editContactId,
+                  pagesVisited,
+                  usersPerPage,
+                  editFormData,
+                  columns,
+                  setPageNumber,
+                  handleDeleteClick,
+                  handleEditClick,
+                  handleEditFormChange,
+                  handleCancelClick,
+                }}
               />
             </table>
           </form>
