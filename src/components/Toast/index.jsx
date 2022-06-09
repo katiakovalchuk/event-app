@@ -1,16 +1,14 @@
-import { useState } from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 import { FaLock } from "react-icons/fa";
 
-import { useToast } from "../../context/toastContext";
+import { useDialog } from "../../context/dialogContext";
 
 const CustomToast = () => {
-  const { isToastShown, toastContent } = useToast();
-  const [show, setShow] = useState(isToastShown);
+  const { show, handleClose, toastContent } = useDialog();
 
   return (
     <ToastContainer className="pt-5" position="top-center">
-      <Toast onClose={() => setShow(false)} show={show} delay={7000} autohide>
+      <Toast onClose={handleClose} show={show} delay={7000} autohide>
         <Toast.Header>
           <FaLock className="me-1" />
           <strong className="me-auto">{toastContent.heading}</strong>
