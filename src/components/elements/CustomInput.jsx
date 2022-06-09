@@ -17,6 +17,7 @@ const CustomInput = ({
       {label && <label className="label form-label">{label}</label>}
       <span className="input-item input-group">
         {icon && <span className="input-icon input-group-text">{icon}</span>}
+
         <input
           className={`input-input form-control ${version}`}
           {...register}

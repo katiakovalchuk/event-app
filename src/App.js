@@ -1,14 +1,14 @@
 import Router from "./routes";
 import { AuthContextProvider } from "./context/authContext";
-import { ToastContextProvider } from "./context/toastContext";
+import { DialogContextProvider } from "./context/dialogContext";
 import "./App.css";
 
 function App() {
   return (
     <AuthContextProvider>
-      <ToastContextProvider>
+      <DialogContextProvider>
         <Router />
-      </ToastContextProvider>
+      </DialogContextProvider>
     </AuthContextProvider>
   );
 }

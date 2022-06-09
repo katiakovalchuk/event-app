@@ -4,19 +4,19 @@ import { Link } from "react-router-dom";
 import { Table, Container } from "react-bootstrap";
 
 import eventsList from "../data/eventsList.json";
-import { useToast } from "../context/toastContext";
+import { useDialog } from "../context/dialogContext";
 
-import { CustomButton } from "../components/elements";
-import EventModal from "../components/modals/EventModal";
+import { CustomButton, ModalForm } from "../components/elements";
+import EventForm from "../components/forms/EventForm";
 
 const EventsList = () => {
   const oderedEvents = [...eventsList].sort((a, b) =>
     b.date.localeCompare(a.date)
   );
-  const { showToast } = useToast();
+  const { handleShow } = useDialog();
   return (
     <Container>
-      <CustomButton variant="primary" size="lg" onClick={showToast}>
+      <CustomButton variant="primary" size="lg" onClick={handleShow}>
         Add a new Event
       </CustomButton>
       <Table striped bordered hover>
@@ -41,7 +41,7 @@ const EventsList = () => {
           <p>No Events</p>
         )}
       </Table>
-      <EventModal />
+      <ModalForm title="Add a new Event" form={<EventForm />} />
     </Container>
   );
 };

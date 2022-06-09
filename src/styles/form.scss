@@ -17,9 +17,9 @@
 
 .input-item {
   width: 100%;
-  margin-bottom: 10px;
   margin-left: 0 !important;
   color: $primary-color;
+  margin-bottom: 5px;
 
   .input-icon {
     margin-left: 0;
@@ -120,7 +120,7 @@
 }
 
 .button {
-  @extend %fira-500;
+  @extend %fira-600;
   font-size: 16px;
   line-height: 24px;
   align-self: center;
@@ -132,8 +132,9 @@
   transition: all 0.3s ease-in-out;
 
   &:hover,
-  &:focus {
-    background-color: lighten($button-gray, 15%);
+  &:focus,
+  &:active {
+    background-color: darken($button-gray, 15%);
     border-color: none;
     box-shadow: none;
   }
@@ -206,7 +207,7 @@
     background: lighten($blue, 60%) !important;
   }
   &__close-icon {
-    padding: 22px 6px 0 0 !important;
+    padding: 26px 6px 0 0 !important;
     &::after {
       background-color: $primary-color !important;
       color: $white !important;

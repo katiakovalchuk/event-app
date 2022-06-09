@@ -11,7 +11,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/form.scss";
 
 import {
-  CustomForm,
   CustomInput,
   CustomTextarea,
   CustomCheckbox,
@@ -30,22 +29,15 @@ const EventForm = () => {
     resolver: yupResolver(eventSchema),
   });
 
-  React.useEffect(() => {
-    const subscription = watch((value, { name, type }) =>
-      console.log(value, name, type)
-    );
-    return () => subscription.unsubscribe();
-  }, [watch]);
-
   const onSubmitEventForm = (data) => {
-    console.log(data);
+    alert(JSON.stringify(data));
   };
 
   const hasDescription = watch("hasDescription");
   const eventPlace = watch("eventPlace");
 
   return (
-    <CustomForm onSubmit={handleSubmit(onSubmitEventForm)}>
+    <form className="form" onSubmit={handleSubmit(onSubmitEventForm)}>
       <CustomInput
         label="Event Name"
         icon={<MdEventNote />}
@@ -72,6 +64,7 @@ const EventForm = () => {
             placeholderText="Choose date and time"
             customInput={
               <CustomInput
+                version="date"
                 label="Date of the Event"
                 icon={<AiOutlineClockCircle />}
               />
@@ -79,7 +72,9 @@ const EventForm = () => {
           />
         )}
       />
-      {errors.eventDate && <span>This field is required</span>}
+      {errors?.eventDate && (
+        <span className="error-text">{errors?.eventDate?.message}</span>
+      )}
       <CustomCheckbox
         control={control}
         label="Add description"
@@ -124,6 +119,9 @@ const EventForm = () => {
         <span className="radio-style"></span>
         City
       </label>
+      {errors?.eventPlace && (
+        <span className="error-text">{errors?.eventPlace?.message}</span>
+      )}
       {eventPlace === "city" && (
         <CustomInput
           label="Place of the event"
@@ -146,7 +144,7 @@ const EventForm = () => {
         errorText={errors?.points?.message}
       />
       <CustomButton type="submit">Add an Event</CustomButton>
-    </CustomForm>
+    </form>
   );
 };
 
