@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { debounce } from "lodash";
 
 import AddUser from "./AddUser";
+import EditUser from "./EditUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
 
@@ -16,16 +18,26 @@ import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import "./style.scss";
 
 const Table = () => {
-  const { documents: users_live } = useCollection("users");
+  const [query, setQuery] = useState("");
+  const { documents: users_live } = useCollection("users", query);
   const { users, sendResetEmail } = useUserAuth();
+
   const [tableData, setTableData] = useState(users);
   const [show, setShow] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const handleClose = () => setShow(false);
+  const handleCloseEdit = () => setShowEdit(false);
   const handleShow = () => setShow(true);
+  const handleShowEdit = () => setShowEdit(true);
+
   const [editContactId, setEditContactId] = useState(null);
 
   const [addFormData, setAddFormData] = useState({ role: "user" });
+
+  useEffect(() => {
+    document.title = "Admin members management";
+  });
 
   const [editFormData, setEditFormData] = useState({
     fullName: "",
@@ -35,6 +47,11 @@ const Table = () => {
     scores: "",
     birth: "",
   });
+
+  const [pageNumber, setPageNumber] = useState(0);
+
+  const usersPerPage = 5;
+  const pagesVisited = pageNumber * usersPerPage;
 
   const columns = [
     { label: "Full Name", accessor: "fullName", sortable: false },
@@ -103,6 +120,7 @@ const Table = () => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
+    handleCloseEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     updateDoc(docRef, {
       fullName: editFormData.fullName,
@@ -120,8 +138,10 @@ const Table = () => {
   };
 
   const handleEditClick = (event, contact) => {
-    event.preventDefault();
+    // event.preventDefault();
     setEditContactId(contact.id);
+    handleShowEdit();
+
     const formValues = {
       fullName: contact.fullName,
       phoneNumber: contact.phoneNumber,
@@ -132,20 +152,46 @@ const Table = () => {
     };
     setEditFormData(formValues);
   };
+
+  const search = debounce((e) => {
+    console.log(e.target.value);
+    setQuery(e.target.value);
+  }, 350);
+
   return (
     <Container>
       <Row>
         <Col md={12}>
-          <Button variant="primary" className="btn btn-primary mt-5" onClick={handleShow}>
-            Add user
-          </Button>
+          <div className="mt-5 d-flex justify-content-between">
+            <Button variant="primary" className="btn btn-primary " onClick={handleShow}>
+              Add user
+            </Button>
+
+            <div>
+              <input onChange={search} className="form-control me-2" type="search" placeholder="Search..." aria-label="Search"></input>
+            </div>
+          </div>
+
           <AddUser {...{ show, handleClose, handleAddFormSubmit, handleAddFormChange, addFormData }} />
+          {showEdit && <EditUser {...{ showEdit, editContactId, handleCloseEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
+
           <form onSubmit={handleEditFormSubmit}>
-            <table className="table">
+            <table className="table table-admin">
               <TableHead {...{ columns, handleSorting }} />
               <TableBody
                 tableData={users_live}
-                {...{ editContactId, editFormData, columns, handleDeleteClick, handleEditClick, handleEditFormChange, handleCancelClick }}
+                {...{
+                  editContactId,
+                  pagesVisited,
+                  usersPerPage,
+                  editFormData,
+                  columns,
+                  setPageNumber,
+                  handleDeleteClick,
+                  handleEditClick,
+                  handleEditFormChange,
+                  handleCancelClick,
+                }}
               />
             </table>
           </form>
