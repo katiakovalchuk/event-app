@@ -19,18 +19,22 @@ export const useCollection = (col, _query) => {
       const name = query(collection(db, col), where("fullName", "==", _query));
       const company = query(collection(db, col), where("company", "==", _query));
       const phone = query(collection(db, col), where("phoneNumber", "==", _query));
+      const email = query(collection(db, col), where("email", "==", _query));
 
       const querySnapshot1 = await getDocs(name);
       const querySnapshot2 = await getDocs(company);
       const querySnapshot3 = await getDocs(phone);
+      const querySnapshot4 = await getDocs(email);
 
-      const [nameSnapshot, companySnapshot, phoneSnapshot3] = await Promise.all([querySnapshot1, querySnapshot2, querySnapshot3]);
+      const [nameSnapshot, companySnapshot, phoneSnapshot, emailSnapshot] = await Promise.all([querySnapshot1, querySnapshot2, querySnapshot3, querySnapshot4]);
 
       const oneArray = nameSnapshot.docs;
       const twoArray = companySnapshot.docs;
-      const threeArray = phoneSnapshot3.docs;
-      const res = oneArray.concat(twoArray).concat(threeArray);
-      console.log(res);
+      const threeArray = phoneSnapshot.docs;
+      const fourArray = emailSnapshot.docs;
+
+      const res = oneArray.concat(twoArray).concat(threeArray).concat(fourArray);
+
       return res;
     }
 

@@ -177,7 +177,7 @@ const Table = () => {
           {showEdit && <EditUser {...{ showEdit, editContactId, handleCloseEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
 
           <form onSubmit={handleEditFormSubmit}>
-            <table className="table">
+            <table className="table table-admin">
               <TableHead {...{ columns, handleSorting }} />
               <TableBody
                 tableData={users_live}
