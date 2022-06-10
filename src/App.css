@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -20,4 +19,11 @@
 .home_page {
   display: flex;
   justify-content: center;
+}
+
+.loader {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
