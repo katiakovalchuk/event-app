@@ -19,9 +19,8 @@ import "./style.scss";
 
 const Table = () => {
   const [query, setQuery] = useState("");
-  const { documents: users_live } = useCollection("users_test", query);
+  const { documents: users_live } = useCollection("users", query);
   const { users, sendResetEmail } = useUserAuth();
-  const [focused, setFocused] = useState(false);
 
   const [tableData, setTableData] = useState(users);
   const [show, setShow] = useState(false);
