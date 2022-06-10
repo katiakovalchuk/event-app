@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
-import ReactPaginate from "react-paginate";
+import { debounce } from "lodash";
 
-import { RiSearch2Line } from "react-icons/ri";
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
 import TableBody from "./TableBody";
@@ -155,10 +154,10 @@ const Table = () => {
     setEditFormData(formValues);
   };
 
-  function search(e) {
+  const search = debounce((e) => {
     console.log(e.target.value);
     setQuery(e.target.value);
-  }
+  }, 350);
 
   return (
     <Container>
@@ -170,12 +169,8 @@ const Table = () => {
             </Button>
 
             <div>
-              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
+              <input onChange={search} className="form-control me-2" type="search" placeholder="Search..." aria-label="Search"></input>
             </div>
-            {/* <div className="search">
-              <RiSearch2Line className={"gray" + (focused ? " light-purple" : "")} />
-              <input type="search" id="search" name="search" className="search" placeholder="Search..." onChange={search} />
-            </div> */}
           </div>
 
           <AddUser {...{ show, handleClose, handleAddFormSubmit, handleAddFormChange, addFormData }} />

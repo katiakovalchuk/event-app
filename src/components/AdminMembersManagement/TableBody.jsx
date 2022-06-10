@@ -17,7 +17,7 @@ const TableBody = ({ tableData, columns, pagesVisited, setPageNumber, handleDele
       </tbody>
       <tfoot>
         <tr>
-          <td colSpan="7">
+          <td colSpan="7" >
             <ReactPaginate
               breakLabel="..."
               previousLabel={"Previous"}
