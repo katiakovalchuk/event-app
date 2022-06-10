@@ -88,6 +88,20 @@ tr:hover {
   background-color: #ddd;
 }
 
+tfoot tr:hover {
+  background-color: #fff;
+}
+tfoot tr td ul {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+tfoot tr td {
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+}
+
 th {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -99,4 +113,21 @@ th {
 .paginationActive {
   background-color: #04aa6d;
   color: #fff;
+}
+
+.search .fa-search {
+  position: absolute;
+  top: 20px;
+  left: 16px;
+}
+
+.search {
+  position: relative;
+  box-shadow: 0 0 40px rgba(51, 51, 51, 0.1);
+}
+
+.search input {
+  height: 60px;
+  text-indent: 25px;
+  border: 2px solid #d6d4d4;
 }

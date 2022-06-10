@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import ReactPaginate from "react-paginate";
 
+import { RiSearch2Line } from "react-icons/ri";
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
 import TableBody from "./TableBody";
@@ -21,6 +22,7 @@ const Table = () => {
   const [query, setQuery] = useState("");
   const { documents: users_live } = useCollection("users_test", query);
   const { users, sendResetEmail } = useUserAuth();
+  const [focused, setFocused] = useState(false);
 
   const [tableData, setTableData] = useState(users);
   const [show, setShow] = useState(false);
@@ -166,7 +168,14 @@ const Table = () => {
             <Button variant="primary" className="btn btn-primary " onClick={handleShow}>
               Add user
             </Button>
-            <input className="search" placeholder="Search..." onChange={search} />
+
+            <div>
+              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
+            </div>
+            {/* <div className="search">
+              <RiSearch2Line className={"gray" + (focused ? " light-purple" : "")} />
+              <input type="search" id="search" name="search" className="search" placeholder="Search..." onChange={search} />
+            </div> */}
           </div>
 
           <AddUser {...{ show, handleClose, handleAddFormSubmit, handleAddFormChange, addFormData }} />

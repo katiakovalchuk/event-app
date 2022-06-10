@@ -8,28 +8,32 @@ const TableBody = ({ tableData, columns, pagesVisited, setPageNumber, handleDele
     setPageNumber(selected);
   };
   return (
-    <tbody>
-      {tableData &&
-        tableData
-          .slice(pagesVisited, pagesVisited + usersPerPage)
-          .map((data) => <ReadOnlyRow key={data.id} {...{ data, columns, handleDeleteClick, handleEditClick }} />)}
-      <tr>
-        <td colSpan="7" className="pageRow">
-          <ReactPaginate
-            breakLabel="..."
-            previousLabel={"Previous"}
-            nextLabel={"Next"}
-            pageCount={pageCount}
-            onPageChange={changePage}
-            containerClassName={"paginationBttns"}
-            pageLinkClassName={"page-num"}
-            previousLinkClassName={"page-num"}
-            nextLinkClassName={"page-num"}
-            activeLinkClassName={"paginationActive"}
-          />
-        </td>
-      </tr>
-    </tbody>
+    <>
+      <tbody>
+        {tableData &&
+          tableData
+            .slice(pagesVisited, pagesVisited + usersPerPage)
+            .map((data) => <ReadOnlyRow key={data.id} {...{ data, columns, handleDeleteClick, handleEditClick }} />)}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colSpan="7">
+            <ReactPaginate
+              breakLabel="..."
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              pageCount={pageCount}
+              onPageChange={changePage}
+              containerClassName={"pagination justify-content-center"}
+              pageLinkClassName={"page-link"}
+              previousLinkClassName={"page-link"}
+              nextLinkClassName={"page-link"}
+              activeLinkClassName={"page-item active"}
+            />
+          </td>
+        </tr>
+      </tfoot>
+    </>
   );
 };
 export default TableBody;
