@@ -72,7 +72,7 @@ const LoginTemplate = () => {
                                 required
                                 onChange={handleEmailChange}
                             />
-                            <div className="w-100 d-flex justify-content-center position-relative">
+                            <div className="login-form-password w-100 d-flex justify-content-center position-relative">
                                 <input
                                     className="login-form-input form-control mb-4 rounded-3"
                                     type={passwordShown ? "text" : "password"}

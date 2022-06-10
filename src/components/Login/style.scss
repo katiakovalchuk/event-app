@@ -48,6 +48,10 @@
   &-input::placeholder {
     color: var(--secondary-color) !important;
   }
+
+  &-password{
+    max-width: var(--max-block-width);
+  }
 }
 
 .login-form-outer {
