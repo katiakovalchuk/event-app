@@ -17,7 +17,7 @@ import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import {useUserAuth} from "../context/authContext";
 import {ROLES} from "../store/roles";
-import {setUserWithCustomId} from "../store/slices/usersSlice";
+import {getUsers, setUserWithCustomId} from "../store/slices/usersSlice";
 
 export const AppStack = () => {
     const dispatch = useDispatch();
@@ -27,6 +27,7 @@ export const AppStack = () => {
     const isUserReceived = user && Object.keys(user).length && users.length;
 
     useEffect(() => {
+        dispatch(getUsers());
         if (isUserReceived){
             const userWithRole = users.find(innerUser => innerUser.id === user.uid);
             if (!userWithRole){
@@ -62,7 +63,7 @@ export const AppStack = () => {
                     <Route path="events" element={<EventsList/>}/>
                     <Route path="events/:id" element={<EventsItem/>}/>
 
-                    //remove later
+                    {/*//remove later*/}
                     <Route path="test" element={<TestPage />} />
                 </Route>
                 <Route element={<ProtectedRoute isAllowed={userRole === "manager"}/>}>
