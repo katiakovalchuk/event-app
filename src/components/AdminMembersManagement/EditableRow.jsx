@@ -13,11 +13,20 @@ const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick }) 
           name="fullName"
           value={editFormData.fullName}
           onChange={handleEditFormChange}
+          className="nameInput"
         ></input>
       </td>
 
       <td>
-        <input type="email" required="required" placeholder="Enter an email..." name="email" value={editFormData.email} onChange={handleEditFormChange}></input>
+        <input
+          type="email"
+          required="required"
+          placeholder="Enter an email..."
+          name="email"
+          value={editFormData.email}
+          onChange={handleEditFormChange}
+          className="inputEdit"
+        ></input>
       </td>
 
       <td>
@@ -28,6 +37,7 @@ const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick }) 
           name="phoneNumber"
           value={editFormData.phoneNumber}
           onChange={handleEditFormChange}
+          className="phoneInput"
         ></input>
       </td>
 
@@ -39,14 +49,23 @@ const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick }) 
           name="company"
           value={editFormData.company}
           onChange={handleEditFormChange}
+          className="companyInput"
         ></input>
       </td>
       <td>
-        <input type="text" name="scores" required="required" placeholder="Enter scores..." value={editFormData.scores} onChange={handleEditFormChange} />
+        <input
+          type="text"
+          name="scores"
+          required="required"
+          placeholder="Enter scores..."
+          value={editFormData.scores}
+          onChange={handleEditFormChange}
+          className="scoreInput"
+        />
       </td>
 
       <td>
-        <input type="date" name="birth" required="required" value={editFormData.birth} onChange={handleEditFormChange} />
+        <input className="dateInput" type="date" name="birth" required="required" value={editFormData.birth} onChange={handleEditFormChange} />
       </td>
 
       <td>
