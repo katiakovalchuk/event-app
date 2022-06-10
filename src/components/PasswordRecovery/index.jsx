@@ -5,28 +5,28 @@ import { FaUserLock } from "react-icons/fa";
 
 import Toast from "../Toast";
 import { useUserAuth } from "../../context/authContext";
-import { useToast } from "../../context/toastContext";
+import { useDialog } from "../../context/dialogContext";
 
 import "./style.scss";
 
 const PasswordRecovery = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
-  const { isToastShown, showToast, hideToast, updateToastContent } = useToast();
+  const { show, handleShow, handleClose, updateToastContent } = useDialog();
   const { sendResetEmail } = useUserAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (error) {
       updateToastContent(error);
-      showToast();
+      handleClose();
     }
     if (error === "") {
       updateToastContent(
         "Processed successfully",
         "Reset password link has been sent! Please, check email!"
       );
-      showToast();
+      handleShow();
       setTimeout(() => {
         navigate("/login");
       }, 1000);
@@ -35,15 +35,15 @@ const PasswordRecovery = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    hideToast();
+    handleClose();
     try {
       await sendResetEmail(email);
       setError("");
       setEmail("");
-      showToast();
+      handleShow();
     } catch (err) {
       setError(err.message);
-      showToast();
+      handleShow();
     }
   };
 
@@ -51,7 +51,7 @@ const PasswordRecovery = () => {
 
   return (
     <>
-      {isToastShown && <Toast />}
+      {show && <Toast />}
       <div
         className={`Recovery d-flex justify-content-center align-items-center w-100 vh-100 ${
           error === "" ? "d-none" : ""
@@ -85,7 +85,7 @@ const PasswordRecovery = () => {
                 Send password reset link
               </button>
             </form>
-            <div className="text-end px-4 pb-5" onClick={hideToast}>
+            <div className="text-end px-4 pb-5" onClick={handleClose}>
               <Link className="link-light text-decoration-none" to="/login">
                 Already have an account? Login!
               </Link>

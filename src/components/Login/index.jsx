@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import Toast from "../Toast";
-import { useToast } from "../../context/toastContext";
+import { useDialog } from "../../context/dialogContext";
 import { useUserAuth } from "../../context/authContext";
 
 import "./style.scss";
@@ -14,7 +14,7 @@ const LoginTemplate = () => {
   });
 
   const { login } = useUserAuth();
-  const { isToastShown, showToast, hideToast, updateToastContent } = useToast();
+  const { show, handleShow, handleClose, updateToastContent } = useDialog();
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -30,13 +30,13 @@ const LoginTemplate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    hideToast();
+    handleClose();
     try {
       await login(email, password);
       navigate("/");
     } catch (err) {
       setError(err.message);
-      showToast();
+      handleShow();
     }
   };
 
@@ -47,7 +47,7 @@ const LoginTemplate = () => {
 
   return (
     <>
-      {isToastShown && <Toast />}
+      {show && <Toast />}
       <div className="LoginTemplate d-flex justify-content-center align-items-center w-100 vh-100">
         <div className="LoginTemplate-inner d-flex flex-column flex-md-row col-sm-9 col-xl-7">
           <div className="d-flex flex-column justify-content-center text-center col-md-6 p-5">
@@ -84,7 +84,7 @@ const LoginTemplate = () => {
               </button>
               <div
                 className="forgot-password text-end w-100 mt-1"
-                onClick={hideToast}
+                onClick={handleClose}
               >
                 <Link
                   className="link-light text-decoration-none"
