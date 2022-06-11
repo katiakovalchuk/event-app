@@ -9,7 +9,7 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
         const tData = data[accessor] ? data[accessor] : "——";
         if (accessor === "action") {
           return (
-            <td className="d-flex justify-content-center" key={accessor}>
+            <td className="text-center" key={accessor}>
               <Button className="btn me-2" type="button" onClick={(event) => handleEditClick(event, data)} variant="warning" size="sm">
                 Edit
               </Button>

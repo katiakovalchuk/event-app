@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -12,18 +11,15 @@ import TableHead from "./TableHead";
 
 import { auth } from "../../lib/init-firebase.js";
 import { useUserAuth } from "../../context/authContext";
-import { useCollection } from "../../hooks/useCollection";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 
 import "./style.scss";
 
 const Table = () => {
   const [query, setQuery] = useState("");
-  const { documents: users_live } = useCollection("users", query);
   const [users, setUsers] = useState([]);
   const { sendResetEmail } = useUserAuth();
 
-  const [tableData, setTableData] = useState(users);
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
@@ -33,7 +29,6 @@ const Table = () => {
   const handleShowEdit = () => setShowEdit(true);
 
   const [editContactId, setEditContactId] = useState(null);
-
   const [addFormData, setAddFormData] = useState({ role: "user" });
 
   useEffect(() => {
@@ -78,12 +73,12 @@ const Table = () => {
   const pagesVisited = pageNumber * usersPerPage;
 
   const columns = [
-    { label: "Full Name", accessor: "fullName", sortable: false },
-    { label: "Email", accessor: "email", sortable: false },
-    { label: "Phone number", accessor: "phoneNumber", sortable: false },
-    { label: "Company", accessor: "company", sortable: false },
-    { label: "Scores", accessor: "scores", sortable: false },
-    { label: "Date of birth", accessor: "birth", sortable: false },
+    { label: "Full Name", accessor: "fullName", sortable: true },
+    { label: "Email", accessor: "email", sortable: true },
+    { label: "Phone number", accessor: "phoneNumber", sortable: true },
+    { label: "Company", accessor: "company", sortable: true },
+    { label: "Scores", accessor: "scores", sortable: true },
+    { label: "Date of birth", accessor: "birth", sortable: true },
     { label: "Actions", accessor: "action", sortable: false },
   ];
 
@@ -99,7 +94,7 @@ const Table = () => {
           }) * (sortOrder === "asc" ? 1 : -1)
         );
       });
-      setTableData(sorted);
+      setUsers(sorted);
     }
   };
 
