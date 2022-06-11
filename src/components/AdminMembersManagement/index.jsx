@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, updateDoc, getDocs } from "firebase/firestore";
 import { debounce } from "lodash";
 
 import AddUser from "./AddUser";
@@ -20,7 +20,8 @@ import "./style.scss";
 const Table = () => {
   const [query, setQuery] = useState("");
   const { documents: users_live } = useCollection("users", query);
-  const { users, sendResetEmail } = useUserAuth();
+  const [users, setUsers] = useState([]);
+  const { sendResetEmail } = useUserAuth();
 
   const [tableData, setTableData] = useState(users);
   const [show, setShow] = useState(false);
@@ -38,6 +39,29 @@ const Table = () => {
   useEffect(() => {
     document.title = "Admin members management";
   });
+
+  const getUsers = () => {
+    getDocs(usersCollectionRef).then((data) => {
+      setUsers(
+        data.docs.map((item) => {
+          return { ...item.data(), id: item.id };
+        })
+      );
+    });
+  };
+
+  const search = debounce((e) => {
+    setQuery(e.target.value);
+  }, 350);
+
+  useEffect(() => {
+    if (query.length === 0) {
+      getUsers();
+    } else if (query.length > 2) {
+      const keys = ["fullName", "company", "email", "phoneNumber"];
+      setUsers(users.filter((item) => keys.some((key) => item[key].toLowerCase().includes(query.toLowerCase()))));
+    }
+  }, [query]);
 
   const [editFormData, setEditFormData] = useState({
     fullName: "",
@@ -108,10 +132,12 @@ const Table = () => {
       image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     });
     await sendResetEmail(addFormData.email);
+    getUsers();
   };
 
   const handleDeleteClick = async (id) => {
     await deleteDoc(doc(usersCollectionRef, id));
+    getUsers();
   };
 
   const handleCancelClick = () => {
@@ -135,6 +161,7 @@ const Table = () => {
       })
       .catch((err) => console.log(err.message));
     setEditContactId(null);
+    getUsers();
   };
 
   const handleEditClick = (event, contact) => {
@@ -152,11 +179,6 @@ const Table = () => {
     };
     setEditFormData(formValues);
   };
-
-  const search = debounce((e) => {
-    console.log(e.target.value);
-    setQuery(e.target.value);
-  }, 350);
 
   return (
     <Container>
@@ -179,7 +201,7 @@ const Table = () => {
             <table className="table table-admin">
               <TableHead {...{ columns, handleSorting }} />
               <TableBody
-                tableData={users_live}
+                tableData={users}
                 {...{
                   editContactId,
                   pagesVisited,
