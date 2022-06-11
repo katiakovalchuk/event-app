@@ -36,11 +36,14 @@ const Table = () => {
   });
 
   const getUsers = () => {
+    const keys = ["fullName", "company", "email", "phoneNumber"];
     getDocs(usersCollectionRef).then((data) => {
       setUsers(
-        data.docs.map((item) => {
-          return { ...item.data(), id: item.id };
-        })
+        data.docs
+          .map((item) => {
+            return { ...item.data(), id: item.id };
+          })
+          .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query.toLowerCase())))
       );
     });
   };
@@ -50,11 +53,8 @@ const Table = () => {
   }, 350);
 
   useEffect(() => {
-    if (query.length === 0) {
+    if (query.length === 0 || query.length > 2) {
       getUsers();
-    } else if (query.length > 2) {
-      const keys = ["fullName", "company", "email", "phoneNumber"];
-      setUsers(users.filter((item) => keys.some((key) => item[key].toLowerCase().includes(query.toLowerCase()))));
     }
   }, [query]);
 
