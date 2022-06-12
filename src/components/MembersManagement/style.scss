@@ -73,9 +73,11 @@ input[type="number"] {
   width: 100%;
 }
 
+table-admin,
 td,
 th {
   border: 1px solid #ddd;
+  border-bottom: none !important;
   padding: 8px;
 }
 
@@ -100,7 +102,7 @@ tfoot tr td ul {
 }
 
 tfoot tr td {
-  border-bottom: none;
+  border-bottom: none !important;
   border-left: none;
   border-right: none;
 }

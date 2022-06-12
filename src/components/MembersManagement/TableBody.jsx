@@ -28,22 +28,24 @@ const TableBody = ({ tableData, columns, pagesVisited, setPageNumber, handleDele
             </td>
           </tr>
         )}
-        <tr className="no-data">
-          <td colSpan="7">
-            <ReactPaginate
-              breakLabel="..."
-              previousLabel={"Previous"}
-              nextLabel={"Next"}
-              pageCount={pageCount}
-              onPageChange={changePage}
-              containerClassName={"pagination justify-content-center"}
-              pageLinkClassName={"page-link"}
-              previousLinkClassName={"page-link"}
-              nextLinkClassName={"page-link"}
-              activeLinkClassName={"page-item active"}
-            />
-          </td>
-        </tr>
+        {!!tableData.length && (
+          <tr className="no-data">
+            <td colSpan="7">
+              <ReactPaginate
+                breakLabel="..."
+                previousLabel={"Previous"}
+                nextLabel={"Next"}
+                pageCount={pageCount}
+                onPageChange={changePage}
+                containerClassName={"pagination justify-content-center"}
+                pageLinkClassName={"page-link"}
+                previousLinkClassName={"page-link"}
+                nextLinkClassName={"page-link"}
+                activeLinkClassName={"page-item active"}
+              />
+            </td>
+          </tr>
+        )}
       </tfoot>
     </>
   );
