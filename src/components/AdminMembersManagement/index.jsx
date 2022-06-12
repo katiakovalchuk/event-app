@@ -32,7 +32,7 @@ const Table = () => {
   const [addFormData, setAddFormData] = useState({ role: "user" });
 
   useEffect(() => {
-    document.title = "Admin members management";
+    document.title = "Admin members management"; // or Manager
   });
 
   const getUsers = () => {
@@ -69,7 +69,7 @@ const Table = () => {
 
   const [pageNumber, setPageNumber] = useState(0);
 
-  const usersPerPage = 5;
+  const usersPerPage = 5; // more?
   const pagesVisited = pageNumber * usersPerPage;
 
   const columns = [
@@ -160,7 +160,6 @@ const Table = () => {
   };
 
   const handleEditClick = (event, contact) => {
-    // event.preventDefault();
     setEditContactId(contact.id);
     handleShowEdit();
 
