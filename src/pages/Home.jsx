@@ -8,11 +8,7 @@ const Home = () => {
     user: { role },
   } = useSelector((state) => state.userSlice);
 
-  return (
-    <div className="home_page">
-      {role === ROLES.manager ? <div>Manager event page</div> : role === ROLES.admin ? <MembersManagement /> : role === ROLES.user && <EventTable />}
-    </div>
-  );
+  return <>{role === ROLES.manager ? <div>Manager event page</div> : role === ROLES.admin ? <MembersManagement /> : role === ROLES.user && <EventTable />}</>;
 };
 
 export default Home;

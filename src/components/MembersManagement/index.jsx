@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, deleteDoc, updateDoc, getDocs, where, orderBy, query } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { debounce } from "lodash";
 
 import AddUser from "./AddUser";
@@ -33,7 +32,7 @@ const Table = () => {
   const [addFormData, setAddFormData] = useState({ role: "user" });
 
   useEffect(() => {
-    document.title = "Admin members management"; // or Manager
+    document.title = "Members Management"; // or Managers Management if role is manager;
   });
 
   const getUsers = () => {
@@ -71,7 +70,7 @@ const Table = () => {
 
   const [pageNumber, setPageNumber] = useState(0);
 
-  const usersPerPage = 5; // more?
+  const usersPerPage = 5; // show more?
   const pagesVisited = pageNumber * usersPerPage;
 
   const columns = [

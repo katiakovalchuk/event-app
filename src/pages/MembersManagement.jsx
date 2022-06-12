@@ -1,11 +1,11 @@
-import AdminMembersManagementTemplate from "../components/MembersManagement";
+import MembersManagementTemplate from "../components/MembersManagement";
 
-const AdminMembersManagement = () => {
+const MembersManagement = () => {
   return (
     <div>
-      <AdminMembersManagementTemplate />
+      <MembersManagementTemplate />
     </div>
   );
 };
 
-export default AdminMembersManagement;
+export default MembersManagement;
