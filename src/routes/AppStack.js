@@ -17,6 +17,7 @@ import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import {getUserById} from "../store/slices/userSlice";
 import {useUserAuth} from "../context/authContext";
+import {Circles} from "react-loader-spinner";
 
 export const AppStack = () => {
     const dispatch = useDispatch();
@@ -29,12 +30,16 @@ export const AppStack = () => {
         dispatch(getUserById(user.uid));
     }, []);
 
-    if (!status || status === "pending" || !role){
-        return <div>Loading...</div>;
+    if (!status || status === "pending") {
+        return (
+            <div className="loader">
+                <Circles color="#060b26" height={200} width={200}/>
+            </div>
+        );
     }
 
     return (
-         <Routes>
+        <Routes>
             <Route path="/" element={<Layout/>}>
                 <Route index element={<Home/>}/>
                 <Route element={<ProtectedRoute isAllowed={role === "user"}/>}>
@@ -44,7 +49,7 @@ export const AppStack = () => {
                     <Route path="events/:id" element={<EventsItem/>}/>
 
                     {/*//remove later*/}
-                    <Route path="test" element={<TestPage />} />
+                    <Route path="test" element={<TestPage/>}/>
                 </Route>
                 <Route element={<ProtectedRoute isAllowed={role === "manager"}/>}>
                     <Route path="event-page"/>
