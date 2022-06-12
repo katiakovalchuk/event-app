@@ -14,9 +14,9 @@ const TableForm = ({ data }) => {
           data.map((user, idx) => (
             <tr key={user.id}>
               <td>
-                {idx + 1}. {user.name}
+                {idx + 1}. {user.fullName}
               </td>
-              <td>{user.city}</td>
+              <td>{user?.city ?? ""}</td>
               <td>{user.email}</td>
             </tr>
           ))}

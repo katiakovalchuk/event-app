@@ -34,6 +34,10 @@ const ProfilePage = () => {
     getUsers();
   }, []);
 
+  useEffect(() => {
+    document.title = "Profile page";
+  });
+
   const handleAddFormChange = (e) => {
     const { name, value } = e.target;
     const newFormData = { ...addFormData };
