@@ -1,4 +1,4 @@
-import AdminMembersManagementTemplate from "../components/AdminMembersManagement";
+import AdminMembersManagementTemplate from "../components/MembersManagement";
 
 const AdminMembersManagement = () => {
   return (

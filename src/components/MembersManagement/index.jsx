@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, deleteDoc, updateDoc, getDocs } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, updateDoc, getDocs, where, orderBy, query } from "firebase/firestore";
 import { debounce } from "lodash";
 
 import AddUser from "./AddUser";
@@ -16,7 +17,7 @@ import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import "./style.scss";
 
 const Table = () => {
-  const [query, setQuery] = useState("");
+  const [query_, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const { sendResetEmail } = useUserAuth();
 
@@ -36,14 +37,15 @@ const Table = () => {
   });
 
   const getUsers = () => {
+    const q = query(usersCollectionRef, where("role", "==", "user"));
     const keys = ["fullName", "company", "email", "phoneNumber"];
-    getDocs(usersCollectionRef).then((data) => {
+    getDocs(q).then((data) => {
       setUsers(
         data.docs
           .map((item) => {
             return { ...item.data(), id: item.id };
           })
-          .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query.toLowerCase())))
+          .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
       );
     });
   };
@@ -53,10 +55,10 @@ const Table = () => {
   }, 350);
 
   useEffect(() => {
-    if (query.length === 0 || query.length > 2) {
+    if (query_.length === 0 || query_.length > 2) {
       getUsers();
     }
-  }, [query]);
+  }, [query_]);
 
   const [editFormData, setEditFormData] = useState({
     fullName: "",
