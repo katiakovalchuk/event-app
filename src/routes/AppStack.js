@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Route, Routes} from "react-router-dom";
 
@@ -15,49 +15,29 @@ import {
 } from "../pages";
 import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
+import {getUserById} from "../store/slices/userSlice";
 import {useUserAuth} from "../context/authContext";
-import {ROLES} from "../store/roles";
-import {getUsers, setUserWithCustomId} from "../store/slices/usersSlice";
 
 export const AppStack = () => {
     const dispatch = useDispatch();
     const {user} = useUserAuth();
-    const [userRole, setUserRole] = useState(null);
-    const users = useSelector(state => state.usersSlice.users);
-    const isUserReceived = user && Object.keys(user).length && users.length;
+    const status = useSelector(state => state.userSlice.status);
+    const {user: currUser} = useSelector(state => state.userSlice);
+    const role = currUser?.role;
 
     useEffect(() => {
-        dispatch(getUsers());
-        if (isUserReceived){
-            const userWithRole = users.find(innerUser => innerUser.id === user.uid);
-            if (!userWithRole){
-                dispatch(setUserWithCustomId({email: user.email, id: user.uid}));
-            }
-        }
-    },[]);
+        dispatch(getUserById(user.uid));
+    }, []);
 
-    useEffect(() => {
-        if (user && Object.keys(user).length && users.length) {
-            const userWithRole = users.find(innerUser => innerUser.id === user.uid);
-            if (userWithRole?.role) {
-                setUserRole(userWithRole.role);
-            } else {
-                setUserRole(ROLES.user);
-            }
-        }
-    }, [users]);
-
-    if (!userRole) {
+    if (!status || status === "pending" || !role){
         return <div>Loading...</div>;
     }
 
-    localStorage.setItem("role", JSON.stringify(userRole));
-
     return (
-        <Routes>
+         <Routes>
             <Route path="/" element={<Layout/>}>
                 <Route index element={<Home/>}/>
-                <Route element={<ProtectedRoute isAllowed={userRole === "user"}/>}>
+                <Route element={<ProtectedRoute isAllowed={role === "user"}/>}>
                     <Route path="profile" element={<ProfilePage/>}/>
                     <Route path="members" element={<MembersPage/>}/>
                     <Route path="events" element={<EventsList/>}/>
@@ -66,13 +46,13 @@ export const AppStack = () => {
                     {/*//remove later*/}
                     <Route path="test" element={<TestPage />} />
                 </Route>
-                <Route element={<ProtectedRoute isAllowed={userRole === "manager"}/>}>
+                <Route element={<ProtectedRoute isAllowed={role === "manager"}/>}>
                     <Route path="event-page"/>
                 </Route>
-                <Route element={<ProtectedRoute isAllowed={userRole === "admin"}/>}>
+                <Route element={<ProtectedRoute isAllowed={role === "admin"}/>}>
                     <Route path="managers-management" element={<ManagersManagement/>}/>
                 </Route>
-                <Route element={<ProtectedRoute isAllowed={userRole === "manager" || userRole === "admin"}/>}>
+                <Route element={<ProtectedRoute isAllowed={role === "manager" || role === "admin"}/>}>
                     <Route path="members-management" element={<AdminMembersManagement/>}/>
                 </Route>
             </Route>

@@ -6,14 +6,15 @@ import * as CgIcons from "react-icons/cg";
 import {SidebarData} from "./SidebarData";
 import {IconContext} from "react-icons";
 import {useUserAuth} from "../../context/authContext";
-import {ROLES} from "../../store/roles";
+import {ROLES} from "../../store/data";
 import "./Navbar.css";
+import {useSelector} from "react-redux";
 
 function Navbar() {
     const [sidebar, setSidebar] = useState(false);
     const showSidebar = () => setSidebar(!sidebar);
     const {logout} = useUserAuth();
-    const userRole = JSON.parse(localStorage.getItem("role"));
+    const {user: {role}} = useSelector(state => state.userSlice);
 
     return (
         <>
@@ -27,7 +28,7 @@ function Navbar() {
                         </div>
                         <div className="menu-profile">
                             {
-                                userRole === ROLES.user &&
+                                role === ROLES.user &&
                                 <Link to="/profile" className="menu-prof">
                                     <CgIcons.CgProfile/>
                                 </Link>
@@ -44,7 +45,7 @@ function Navbar() {
                                     <AiIcons.AiOutlineClose/>
                                 </Link>
                             </li>
-                            {SidebarData[userRole].map((item, index) => {
+                            {SidebarData[role].map((item, index) => {
                                 return (
                                     <li key={index} className={item.cName}>
                                         <Link className="d-flex" to={item.path}>

@@ -1,16 +1,17 @@
 import EventTable from "../components/EventTable/EventTable";
 import {AdminMembersManagement} from "./index";
-import {ROLES} from "../store/roles";
+import {ROLES} from "../store/data";
+import {useSelector} from "react-redux";
 
 const Home = () => {
-    const userRole = JSON.parse(localStorage.getItem("role"));
+    const {user: {role}} = useSelector(state => state.userSlice);
 
     return (
         <div className="home_page">
             {
-                userRole === ROLES.manager ? <div>Manager event page</div> :
-                    userRole === ROLES.admin ? <AdminMembersManagement/> :
-                        userRole === ROLES.user && <EventTable/>
+                role === ROLES.manager ? <div>Manager event page</div> :
+                    role === ROLES.admin ? <AdminMembersManagement/> :
+                        role === ROLES.user && <EventTable/>
 
             }
         </div>

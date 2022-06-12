@@ -1,5 +1,5 @@
 import React from "react";
-import {ROLES} from "../../store/roles";
+import {ROLES} from "../../store/data";
 import * as CgIcons from "react-icons/cg";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";

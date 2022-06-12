@@ -1,13 +1,9 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {collection, doc, getDocs, addDoc, setDoc, updateDoc, deleteDoc,} from "firebase/firestore";
 
+import {STATUSES} from "../data";
 import {db} from "../../lib/init-firebase";
 
-const STATUSES = {
-    succeeded: "succeeded",
-    failed: "failed",
-    pending: "pending"
-};
 const initialState = {
     status: null,
     users: []
@@ -17,8 +13,8 @@ export const getUsers = createAsyncThunk(
     "usersSlice/getUsers",
     async (_, {rejectWithValue}) => {
         try {
-            const res = await getDocs(collection(db, "users"));
-            return res.docs.map(doc => ({...doc.data(), id: doc.id}));
+            const docsSnap = await getDocs(collection(db, "users"));
+            return docsSnap.docs.map(doc => ({...doc.data(), id: doc.id}));
         } catch (err) {
             return rejectWithValue(STATUSES.failed);
         }
