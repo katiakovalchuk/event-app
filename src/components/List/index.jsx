@@ -5,15 +5,16 @@ import TableForm from "./TableForm";
 
 const List = () => {
   const [query, setQuery] = useState("");
-  const keys = ["name", "city", "email"];
+  const keys = ["fullName", "city", "email"];
   const search = (data) => {
     if (data.length) {
       const result = data.filter((item) =>
-        keys.some((key) => item[key].toLowerCase().includes(query))
+        keys.some((key) => item[key]?.toLowerCase().includes(query.toLowerCase()))
       );
       console.log(result);
       return result;
     }
+    return null;
   };
 
   const dispatch = useDispatch();
