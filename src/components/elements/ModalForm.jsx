@@ -5,9 +5,17 @@ import { Modal } from "react-bootstrap";
 import { useDialog } from "../../context/dialogContext";
 
 const ModalForm = ({ title, form, ...props }) => {
-  const { show, handleClose } = useDialog();
+  const { show, handleClose, itemEdit, setItemEdit } = useDialog();
+  const hideEdit = () => {
+    itemEdit.edit &&
+      setItemEdit({
+        item: {},
+        edit: false,
+      });
+    handleClose();
+  };
   return (
-    <Modal show={show} onHide={handleClose} {...props}>
+    <Modal show={show} onHide={hideEdit} {...props}>
       <Modal.Header closeButton>
         <Modal.Title className="text-center">{title}</Modal.Title>
       </Modal.Header>

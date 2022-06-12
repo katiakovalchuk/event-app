@@ -8,6 +8,7 @@ export const DialogContextProvider = ({ children }) => {
     heading: "Inner error",
     body: "Please contact our support team for additional information!",
   });
+  const [itemEdit, setItemEdit] = useState({ item: {}, edit: false });
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -23,14 +24,26 @@ export const DialogContextProvider = ({ children }) => {
     }));
   };
 
+  //edit
+  const startEdit = (item) => {
+    setItemEdit({
+      item,
+      edit: true,
+    });
+    setShow(true);
+  };
+
   return (
     <DialogContext.Provider
       value={{
         show,
         toastContent,
+        itemEdit,
         handleShow,
         handleClose,
         updateToastContent,
+        setItemEdit,
+        startEdit,
       }}
     >
       {children}

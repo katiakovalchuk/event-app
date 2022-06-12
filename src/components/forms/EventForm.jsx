@@ -1,17 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import moment from "moment";
 import { useDispatch } from "react-redux";
 
-import { addNewEvent } from "../../store/slices/eventsSlice";
+import { addNewEvent, updateNewEvent } from "../../store/slices/eventsSlice";
 import { useDialog } from "../../context/dialogContext";
-import { capitalizeFirstLet } from "../../helpers/string";
 
 import { MdEventNote, MdPlace } from "react-icons/md";
 import { AiOutlineClockCircle } from "react-icons/ai";
 
+import { capitalizeFirstLet } from "../../helpers/string";
 import { eventSchema } from "../../helpers/schemaForms";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/form.scss";
@@ -24,6 +24,7 @@ import {
 } from "../elements";
 
 const EventForm = () => {
+  const { itemEdit, handleClose, setItemEdit } = useDialog();
   const {
     register,
     handleSubmit,
@@ -36,21 +37,29 @@ const EventForm = () => {
     resolver: yupResolver(eventSchema),
   });
   const dispatch = useDispatch();
-  const { handleClose } = useDialog();
+  useEffect(() => {
+    if (itemEdit.edit === true) {
+      reset({
+        ...itemEdit.item,
+        eventDate: moment(itemEdit.item.eventDate).toDate(),
+        hasDescription: true,
+      });
+    }
+  }, [itemEdit]);
 
   const onSubmitEventForm = (data) => {
     const event = {
       ...data,
       eventName: capitalizeFirstLet(data.eventName),
-      eventDate: moment(data.eventDate).format("D-MM-yyyy HH:mm"),
-      eventDescription: capitalizeFirstLet(data.eventDescription),
-      cityName: capitalizeFirstLet(data.cityName),
+      eventDate: moment(data.eventDate).format("yyyy-MM-DD HH:mm"),
     };
     delete event.hasDescription;
 
-    dispatch(addNewEvent(event));
-    reset();
+    itemEdit.edit
+      ? dispatch(updateNewEvent(event))
+      : dispatch(addNewEvent(event));
     handleClose();
+    setItemEdit({ item: {}, edit: false });
   };
 
   const hasDescription = watch("hasDescription");
@@ -84,7 +93,7 @@ const EventForm = () => {
             showTimeSelect
             timeFormat="HH:mm"
             timeIntervals={15}
-            dateFormat="dd-MM-yyyy HH:mm"
+            dateFormat="yyyy-MM-dd HH:mm"
             placeholderText="Choose date and time"
             customInput={
               <CustomInput
@@ -168,7 +177,7 @@ const EventForm = () => {
         errorText={errors?.points?.message}
       />
       <CustomButton type="submit" disabled={!isValid}>
-        Add an Event
+        {itemEdit.edit ? "Save changes" : "Add an event"}
       </CustomButton>
     </form>
   );

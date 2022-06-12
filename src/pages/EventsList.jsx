@@ -6,23 +6,29 @@ import { GoTrashcan } from "react-icons/go";
 import { RiEdit2Fill } from "react-icons/ri";
 
 import { useDialog } from "../context/dialogContext";
-import { getEvents, selectAllEvents } from "../store/slices/eventsSlice";
+import {
+  getEvents,
+  selectAllEvents,
+  deleteNewEvent,
+} from "../store/slices/eventsSlice";
 
 import { AddButton, ModalForm } from "../components/elements";
 import EventForm from "../components/forms/EventForm";
 import EventPart from "../components/EventPart";
 
 const EventsList = () => {
-  const { handleShow } = useDialog();
+  const { handleShow, startEdit } = useDialog();
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
 
   const oderedEvents = [...events].sort((a, b) =>
-    b.eventDate.localeCompare(a.date)
+    b.eventDate.localeCompare(a.eventDate)
   );
+
   useEffect(() => {
     dispatch(getEvents());
   }, [dispatch]);
+
   return (
     <Container>
       <AddButton onClick={handleShow} />
@@ -34,12 +40,17 @@ const EventsList = () => {
               <span
                 className="event__action"
                 onClick={() => {
-                  console.log("click");
+                  dispatch(deleteNewEvent(event.id));
                 }}
               >
                 <GoTrashcan />
               </span>
-              <span className="event__action">
+              <span
+                className="event__action"
+                onClick={() => {
+                  startEdit(event);
+                }}
+              >
                 <RiEdit2Fill />
               </span>
             </div>
