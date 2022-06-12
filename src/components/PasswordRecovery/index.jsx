@@ -19,7 +19,7 @@ const PasswordRecovery = () => {
   useEffect(() => {
     if (error) {
       updateToastContent(error);
-      handleClose();
+      handleShow();
     }
     if (error === "") {
       updateToastContent(

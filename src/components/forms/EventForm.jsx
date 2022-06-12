@@ -2,6 +2,12 @@ import React from "react";
 import DatePicker from "react-datepicker";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import moment from "moment";
+import { useDispatch } from "react-redux";
+
+import { addNewEvent } from "../../store/slices/eventsSlice";
+import { useDialog } from "../../context/dialogContext";
+import { capitalizeFirstLet } from "../../helpers/string";
 
 import { MdEventNote, MdPlace } from "react-icons/md";
 import { AiOutlineClockCircle } from "react-icons/ai";
@@ -23,21 +29,39 @@ const EventForm = () => {
     handleSubmit,
     watch,
     control,
-    formState: { errors },
+    reset,
+    formState: { errors, isValid },
   } = useForm({
-    mode: "onBlur",
+    mode: "onChange",
     resolver: yupResolver(eventSchema),
   });
+  const dispatch = useDispatch();
+  const { handleClose } = useDialog();
 
   const onSubmitEventForm = (data) => {
-    alert(JSON.stringify(data));
+    const event = {
+      ...data,
+      eventName: capitalizeFirstLet(data.eventName),
+      eventDate: moment(data.eventDate).format("D-MM-yyyy HH:mm"),
+      eventDescription: capitalizeFirstLet(data.eventDescription),
+      cityName: capitalizeFirstLet(data.cityName),
+    };
+    delete event.hasDescription;
+
+    dispatch(addNewEvent(event));
+    reset();
+    handleClose();
   };
 
   const hasDescription = watch("hasDescription");
   const eventPlace = watch("eventPlace");
 
   return (
-    <form className="form" onSubmit={handleSubmit(onSubmitEventForm)}>
+    <form
+      className="form"
+      autoComplete="off"
+      onSubmit={handleSubmit(onSubmitEventForm)}
+    >
       <CustomInput
         label="Event Name"
         icon={<MdEventNote />}
@@ -143,7 +167,9 @@ const EventForm = () => {
         error={!!errors?.points}
         errorText={errors?.points?.message}
       />
-      <CustomButton type="submit">Add an Event</CustomButton>
+      <CustomButton type="submit" disabled={!isValid}>
+        Add an Event
+      </CustomButton>
     </form>
   );
 };

@@ -1,46 +1,52 @@
-import React from "react";
-import moment from "moment";
-import { Link } from "react-router-dom";
-import { Table, Container } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Container } from "react-bootstrap";
 
-import eventsList from "../data/eventsList.json";
+import { GoTrashcan } from "react-icons/go";
+import { RiEdit2Fill } from "react-icons/ri";
+
 import { useDialog } from "../context/dialogContext";
+import { getEvents, selectAllEvents } from "../store/slices/eventsSlice";
 
-import { CustomButton, ModalForm } from "../components/elements";
+import { AddButton, ModalForm } from "../components/elements";
 import EventForm from "../components/forms/EventForm";
+import EventPart from "../components/EventPart";
 
 const EventsList = () => {
-  const oderedEvents = [...eventsList].sort((a, b) =>
-    b.date.localeCompare(a.date)
-  );
   const { handleShow } = useDialog();
+  const dispatch = useDispatch();
+  const events = useSelector(selectAllEvents);
+
+  const oderedEvents = [...events].sort((a, b) =>
+    b.eventDate.localeCompare(a.date)
+  );
+  useEffect(() => {
+    dispatch(getEvents());
+  }, [dispatch]);
   return (
     <Container>
-      <CustomButton variant="primary" size="lg" onClick={handleShow}>
-        Add a new Event
-      </CustomButton>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Event Name</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        {oderedEvents.length ? (
-          <tbody>
-            {oderedEvents.map(({ id, eventName, date }) => (
-              <tr key={id}>
-                <td>
-                  <Link to={`/events/${id}`}>{eventName}</Link>
-                </td>
-                <td>{moment(date).format("MMMM Do YYYY, h:mm a")}</td>
-              </tr>
-            ))}
-          </tbody>
-        ) : (
-          <p>No Events</p>
-        )}
-      </Table>
+      <AddButton onClick={handleShow} />
+      <ul className="event__list">
+        {oderedEvents.map((event) => (
+          <li className="event__item" key={event.id}>
+            <EventPart {...event} />
+            <div className="event__actions">
+              <span
+                className="event__action"
+                onClick={() => {
+                  console.log("click");
+                }}
+              >
+                <GoTrashcan />
+              </span>
+              <span className="event__action">
+                <RiEdit2Fill />
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
+
       <ModalForm title="Add a new Event" form={<EventForm />} />
     </Container>
   );
