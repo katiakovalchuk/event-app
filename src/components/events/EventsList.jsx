@@ -38,6 +38,7 @@ const EventsList = () => {
   return (
     <>
       {status === "loading" && <Spinner />}
+
       {status === "failed" && (
         <CustomToast
           toastHeading="Server Error"
@@ -45,6 +46,7 @@ const EventsList = () => {
           variant="danger"
         />
       )}
+
       {oderedEvents.length ? (
         <ul className="event__list">
           {oderedEvents.map((event) => (
