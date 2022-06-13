@@ -87,3 +87,7 @@
 span {
   margin-left: 16px;
 }
+
+.size-large {
+    height: 80px;
+}
