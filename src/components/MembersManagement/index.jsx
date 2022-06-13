@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, deleteDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { debounce } from "lodash";
 
@@ -9,7 +10,7 @@ import EditUser from "./EditUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
 
-import { auth } from "../../lib/init-firebase.js";
+// import { auth } from "../../lib/init-firebase.js";
 import { useUserAuth } from "../../context/authContext";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 
@@ -18,7 +19,7 @@ import "./style.scss";
 const Table = () => {
   const [query_, setQuery] = useState("");
   const [users, setUsers] = useState([]);
-  const { sendResetEmail } = useUserAuth();
+  const { sendResetEmail, sendLink } = useUserAuth();
 
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -115,8 +116,10 @@ const Table = () => {
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
-    const res = await createUserWithEmailAndPassword(auth, addFormData.email, "123456");
-    await setDoc(doc(usersCollectionRef, res.user.uid), {
+    // const res = await createUserWithEmailAndPassword(auth, addFormData.email, "123456");
+    sendLink(addFormData.email);
+
+    await setDoc(doc(usersCollectionRef, addFormData.email), {
       fullName: addFormData.fullName,
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
@@ -127,7 +130,6 @@ const Table = () => {
       rank: 0,
       image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     });
-    await sendResetEmail(addFormData.email);
     getUsers();
   };
 
