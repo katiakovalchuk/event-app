@@ -4,9 +4,16 @@ export const eventSchema = yup.object().shape({
   eventName: yup
     .string("* Event Name should be a string")
     .required("* Event Name is a required field")
+    .matches(
+      /^[aA-zZ0-9'-\s]+$/,
+      "Only alphabets and numbers are allowed for this field "
+    )
     .min(4, "* Min length is 4 characters")
     .max(50, "* Max length is 50 characters"),
-  eventDate: yup.date().required("* Event Date is a required field"),
+  eventDate: yup
+    .date()
+    .required("* Event Date is a required field")
+    .typeError("* Event Date is a required field"),
   hasDescription: yup.bool(),
   eventDescription: yup.string().when("hasDescription", {
     is: true,
@@ -14,7 +21,7 @@ export const eventSchema = yup.object().shape({
       .string()
       .required("* Event Description is a required field")
       .min(20, "* Min length is 20 characters")
-      .max(500, "* Max length is 500 characters"),
+      .max(1000, "* Max length is 1000 characters"),
     otherwise: yup.string().notRequired(),
   }),
 
@@ -29,6 +36,10 @@ export const eventSchema = yup.object().shape({
     then: yup
       .string()
       .required("* City Name is a required field")
+      .matches(
+        /^[aA-zZ0-9'-\s]+$/,
+        "Only alphabets and numbers are allowed for this field "
+      )
       .min(2, "* Min length is 2 characters")
       .max(50, "* Max length is 50 characters"),
     otherwise: yup.string().notRequired(),
