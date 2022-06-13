@@ -1,0 +1,22 @@
+.Toast {
+  --primary-color: #4285f4;
+  --secondary-color: #ffffff;
+  --desc-color: #646464;
+  color: var(--secondary-color);
+
+  &-inner {
+    border: 2px solid rgba(31, 99, 159, 0.9);
+    border-radius: 8px;
+  }
+
+  &-header{
+    color: #ffffff;
+    background: #29256EFF;
+    background: linear-gradient(90deg, #29256EF2 0%, #4285F4F2 95%);
+  }
+
+  &-body{
+    background-color: var(--secondary-color);
+    color: var(--desc-color);
+  }
+}

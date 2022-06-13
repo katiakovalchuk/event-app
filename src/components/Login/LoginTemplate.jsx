@@ -1,10 +1,14 @@
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+
 import {AiOutlineEye, AiOutlineEyeInvisible} from "react-icons/ai";
-import Toast from "../Toast";
 import {useDialog} from "../../context/dialogContext";
 import {useUserAuth} from "../../context/authContext";
-
+import {getUsers} from "../../store/slices/usersSlice";
+import Toast from "../Toast";
+import {errMessages} from "./messages";
+import {getErrorMessage} from "../../helpers/getErrorMessage";
 import "./style.scss";
 
 const LoginTemplate = () => {
@@ -14,29 +18,41 @@ const LoginTemplate = () => {
     });
 
     const {login} = useUserAuth();
-    const {show, handleShow, handleClose, updateToastContent} = useDialog();
+    const users = useSelector(state => state.usersSlice.users);
+    const {handleShow, handleClose, updateToastContent} = useDialog();
     const [passwordShown, setPasswordShown] = useState(false);
     const [error, setError] = useState("");
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        dispatch(getUsers());
+    }, []);
 
     useEffect(() => {
         if (error) {
             updateToastContent(
-                error,
-                "Please, check email and password and try again!"
+                "Failed to login",
+                getErrorMessage(error, errMessages)
             );
         }
     }, [error]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const isUserEmail = users.some((user) => user.email === email);
         setError("");
         handleClose();
-        try {
-            await login(email, password);
-            navigate("/");
-        } catch (err) {
-            setError(err.message);
+        if (isUserEmail){
+            try {
+                await login(email, password);
+                navigate("/");
+            } catch (err) {
+                setError(err.message);
+                handleShow();
+            }
+        } else {
+            setError("auth/not-registered");
             handleShow();
         }
     };
@@ -50,7 +66,7 @@ const LoginTemplate = () => {
 
     return (
         <>
-            {show && <Toast/>}
+            <Toast/>
             <div className="LoginTemplate d-flex justify-content-center align-items-center w-100 vh-100">
                 <div className="LoginTemplate-inner d-flex flex-column flex-md-row col-sm-9 col-xl-7">
                     <div className="d-flex flex-column justify-content-center text-center col-md-6 p-5">
@@ -99,24 +115,24 @@ const LoginTemplate = () => {
                             >
                                 Login
                             </button>
-                            <div
-                                className="forgot-password text-end w-100 mt-1"
-                                onClick={handleClose}
-                            >
-                                <Link
-                                    className="link-light text-decoration-none"
-                                    to="/recovery"
-                                >
-                                    Forgot password?
-                                </Link>
-                                <Link
-                                    className="link-light text-decoration-none"
-                                    to="/loginpasswordless"
-                                >
-                                    Login without password
-                                </Link>
-                            </div>
                         </form>
+                        <div
+                            className="forgot-password align-self-center w-100 mt-1 pb-3"
+                            onClick={handleClose}
+                        >
+                            <Link
+                                className="d-block text-end link-light text-decoration-none"
+                                to="/recovery"
+                            >
+                                Forgot password?
+                            </Link>
+                            <Link
+                                className="d-block text-end link-light text-decoration-none"
+                                to="/loginpasswordless"
+                            >
+                                Login without password
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
