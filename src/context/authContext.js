@@ -14,6 +14,7 @@ import {doc, serverTimestamp, setDoc} from "firebase/firestore";
 import {auth} from "../lib/init-firebase";
 import {usersCollectionRef} from "../lib/firestore.collections.js";
 import {getUsers} from "../store/slices/usersSlice";
+import PropTypes from "prop-types";
 
 const authContext = createContext();
 
@@ -35,7 +36,6 @@ export const AuthContextProvider = ({children}) => {
         return signOut(auth).then(() => {
             setUser(null);
             navigate("/login");
-            localStorage.removeItem("role");
         });
     }
 
@@ -61,7 +61,6 @@ export const AuthContextProvider = ({children}) => {
     }
 
     function sendLink(email) {
-        console.log("send link");
         return sendSignInLinkToEmail(auth, email, {
             url: "http://localhost:3000/confirm",
             handleCodeInApp: true,
@@ -82,6 +81,9 @@ export const AuthContextProvider = ({children}) => {
 
     return <authContext.Provider value={values}>{children}</authContext.Provider>;
 };
-/*eslint react/prop-types: 0 */
 
 export const useUserAuth = () => useContext(authContext);
+
+AuthContextProvider.propTypes = {
+    children: PropTypes.element
+};

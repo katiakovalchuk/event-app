@@ -1,11 +1,7 @@
-import ConfirmTemplate from "../components/ConfirmEmail";
+import ConfirmTemplate from "../components/Login/ConfirmEmail";
 
 const ConfirmPage = () => {
-  return (
-    <div>
-      <ConfirmTemplate />
-    </div>
-  );
+  return <ConfirmTemplate />;
 };
 
 export default ConfirmPage;
