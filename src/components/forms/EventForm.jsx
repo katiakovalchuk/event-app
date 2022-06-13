@@ -24,7 +24,7 @@ import {
 } from "../elements";
 
 const EventForm = () => {
-  const { itemEdit, handleClose, setItemEdit } = useDialog();
+  const { itemEdit, hideEdit } = useDialog();
   const {
     register,
     handleSubmit,
@@ -37,6 +37,7 @@ const EventForm = () => {
     resolver: yupResolver(eventSchema),
   });
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (itemEdit.edit === true) {
       reset({
@@ -58,8 +59,7 @@ const EventForm = () => {
     itemEdit.edit
       ? dispatch(updateNewEvent(event))
       : dispatch(addNewEvent(event));
-    handleClose();
-    setItemEdit({ item: {}, edit: false });
+    hideEdit();
   };
 
   const hasDescription = watch("hasDescription");

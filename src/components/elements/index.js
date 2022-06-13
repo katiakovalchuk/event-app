@@ -4,3 +4,4 @@ export { default as CustomCheckbox } from "./CustomCheckbox";
 export { default as CustomButton } from "./CustomButton";
 export { default as AddButton } from "./AddButton";
 export { default as ModalForm } from "./ModalForm";
+export { default as CustomToast } from "./CustomToast";

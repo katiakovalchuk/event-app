@@ -12,21 +12,22 @@ import "./style.scss";
 const PasswordRecovery = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
-  const { show, handleShow, handleClose, updateToastContent } = useDialog();
+  const { showToast, handleShowToast, handleCloseToast, updateToastContent } =
+    useDialog();
   const { sendResetEmail } = useUserAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (error) {
       updateToastContent(error);
-      handleShow();
+      handleShowToast();
     }
     if (error === "") {
       updateToastContent(
         "Processed successfully",
         "Reset password link has been sent! Please, check email!"
       );
-      handleShow();
+      handleShowToast();
       setTimeout(() => {
         navigate("/login");
       }, 1000);
@@ -35,15 +36,15 @@ const PasswordRecovery = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    handleClose();
+    handleCloseToast();
     try {
       await sendResetEmail(email);
       setError("");
       setEmail("");
-      handleShow();
+      handleShowToast();
     } catch (err) {
       setError(err.message);
-      handleShow();
+      handleShowToast();
     }
   };
 
@@ -51,7 +52,7 @@ const PasswordRecovery = () => {
 
   return (
     <>
-      {show && <Toast />}
+      {showToast && <Toast />}
       <div
         className={`Recovery d-flex justify-content-center align-items-center w-100 vh-100 ${
           error === "" ? "d-none" : ""
@@ -85,7 +86,7 @@ const PasswordRecovery = () => {
                 Send password reset link
               </button>
             </form>
-            <div className="text-end px-4 pb-5" onClick={handleClose}>
+            <div className="text-end px-4 pb-5" onClick={handleCloseToast}>
               <Link className="link-light text-decoration-none" to="/login">
                 Already have an account? Login!
               </Link>

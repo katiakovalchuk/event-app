@@ -17,7 +17,7 @@ export const getEvents = createAsyncThunk(
       const response = await getDocs(eventsCollectionRef);
       return response.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -30,8 +30,7 @@ export const addNewEvent = createAsyncThunk(
       const newEvent = { ...event, id: docRef.id };
       dispatch(addEvent(newEvent));
     } catch (error) {
-      console.log(error);
-      return rejectWithValue(error.message);
+      return rejectWithValue("Sorry, Can't add an Event");
     }
   }
 );
@@ -43,7 +42,8 @@ export const deleteNewEvent = createAsyncThunk(
       await deleteDoc(doc(db, "events", id));
       dispatch(deleteEvent(id));
     } catch (error) {
-      rejectWithValue(error.message);
+      console.log(error);
+      return rejectWithValue("Sorry, Can't delete an Event");
     }
   }
 );
@@ -56,12 +56,15 @@ export const updateNewEvent = createAsyncThunk(
       await updateDoc(doc(db, "events", id), { ...rest });
       dispatch(updateEvent(event));
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue("Sorry, Can't update an Event");
     }
   }
 );
 
 //helpers
+const setSuccess = (state) => {
+  state.status = "succeeded";
+};
 const setError = (state, action) => {
   state.status = "failed";
   state.error = action.payload;
@@ -92,13 +95,21 @@ const eventsSlice = createSlice({
     },
   },
   extraReducers: {
+    [getEvents.pending]: setLoading,
     [getEvents.fulfilled]: (state, action) => {
       state.status = "succeeded";
       state.events = action.payload;
     },
     [getEvents.rejected]: setError,
-    [getEvents.pending]: setLoading,
+    [addNewEvent.pending]: setLoading,
+    [addNewEvent.fulfilled]: setSuccess,
     [addNewEvent.rejected]: setError,
+    [deleteNewEvent.pending]: setLoading,
+    [deleteNewEvent.fulfilled]: setSuccess,
+    [deleteNewEvent.rejected]: setError,
+    [updateNewEvent.pending]: setLoading,
+    [updateNewEvent.fulfilled]: setSuccess,
+    [updateNewEvent.rejected]: setError,
   },
 });
 
