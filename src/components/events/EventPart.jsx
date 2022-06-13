@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import { ellipsify } from "../helpers/string";
+import { ellipsify } from "../../helpers/string";
 
-import "../styles/eventlist.scss";
+import "../../styles/eventlist.scss";
 
 const EventPart = ({
   eventName,

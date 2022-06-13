@@ -3,15 +3,20 @@ import { createContext, useContext, useState } from "react";
 const DialogContext = createContext();
 
 export const DialogContextProvider = ({ children }) => {
-  const [show, setShow] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [toastContent, setToastContent] = useState({
     heading: "Inner error",
     body: "Please contact our support team for additional information!",
   });
-  const [itemEdit, setItemEdit] = useState({ item: {}, edit: false });
+  const defaultItemEdit = { item: {}, edit: false };
+  const [itemEdit, setItemEdit] = useState(defaultItemEdit);
 
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const handleShowToast = () => setShowToast(true);
+  const handleCloseToast = () => setShowToast(false);
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   const updateToastContent = (
     toastHeading = toastContent.heading,
@@ -30,20 +35,30 @@ export const DialogContextProvider = ({ children }) => {
       item,
       edit: true,
     });
-    setShow(true);
+    setShowModal(true);
+  };
+
+  const hideEdit = () => {
+    if (itemEdit.edit) {
+      setItemEdit(defaultItemEdit);
+    }
+    handleCloseModal();
   };
 
   return (
     <DialogContext.Provider
       value={{
-        show,
+        showToast,
+        showModal,
         toastContent,
         itemEdit,
-        handleShow,
-        handleClose,
+        handleShowToast,
+        handleCloseToast,
+        handleShowModal,
+        handleCloseModal,
         updateToastContent,
-        setItemEdit,
         startEdit,
+        hideEdit,
       }}
     >
       {children}
