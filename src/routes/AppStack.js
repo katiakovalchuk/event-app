@@ -1,3 +1,4 @@
+
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Route, Routes} from "react-router-dom";
@@ -5,7 +6,7 @@ import {Route, Routes} from "react-router-dom";
 import {
     AdminMembersManagement,
     EventsItem,
-    EventsList,
+    Events,
     Home,
     ManagersManagement,
     MembersPage,
@@ -45,7 +46,7 @@ export const AppStack = () => {
                 <Route element={<ProtectedRoute isAllowed={role === "user"}/>}>
                     <Route path="profile" element={<ProfilePage/>}/>
                     <Route path="members" element={<MembersPage/>}/>
-                    <Route path="events" element={<EventsList/>}/>
+                    <Route path="events" element={<Events/>}/>
                     <Route path="events/:id" element={<EventsItem/>}/>
 
                     {/*//remove later*/}

@@ -14,7 +14,7 @@ const LoginPasswordlessTemplate = () => {
     const [{email}, setCredentials] = useState({
         email: "",
     });
-    const {handleShow, handleClose, updateToastContent} = useDialog();
+    const {handleShowToast, handleCloseToast, updateToastContent} = useDialog();
     const [error, setError] = useState(null);
     const {sendLink} = useUserAuth();
     const users = useSelector(state => state.usersSlice.users);
@@ -36,7 +36,7 @@ const LoginPasswordlessTemplate = () => {
                 "Processed successfully",
                 "Login link has been sent! Please, check email!"
             );
-            handleShow();
+            handleShowToast();
         }
     }, [error]);
 
@@ -44,7 +44,7 @@ const LoginPasswordlessTemplate = () => {
         e.preventDefault();
         const isUserEmail = users.some((user) => user.email === email);
         setError("");
-        handleClose();
+        handleCloseToast();
         if (isUserEmail) {
             try {
                 await sendLink(email);
@@ -54,7 +54,7 @@ const LoginPasswordlessTemplate = () => {
             }
         } else {
             setError("auth/not-registered");
-            handleShow();
+            handleShowToast();
         }
     };
 

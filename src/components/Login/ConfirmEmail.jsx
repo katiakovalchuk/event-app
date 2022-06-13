@@ -13,7 +13,7 @@ const ConfirmEmailTemplate = () => {
         email: "",
     });
     const [error, setError] = useState("");
-    const {handleShow, handleClose, updateToastContent} = useDialog();
+    const {handleShowToast, handleCloseToast, updateToastContent} = useDialog();
     const {signin} = useUserAuth();
     const navigate = useNavigate();
 
@@ -29,13 +29,13 @@ const ConfirmEmailTemplate = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
-        handleClose();
+        handleCloseToast();
         try {
             await signin(email, window.location.href);
             navigate("/");
         } catch (err) {
             setError(err.message);
-            handleShow();
+            handleShowToast();
         }
     };
 

@@ -19,7 +19,7 @@ const LoginTemplate = () => {
 
     const {login} = useUserAuth();
     const users = useSelector(state => state.usersSlice.users);
-    const {handleShow, handleClose, updateToastContent} = useDialog();
+    const {handleShowToast, handleCloseToast, updateToastContent} = useDialog();
     const [passwordShown, setPasswordShown] = useState(false);
     const [error, setError] = useState("");
     const dispatch = useDispatch();
@@ -42,18 +42,18 @@ const LoginTemplate = () => {
         e.preventDefault();
         const isUserEmail = users.some((user) => user.email === email);
         setError("");
-        handleClose();
-        if (isUserEmail){
+        handleCloseToast();
+        if (isUserEmail) {
             try {
                 await login(email, password);
                 navigate("/");
             } catch (err) {
                 setError(err.message);
-                handleShow();
+                handleShowToast();
             }
         } else {
             setError("auth/not-registered");
-            handleShow();
+            handleShowToast();
         }
     };
 
@@ -118,7 +118,7 @@ const LoginTemplate = () => {
                         </form>
                         <div
                             className="forgot-password align-self-center w-100 mt-1 pb-3"
-                            onClick={handleClose}
+                            onClick={handleCloseToast}
                         >
                             <Link
                                 className="d-block text-end link-light text-decoration-none"

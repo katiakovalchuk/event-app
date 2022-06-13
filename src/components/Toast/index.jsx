@@ -5,11 +5,11 @@ import {useDialog} from "../../context/dialogContext";
 import "./style.scss";
 
 const CustomToast = () => {
-    const {show, handleClose, toastContent} = useDialog();
+    const {showToast, handleCloseToast, toastContent} = useDialog();
 
     return (
-         show && <ToastContainer className="Toast mt-5" position="top-center">
-             <Toast className="Toast-inner" onClose={handleClose} show={show} delay={7000} autohide>
+        showToast && <ToastContainer className="Toast mt-5" position="top-center">
+             <Toast className="Toast-inner" onClose={handleCloseToast} show={showToast} delay={7000} autohide>
                  <Toast.Header className="Toast-header" closeVariant="white">
                      <FaLock className="me-1"/>
                      <strong className="me-auto">{toastContent.heading}</strong>

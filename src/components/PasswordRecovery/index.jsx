@@ -15,7 +15,7 @@ import "./style.scss";
 const PasswordRecovery = () => {
     const [email, setEmail] = useState("");
     const [error, setError] = useState(null);
-    const {handleShow, handleClose, updateToastContent} = useDialog();
+    const {handleShowToast, handleCloseToast, updateToastContent} = useDialog();
     const users = useSelector(state => state.usersSlice.users);
     const {sendResetEmail} = useUserAuth();
     const navigate = useNavigate();
@@ -37,7 +37,7 @@ const PasswordRecovery = () => {
                 "Processed successfully",
                 "Reset password link has been sent! Please, check email!"
             );
-            handleShow();
+            handleShowToast();
             setTimeout(() => {
                 navigate("/login");
             }, 1000);
@@ -47,20 +47,20 @@ const PasswordRecovery = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isUserEmail = users.some((user) => user.email === email);
-        handleClose();
-        if (isUserEmail){
+        handleCloseToast();
+        if (isUserEmail) {
             try {
                 await sendResetEmail(email);
                 setError("");
                 setEmail("");
-                handleShow();
+                handleShowToast();
             } catch (err) {
                 setError(err.message);
-                handleShow();
+                handleShowToast();
             }
         } else {
             setError("auth/not-registered");
-            handleShow();
+            handleShowToast();
         }
     };
 
@@ -102,7 +102,7 @@ const PasswordRecovery = () => {
                                 Send password reset link
                             </button>
                         </form>
-                        <div className="text-end px-4 pb-5" onClick={handleClose}>
+                        <div className="text-end px-4 pb-5" onClick={handleCloseToast}>
                             <Link className="link-light text-decoration-none" to="/login">
                                 Already have an account? Login!
                             </Link>
