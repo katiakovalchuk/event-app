@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {doc, getDoc} from "firebase/firestore";
+import {collection, getDocs, query, where} from "firebase/firestore";
 
 import {ROLES, STATUSES} from "../data";
 import {db} from "../../lib/init-firebase";
@@ -9,12 +9,12 @@ const initialState = {
     user: null
 };
 
-export const getUserById = createAsyncThunk(
+export const getUserByEmail = createAsyncThunk(
     "userSlice/getUserById",
-    async (id, {rejectWithValue}) => {
+    async (email, {rejectWithValue}) => {
         try {
-            const docSnap = await getDoc(doc(db, "users", id));
-            return docSnap.data();
+            const querySnap = await getDocs(query(collection(db, "users"), where("email", "==", email)));
+            return querySnap.docs[0].data();
         } catch (err) {
             return rejectWithValue(STATUSES.failed);
         }
@@ -25,14 +25,14 @@ const userSlice = createSlice({
     name: "userSlice",
     initialState,
     extraReducers: {
-        [getUserById.fulfilled]: (state, action) => {
+        [getUserByEmail.fulfilled]: (state, action) => {
             state.status = STATUSES.succeeded;
-            state.user = action.payload.role ? action.payload : {...action.payload, role: ROLES.user};
+            state.user = action.payload?.role ? action.payload : {...action.payload, role: ROLES.user};
         },
-        [getUserById.pending]: state => {
+        [getUserByEmail.pending]: state => {
             state.status = STATUSES.pending;
         },
-        [getUserById.rejected]: (state, action) => {
+        [getUserByEmail.rejected]: (state, action) => {
             state.status = action.payload;
         }
     }
