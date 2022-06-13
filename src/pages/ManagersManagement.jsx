@@ -1,5 +1,6 @@
+
 const ManagersManagement = () => {
-  return <div>Managers Management</div>;
+    return <div>Managers Management</div>;
 };
 
 export default ManagersManagement;
