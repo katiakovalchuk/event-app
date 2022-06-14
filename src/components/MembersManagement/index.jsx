@@ -39,7 +39,12 @@ const Table = ({ showManagers }) => {
   });
 
   const getUsers = () => {
-    const q = query(usersCollectionRef, where("role", "==", "user"));
+    let q = "";
+    if (showManagers) {
+      q = query(usersCollectionRef, where("role", "==", "manager"));
+    } else {
+      q = query(usersCollectionRef, where("role", "==", "user"));
+    }
     const keys = ["fullName", "company", "email", "phoneNumber"];
     getDocs(q).then((data) => {
       setUsers(
