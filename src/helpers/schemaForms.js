@@ -21,7 +21,7 @@ export const eventSchema = yup.object().shape({
       .string()
       .required("* Event Description is a required field")
       .min(20, "* Min length is 20 characters")
-      .max(1000, "* Max length is 1000 characters"),
+      .max(600, "* Max length is 600 characters"),
     otherwise: yup.string().notRequired(),
   }),
 
@@ -41,7 +41,7 @@ export const eventSchema = yup.object().shape({
         "Only alphabets and numbers are allowed for this field "
       )
       .min(2, "* Min length is 2 characters")
-      .max(50, "* Max length is 50 characters"),
+      .max(30, "* Max length is 30 characters"),
     otherwise: yup.string().notRequired(),
   }),
   points: yup

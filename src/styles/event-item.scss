@@ -1,0 +1,80 @@
+@import "./scss/reset";
+@import "./scss/variable";
+
+.eventItem {
+  padding: 50px 0;
+  background-image: url("../assets/images/bg-event-2.jpg");
+  @extend %bg-cover;
+  min-height: 30vh;
+  position: relative;
+  color: $white;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    background: linear-gradient(
+      248deg,
+      rgba(68, 97, 130, 0.6474964985994398) 0%,
+      rgba(6, 11, 38, 0.3337710084033614) 35%,
+      rgba(68, 97, 130, 1) 100%
+    );
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: calc(30vh - 80px);
+    z-index: 5;
+  }
+
+  &__title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 42px;
+    text-transform: capitalize;
+    margin-bottom: 20px;
+    z-index: 5;
+  }
+
+  &__desc {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: justify;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 40px;
+    z-index: 5;
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: auto 0 30px;
+    z-index: 5;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+  }
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+  }
+
+  &__text {
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 36px;
+  }
+}

@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 import { Button } from "react-bootstrap";
 
-const CustomButton = ({ children, ...props }) => {
+const CustomButton = ({ arrow, children, ...props }) => {
   return (
-    <Button className="button" {...props}>
+    <Button className={`button ${arrow && "btn-arrow"} `} {...props}>
       {children}
     </Button>
   );
@@ -13,6 +13,7 @@ const CustomButton = ({ children, ...props }) => {
 
 CustomButton.propTypes = {
   children: PropTypes.node,
+  arrow: PropTypes.bool,
 };
 
 export default CustomButton;
