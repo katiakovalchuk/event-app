@@ -2,7 +2,16 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
-import { MembersManagement, EventsItem, Events, Home, ManagersManagement, MembersPage, NotFoundPage, ProfilePage } from "../pages";
+import {
+  MembersManagement,
+  EventsItem,
+  Events,
+  Home,
+  ManagersManagement,
+  MembersPage,
+  NotFoundPage,
+  ProfilePage,
+} from "../pages";
 import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import { getUserByEmail } from "../store/slices/userSlice";
@@ -43,7 +52,13 @@ export const AppStack = () => {
         <Route element={<ProtectedRoute isAllowed={role === "admin"} />}>
           <Route path="managers-management" element={<ManagersManagement />} />
         </Route>
-        <Route element={<ProtectedRoute isAllowed={role === "manager" || role === "admin"} />}>
+        <Route
+          element={
+            <ProtectedRoute
+              isAllowed={role === "manager" || role === "admin"}
+            />
+          }
+        >
           <Route path="members-management" element={<MembersManagement />} />
         </Route>
       </Route>
