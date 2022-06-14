@@ -13,7 +13,8 @@ import { usersCollectionRef } from "../../lib/firestore.collections.js";
 
 import "./style.scss";
 
-const Table = () => {
+// eslint-disable-next-line react/prop-types
+const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const { sendLink } = useUserAuth();
@@ -30,7 +31,11 @@ const Table = () => {
   const [addFormData, setAddFormData] = useState({ role: "user" });
 
   useEffect(() => {
-    document.title = "Members Management"; // or Managers Management if role is manager;
+    if (showManagers) {
+      document.title = "Managers Management";
+    } else {
+      document.title = "Members Management";
+    }
   });
 
   const getUsers = () => {
