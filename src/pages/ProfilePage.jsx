@@ -9,6 +9,8 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useUserAuth } from "../context/authContext";
 import { storage } from "../lib/init-firebase.js";
 import { usersCollectionRef } from "../lib/firestore.collections.js";
+import { getIndex } from "../helpers/utils.js";
+import { capitalizeFirstLetter } from "../helpers/utils.js";
 
 import styles from "../styles/Profile.module.scss";
 
@@ -45,14 +47,6 @@ const ProfilePage = () => {
     setAddFormData(newFormData);
   };
 
-  function getIndex(_user) {
-    return users.findIndex((user) => user.id === _user);
-  }
-
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
-  }
-
   useEffect(() => {
     const uploadFile = () => {
       const name = new Date().getTime() + file.name;
@@ -87,16 +81,16 @@ const ProfilePage = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    console.log("submit", user.uid);
+    console.log("submit", user);
 
-    const fullName = addFormData.fullName || (users.length && capitalizeFirstLetter(users[getIndex(user.uid)].fullName));
-    const email = addFormData.email || (users.length && users[getIndex(user.uid)].email);
-    const phoneNumber = addFormData.phoneNumber || (users.length && users[getIndex(user.uid)].phoneNumber);
-    const company = addFormData.company || (users.length && users[getIndex(user.uid)].company);
-    const birth = addFormData.birth || (users.length && users[getIndex(user.uid)].birth);
-    const image = data.img || (users.length && users[getIndex(user.uid)].image);
+    const fullName = addFormData.fullName || (users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].fullName));
+    const email = addFormData.email || (users.length && users[getIndex(users, user.email)].email);
+    const phoneNumber = addFormData.phoneNumber || (users.length && users[getIndex(users, user.email)].phoneNumber);
+    const company = addFormData.company || (users.length && users[getIndex(users, user.email)].company);
+    const birth = addFormData.birth || (users.length && users[getIndex(users, user.email)].birth);
+    const image = data.img || (users.length && users[getIndex(users, user.email)].image);
 
-    const docRef = doc(usersCollectionRef, user.uid);
+    const docRef = doc(usersCollectionRef, user.email);
     updateDoc(docRef, {
       fullName,
       email,
@@ -130,7 +124,7 @@ const ProfilePage = () => {
                   id="fullName"
                   name="fullName"
                   className="form-control"
-                  placeholder={users.length && capitalizeFirstLetter(users[getIndex(user.uid)].fullName)}
+                  placeholder={users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].fullName)}
                 />
               </div>
 
@@ -149,7 +143,7 @@ const ProfilePage = () => {
                   name="email"
                   id="email"
                   className="form-control"
-                  placeholder={users.length && users[getIndex(user.uid)].email}
+                  placeholder={users.length && users[getIndex(users, user.email)].email}
                 />
               </div>
 
@@ -171,7 +165,7 @@ const ProfilePage = () => {
                   name="phoneNumber"
                   id="phoneNumber"
                   className="form-control"
-                  placeholder={users.length && users[getIndex(user.uid)].phoneNumber}
+                  placeholder={users.length && users[getIndex(users, user.email)].phoneNumber}
                 />
               </div>
 
@@ -194,7 +188,7 @@ const ProfilePage = () => {
                   id="company"
                   name="company"
                   className="form-control"
-                  placeholder={users.length && capitalizeFirstLetter(users[getIndex(user.uid)].company)}
+                  placeholder={users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].company)}
                 />
               </div>
 
@@ -221,12 +215,16 @@ const ProfilePage = () => {
           <Col md={4} className="">
             <div className="card text-center align-items-center shadow rounded">
               <img src={require("../assets/images/profile/profile-3.jpg")} className="card-img-top" alt="profile" />
-              <img className={styles.profileImg} src={file ? URL.createObjectURL(file) : users.length && users[getIndex(user.uid)].image} alt="profile" />
+              <img
+                className={styles.profileImg}
+                src={file ? URL.createObjectURL(file) : users.length && users[getIndex(users, user.email)].image}
+                alt="profile"
+              />
 
               <div className="card-body ">
-                <h5 className="card-title">{users.length && capitalizeFirstLetter(users[getIndex(user.uid)].role)}</h5>
-                <p>Rank: {users.length && users[getIndex(user.uid)].rank}</p>
-                <p>Scores: {users.length && users[getIndex(user.uid)].scores}</p>
+                <h5 className="card-title">{users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].role)}</h5>
+                <p>Rank: {users.length && users[getIndex(users, user.email)].rank}</p>
+                <p>Scores: {users.length && users[getIndex(users, user.email)].scores}</p>
                 <Link to="/recovery" className="btn btn-warning">
                   Change password
                 </Link>

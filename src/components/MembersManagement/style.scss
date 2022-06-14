@@ -1,8 +1,8 @@
 .table th.up {
-  background-image: url("../../assets/images/admin-table/up_arrow.png");
+  background-image: url("../../assets/images/admin-table/newUp.png");
 }
 .table th.down {
-  background-image: url("../../assets/images/admin-table/down_arrow.png");
+  background-image: url("../../assets/images/admin-table/newDown.png");
 }
 .table th.default {
   background-image: url("../../assets/images/admin-table/default.png");
@@ -73,14 +73,20 @@ input[type="number"] {
   width: 100%;
 }
 
+table-admin,
 td,
 th {
   border: 1px solid #ddd;
+  border-bottom: none !important;
   padding: 8px;
 }
 
 tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+
+.gray {
+  color: gray;
 }
 
 tr:hover {
@@ -96,9 +102,13 @@ tfoot tr td ul {
 }
 
 tfoot tr td {
-  border-bottom: none;
+  border-bottom: none !important;
   border-left: none;
   border-right: none;
+}
+
+.no-data {
+  background-color: #fff !important;
 }
 
 .table-admin th {
