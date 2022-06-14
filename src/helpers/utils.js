@@ -1,5 +1,5 @@
-export function getIndex(collection, id) {
-  return collection.findIndex((item) => item.id === id);
+export function getIndex(collection, email) {
+  return collection.findIndex((item) => item.email === email);
 }
 
 export function capitalizeFirstLetter(string) {
