@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { debounce } from "lodash";
 
 import AddUser from "./AddUser";
@@ -10,19 +8,16 @@ import EditUser from "./EditUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
 
-import { auth } from "../../lib/init-firebase.js";
 import { useUserAuth } from "../../context/authContext";
-import { useCollection } from "../../hooks/useCollection";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 
 import "./style.scss";
 
 const Table = () => {
-  const [query, setQuery] = useState("");
-  const { documents: users_live } = useCollection("users", query);
-  const { users, sendResetEmail } = useUserAuth();
+  const [query_, setQuery] = useState("");
+  const [users, setUsers] = useState([]);
+  const { sendLink } = useUserAuth();
 
-  const [tableData, setTableData] = useState(users);
   const [show, setShow] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
@@ -32,12 +27,35 @@ const Table = () => {
   const handleShowEdit = () => setShowEdit(true);
 
   const [editContactId, setEditContactId] = useState(null);
-
   const [addFormData, setAddFormData] = useState({ role: "user" });
 
   useEffect(() => {
-    document.title = "Admin members management";
+    document.title = "Members Management"; // or Managers Management if role is manager;
   });
+
+  const getUsers = () => {
+    const q = query(usersCollectionRef, where("role", "==", "user"));
+    const keys = ["fullName", "company", "email", "phoneNumber"];
+    getDocs(q).then((data) => {
+      setUsers(
+        data.docs
+          .map((item) => {
+            return { ...item.data(), id: item.id };
+          })
+          .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
+      );
+    });
+  };
+
+  const search = debounce((e) => {
+    setQuery(e.target.value);
+  }, 350);
+
+  useEffect(() => {
+    if (query_.length === 0 || query_.length > 2) {
+      getUsers();
+    }
+  }, [query_]);
 
   const [editFormData, setEditFormData] = useState({
     fullName: "",
@@ -50,16 +68,16 @@ const Table = () => {
 
   const [pageNumber, setPageNumber] = useState(0);
 
-  const usersPerPage = 5;
+  const usersPerPage = 5; // show more?
   const pagesVisited = pageNumber * usersPerPage;
 
   const columns = [
-    { label: "Full Name", accessor: "fullName", sortable: false },
-    { label: "Email", accessor: "email", sortable: false },
-    { label: "Phone number", accessor: "phoneNumber", sortable: false },
-    { label: "Company", accessor: "company", sortable: false },
-    { label: "Scores", accessor: "scores", sortable: false },
-    { label: "Date of birth", accessor: "birth", sortable: false },
+    { label: "Full Name", accessor: "fullName", sortable: true },
+    { label: "Email", accessor: "email", sortable: true },
+    { label: "Phone number", accessor: "phoneNumber", sortable: true },
+    { label: "Company", accessor: "company", sortable: true },
+    { label: "Scores", accessor: "scores", sortable: true },
+    { label: "Date of birth", accessor: "birth", sortable: true },
     { label: "Actions", accessor: "action", sortable: false },
   ];
 
@@ -75,7 +93,7 @@ const Table = () => {
           }) * (sortOrder === "asc" ? 1 : -1)
         );
       });
-      setTableData(sorted);
+      setUsers(sorted);
     }
   };
 
@@ -95,8 +113,8 @@ const Table = () => {
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
-    const res = await createUserWithEmailAndPassword(auth, addFormData.email, "123456");
-    await setDoc(doc(usersCollectionRef, res.user.uid), {
+    sendLink(addFormData.email);
+    await setDoc(doc(usersCollectionRef, addFormData.email), {
       fullName: addFormData.fullName,
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
@@ -107,11 +125,13 @@ const Table = () => {
       rank: 0,
       image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     });
-    await sendResetEmail(addFormData.email);
+
+    getUsers();
   };
 
   const handleDeleteClick = async (id) => {
     await deleteDoc(doc(usersCollectionRef, id));
+    getUsers();
   };
 
   const handleCancelClick = () => {
@@ -135,11 +155,11 @@ const Table = () => {
       })
       .catch((err) => console.log(err.message));
     setEditContactId(null);
+    getUsers();
   };
 
   const handleEditClick = (event, contact) => {
-    // event.preventDefault();
-    setEditContactId(contact.id);
+    setEditContactId(contact.email);
     handleShowEdit();
 
     const formValues = {
@@ -152,11 +172,6 @@ const Table = () => {
     };
     setEditFormData(formValues);
   };
-
-  const search = debounce((e) => {
-    console.log(e.target.value);
-    setQuery(e.target.value);
-  }, 350);
 
   return (
     <Container>
@@ -179,7 +194,7 @@ const Table = () => {
             <table className="table table-admin">
               <TableHead {...{ columns, handleSorting }} />
               <TableBody
-                tableData={users_live}
+                tableData={users}
                 {...{
                   editContactId,
                   pagesVisited,

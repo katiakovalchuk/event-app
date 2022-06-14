@@ -3,8 +3,10 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useEffect, useState } from "react";
+
 import { getDocs } from "firebase/firestore";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
+import { getIndex } from "../../helpers/utils.js";
 
 const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubmit, handleEditFormChange }) => {
   const [users, setUsers] = useState([]);
@@ -17,10 +19,6 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
       );
     });
   };
-
-  function getIndex(_user) {
-    return users.findIndex((user) => user.id === _user);
-  }
 
   useEffect(() => {
     getUsers();
@@ -47,7 +45,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               id="name"
               name="fullName"
               className="form-control"
-              placeholder={users.length && users[getIndex(editContactId)].fullName}
+              placeholder={users.length && users[getIndex(users, editContactId)].fullName}
               onChange={handleEditFormChange}
             />
           </div>
@@ -66,7 +64,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               name="email"
               id="email"
               className="form-control"
-              placeholder={users.length && users[getIndex(editContactId)].email}
+              placeholder={users.length && users[getIndex(users, editContactId)].email}
               onChange={handleEditFormChange}
             />
           </div>
@@ -88,7 +86,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               type="number"
               id="number"
               className="form-control"
-              placeholder={users.length && users[getIndex(editContactId)].phoneNumber}
+              placeholder={users.length && users[getIndex(users, editContactId)].phoneNumber}
               onChange={handleEditFormChange}
             />
           </div>
@@ -111,7 +109,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               type="text"
               id="firm"
               className="form-control"
-              placeholder={users.length && users[getIndex(editContactId)].company}
+              placeholder={users.length && users[getIndex(users, editContactId)].company}
               onChange={handleEditFormChange}
             />
           </div>
@@ -130,7 +128,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               type="number"
               id="scores"
               className="form-control"
-              placeholder={users.length && users[getIndex(editContactId)].scores}
+              placeholder={users.length && users[getIndex(users, editContactId)].scores}
               onChange={handleEditFormChange}
             />
           </div>
