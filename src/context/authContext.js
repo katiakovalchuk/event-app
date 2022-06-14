@@ -1,86 +1,79 @@
-import {createContext, useContext, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {
-    onAuthStateChanged,
-    sendPasswordResetEmail,
-    sendSignInLinkToEmail,
-    signInWithEmailAndPassword,
-    signInWithEmailLink,
-    signOut
-} from "firebase/auth";
-import {doc, serverTimestamp, setDoc} from "firebase/firestore";
+import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { onAuthStateChanged, sendPasswordResetEmail, sendSignInLinkToEmail, signInWithEmailAndPassword, signInWithEmailLink, signOut } from "firebase/auth";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
-import {auth} from "../lib/init-firebase";
-import {usersCollectionRef} from "../lib/firestore.collections.js";
-import {getUsers} from "../store/slices/usersSlice";
+import { auth } from "../lib/init-firebase";
+import { usersCollectionRef } from "../lib/firestore.collections.js";
+import { getUsers } from "../store/slices/usersSlice";
 
 const authContext = createContext();
 
-export const AuthContextProvider = ({children}) => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const users = useSelector(state => state.usersSlice.users);
-    const [user, setUser] = useState({});
+export const AuthContextProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.usersSlice.users);
+  const [user, setUser] = useState({});
 
-    useEffect(() => {
-        dispatch(getUsers());
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
-        return () => unsubscribe();
-    }, []);
+  useEffect(() => {
+    dispatch(getUsers());
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
+    return () => unsubscribe();
+  }, []);
 
-    const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
 
-    function logout() {
-        return signOut(auth).then(() => {
-            setUser(null);
-            navigate("/login");
-            localStorage.removeItem("role");
+  function logout() {
+    return signOut(auth).then(() => {
+      setUser(null);
+      navigate("/login");
+      localStorage.removeItem("role");
+    });
+  }
+
+  const sendResetEmail = (email) => sendPasswordResetEmail(auth, email);
+
+  function signin(email, code) {
+    return signInWithEmailLink(auth, email, code).then((result) => {
+      setUser(result.user);
+
+      const isUserEmail = users.some((user) => user.email === email);
+      if (!isUserEmail) {
+        setDoc(doc(usersCollectionRef, result.user.uid), {
+          name: email,
+          id: result.user.uid,
+          email,
+          userImage:
+            "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/profile-1.png?alt=media&token=6e911220-745f-4fab-918d-497af8aa1566",
+          timeStamp: serverTimestamp(),
         });
-    }
+      }
+      return true;
+    });
+  }
 
-    const sendResetEmail = (email) => sendPasswordResetEmail(auth, email);
+  function sendLink(email) {
+    console.log("send link");
+    return sendSignInLinkToEmail(auth, email, {
+      url: "http://localhost:3000/confirm",
+      handleCodeInApp: true,
+    }).then(() => {
+      return true;
+    });
+  }
 
-    function signin(email, code) {
-        return signInWithEmailLink(auth, email, code).then((result) => {
-            setUser(result.user);
+  const values = {
+    user,
+    users,
+    sendLink,
+    signin,
+    logout,
+    login,
+    sendResetEmail,
+  };
 
-            const isUserEmail = users.some((user) => user.email === email);
-            if (!isUserEmail) {
-                setDoc(doc(usersCollectionRef, result.user.uid), {
-                    name: email,
-                    id: result.user.uid,
-                    email,
-                    userImage:
-                        "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/profile-1.png?alt=media&token=6e911220-745f-4fab-918d-497af8aa1566",
-                    timeStamp: serverTimestamp(),
-                });
-            }
-            return true;
-        });
-    }
-
-    function sendLink(email) {
-        console.log("send link");
-        return sendSignInLinkToEmail(auth, email, {
-            url: "http://localhost:3000/confirm",
-            handleCodeInApp: true,
-        }).then(() => {
-            return true;
-        });
-    }
-
-    const values = {
-        user,
-        users,
-        sendLink,
-        signin,
-        logout,
-        login,
-        sendResetEmail,
-    };
-
-    return <authContext.Provider value={values}>{children}</authContext.Provider>;
+  return <authContext.Provider value={values}>{children}</authContext.Provider>;
 };
 /*eslint react/prop-types: 0 */
 
