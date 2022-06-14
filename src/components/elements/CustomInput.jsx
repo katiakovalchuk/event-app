@@ -1,4 +1,5 @@
 import React from "react";
+
 import PropTypes from "prop-types";
 
 import "../../styles/form.scss";
@@ -10,6 +11,8 @@ const CustomInput = ({
   error,
   errorText,
   register,
+  show,
+  onShowPassword,
   ...props
 }) => {
   return (
@@ -23,6 +26,11 @@ const CustomInput = ({
           {...register}
           {...props}
         />
+        {show && (
+          <span className="showPassword" onClick={onShowPassword}>
+            {show}
+          </span>
+        )}
       </span>
       {error && <span className="error-text">{errorText}</span>}
     </>
@@ -36,6 +44,8 @@ CustomInput.propTypes = {
   error: PropTypes.bool,
   errorText: PropTypes.string,
   register: PropTypes.object,
+  show: PropTypes.node,
+  onShowPassword: PropTypes.func,
 };
 
 export default CustomInput;

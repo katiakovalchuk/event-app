@@ -19,7 +19,7 @@
   width: 100%;
   margin-left: 0 !important;
   color: $primary-color;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 
   .input-icon {
     margin-left: 0;
@@ -35,6 +35,15 @@
       box-shadow: none;
     }
   }
+
+  .showPassword {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    cursor: pointer;
+  }
+
   .number {
     flex: initial;
     width: 100px;

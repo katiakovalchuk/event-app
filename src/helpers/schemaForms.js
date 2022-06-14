@@ -51,3 +51,22 @@ export const eventSchema = yup.object().shape({
     .positive("* Points should be a positive number")
     .integer("* Points should be an integer number"),
 });
+
+export const passwordSchema = yup.object().shape({
+  newPassword: yup
+    .string()
+    .min(7, "* Min length is 7 characters")
+    .max(16, "* Max length is 16 characters")
+    .matches(
+      /^(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{7}$/,
+      "Password should contain 7 characters, including a number and a special character"
+    )
+    .required("New password is a required field"),
+  confirmNewPassword: yup
+    .string()
+    .oneOf(
+      [yup.ref("newPassword"), null],
+      "This field should match with New password"
+    )
+    .required("Confirm new password is a required field"),
+});
