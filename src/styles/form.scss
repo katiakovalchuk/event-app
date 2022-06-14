@@ -138,6 +138,10 @@
     border-color: none;
     box-shadow: none;
   }
+
+  &:disabled {
+    background-color: $disable;
+  }
 }
 
 .react-datepicker {

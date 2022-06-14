@@ -1,0 +1,28 @@
+@import "./scss/reset";
+@import "./scss/variable";
+
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: $primary-color;
+  position: fixed;
+  z-index: 99;
+  bottom: 50px;
+  right: 50px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+
+  & > svg {
+    color: $white;
+    width: 30px;
+    height: 30px;
+  }
+
+  &:hover {
+    background-color: lighten($primary-color, 15%);
+  }
+}
