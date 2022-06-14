@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 
 import {
-  AdminMembersManagement,
+  MembersManagement,
   EventsItem,
   Events,
   Home,
@@ -11,23 +11,21 @@ import {
   MembersPage,
   NotFoundPage,
   ProfilePage,
-  TestPage,
 } from "../pages";
 import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
-import { getUserById } from "../store/slices/userSlice";
+import { getUserByEmail } from "../store/slices/userSlice";
 import { useUserAuth } from "../context/authContext";
 import { Circles } from "react-loader-spinner";
 
 export const AppStack = () => {
   const dispatch = useDispatch();
   const { user } = useUserAuth();
-  const status = useSelector((state) => state.userSlice.status);
-  const { user: currUser } = useSelector((state) => state.userSlice);
+  const { status, user: currUser } = useSelector((state) => state.userSlice);
   const role = currUser?.role;
 
   useEffect(() => {
-    dispatch(getUserById(user.uid));
+    dispatch(getUserByEmail(user.email));
   }, []);
 
   if (!status || status === "pending") {
@@ -47,9 +45,6 @@ export const AppStack = () => {
           <Route path="members" element={<MembersPage />} />
           <Route path="events" element={<Events />} />
           <Route path="events/:id" element={<EventsItem />} />
-
-          {/*//remove later*/}
-          <Route path="test" element={<TestPage />} />
         </Route>
         <Route element={<ProtectedRoute isAllowed={role === "manager"} />}>
           <Route path="event-page" />
@@ -64,10 +59,7 @@ export const AppStack = () => {
             />
           }
         >
-          <Route
-            path="members-management"
-            element={<AdminMembersManagement />}
-          />
+          <Route path="members-management" element={<MembersManagement />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFoundPage />} />
