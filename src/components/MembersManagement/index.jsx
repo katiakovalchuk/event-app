@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { doc, setDoc, deleteDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { debounce } from "lodash";
+import { ToastContainer, toast } from "react-toastify";
 
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
@@ -12,6 +13,7 @@ import { useUserAuth } from "../../context/authContext";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 
 import "./style.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 // eslint-disable-next-line react/prop-types
 const Table = ({ showManagers }) => {
@@ -54,6 +56,42 @@ const Table = ({ showManagers }) => {
           })
           .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
       );
+    });
+  };
+
+  const addUserToast = () => {
+    toast.success("User Account has been created", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const deleteUserToast = () => {
+    toast.success("A user account was deleted", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const editUserToast = () => {
+    toast.success("Your data has been successfully saved!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
   };
 
@@ -135,12 +173,13 @@ const Table = ({ showManagers }) => {
       rank: 0,
       image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     });
-
     getUsers();
+    addUserToast();
   };
 
   const handleDeleteClick = async (id) => {
     await deleteDoc(doc(usersCollectionRef, id));
+    deleteUserToast();
     getUsers();
   };
 
@@ -165,6 +204,7 @@ const Table = ({ showManagers }) => {
       })
       .catch((err) => console.log(err.message));
     setEditContactId(null);
+    editUserToast();
     getUsers();
   };
 
@@ -220,6 +260,7 @@ const Table = ({ showManagers }) => {
               />
             </table>
           </form>
+          <ToastContainer />
         </Col>
       </Row>
     </Container>
