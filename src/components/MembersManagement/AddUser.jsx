@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import PropTypes from "prop-types";
 
 const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAddFormChange }) => {
   return (
@@ -185,6 +185,14 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
       </Modal.Footer>
     </Modal>
   );
+};
+
+AddUser.propTypes = {
+  show: PropTypes.bool,
+  handleClose: PropTypes.bool,
+  handleAddFormSubmit: PropTypes.func,
+  addFormData: PropTypes.object,
+  handleAddFormChange: PropTypes.func,
 };
 
 export default AddUser;
