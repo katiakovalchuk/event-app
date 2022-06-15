@@ -1,6 +1,11 @@
+import MembersManagementTemplate from "../components/MembersManagement";
 
 const ManagersManagement = () => {
-    return <div>Managers Management</div>;
+  return (
+    <div>
+      <MembersManagementTemplate showManagers={true} />
+    </div>
+  );
 };
 
 export default ManagersManagement;
