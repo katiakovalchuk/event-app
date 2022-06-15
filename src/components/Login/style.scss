@@ -37,6 +37,10 @@
     max-width: var(--max-block-width);
   }
 
+  &-heading{
+    font-size: 1.6rem;
+  }
+
   &-input {
     background-color: var(--primary-color) !important;
     border-color: var(--secondary-color) !important;
