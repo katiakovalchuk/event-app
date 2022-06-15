@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
 
 import { updateDoc, doc, getDocs } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -11,7 +12,7 @@ import { storage } from "../lib/init-firebase.js";
 import { usersCollectionRef } from "../lib/firestore.collections.js";
 import { getIndex } from "../helpers/utils.js";
 import { capitalizeFirstLetter } from "../helpers/utils.js";
-
+import "react-toastify/dist/ReactToastify.css";
 import styles from "../styles/Profile.module.scss";
 
 const ProfilePage = () => {
@@ -45,6 +46,18 @@ const ProfilePage = () => {
     const newFormData = { ...addFormData };
     newFormData[name] = value;
     setAddFormData(newFormData);
+  };
+
+  const successToast = () => {
+    toast.success("Your data has been successfully saved!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   useEffect(() => {
@@ -100,6 +113,7 @@ const ProfilePage = () => {
       image,
     }).then((e) => {
       console.error(e);
+      successToast();
     });
   };
 
@@ -239,6 +253,7 @@ const ProfilePage = () => {
                   </label>
                   <input type="file" id="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }} />
                 </div>
+                <ToastContainer />
                 <div className="p-1 pt-0">
                   <p className="mb-1 ps-2">Choose Image</p>
                   <p className="text-muted mb-1 ms-2">JPG, GIF or PNG. MAX size of 800K</p>
