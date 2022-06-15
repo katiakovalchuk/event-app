@@ -1,40 +1,39 @@
 /* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
-import { ToastContainer, toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { Col, Container, Row } from "react-bootstrap";
+import { doc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
-import { updateDoc, doc, getDocs } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
+import ConfirmSignIn from "../components/ConfirmSignIn";
+import Toast from "../components/elements/CustomToast";
+import { ModalForm } from "../components/elements";
+import { useDialog } from "../context/dialogContext";
 import { useUserAuth } from "../context/authContext";
+import { getUsers, updateUserByInitialEmail } from "../store/slices/usersSlice";
 import { storage } from "../lib/init-firebase.js";
 import { usersCollectionRef } from "../lib/firestore.collections.js";
-import { getIndex } from "../helpers/utils.js";
-import { capitalizeFirstLetter } from "../helpers/utils.js";
-import "react-toastify/dist/ReactToastify.css";
+import { capitalizeFirstLetter, getIndex } from "../helpers/utils.js";
+
 import styles from "../styles/Profile.module.scss";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");
-  const [users, setUsers] = useState([]);
+  const users = useSelector((state) => state.usersSlice.users);
   const [addFormData, setAddFormData] = useState({});
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
-  const { user } = useUserAuth();
-
-  const getUsers = () => {
-    getDocs(usersCollectionRef).then((data) => {
-      setUsers(
-        data.docs.map((item) => {
-          return { ...item.data(), id: item.id };
-        })
-      );
-    });
-  };
+  const { user, changeEmail } = useUserAuth();
+  const { handleShowModal } = useDialog();
+  const dispatch = useDispatch();
+  const initialEmail = user.email;
+  const [updatedUser, setUpdatedUser] = useState();
+  const docRef = doc(usersCollectionRef, user.uid);
 
   useEffect(() => {
-    getUsers();
+    dispatch(getUsers());
   }, []);
 
   useEffect(() => {
@@ -46,18 +45,6 @@ const ProfilePage = () => {
     const newFormData = { ...addFormData };
     newFormData[name] = value;
     setAddFormData(newFormData);
-  };
-
-  const successToast = () => {
-    toast.success("Your data has been successfully saved!", {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
   };
 
   useEffect(() => {
@@ -94,7 +81,6 @@ const ProfilePage = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    console.log("submit", user);
 
     const fullName = addFormData.fullName || (users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].fullName));
     const email = addFormData.email || (users.length && users[getIndex(users, user.email)].email);
@@ -102,24 +88,44 @@ const ProfilePage = () => {
     const company = addFormData.company || (users.length && users[getIndex(users, user.email)].company);
     const birth = addFormData.birth || (users.length && users[getIndex(users, user.email)].birth);
     const image = data.img || (users.length && users[getIndex(users, user.email)].image);
-
-    const docRef = doc(usersCollectionRef, user.email);
-    updateDoc(docRef, {
+    const newUSer = {
       fullName,
       email,
       phoneNumber,
       company,
       birth,
       image,
-    }).then((e) => {
-      console.error(e);
-      successToast();
-    });
-  };
+      initialEmail,
+    };
+    setUpdatedUser(newUSer);
 
+    if (email !== user.email || email !== "") {
+      try {
+        // throw new Error("error");
+        await changeEmail(user, email);
+        await dispatch(updateUserByInitialEmail(newUSer));
+        window.location.reload();
+      } catch (err) {
+        handleShowModal();
+      }
+    } else {
+      await updateDoc(docRef, {
+        fullName,
+        email,
+        phoneNumber,
+        company,
+        birth,
+        image,
+      }).then((e) => {
+        console.error(e);
+      });
+    }
+  };
   return (
     <section id="profile" className="pt-4">
       <Container>
+        <ModalForm title="Please, type Your password to continue" form={<ConfirmSignIn updatedUser={updatedUser} newEmail={addFormData.email} />} />
+        <Toast toastHeading="Failed to change profile data" toastText="Try again. Pay attention to submit correct password." variant="warning" />
         <Row>
           <Col md={8}>
             <form onSubmit={handleAdd}>
@@ -253,7 +259,6 @@ const ProfilePage = () => {
                   </label>
                   <input type="file" id="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }} />
                 </div>
-                <ToastContainer />
                 <div className="p-1 pt-0">
                   <p className="mb-1 ps-2">Choose Image</p>
                   <p className="text-muted mb-1 ms-2">JPG, GIF or PNG. MAX size of 800K</p>

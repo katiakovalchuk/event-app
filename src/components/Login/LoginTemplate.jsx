@@ -80,7 +80,7 @@ const LoginTemplate = () => {
                             className="login-form d-flex flex-column align-items-center text-center text-white"
                             onSubmit={handleSubmit}
                         >
-                            <h2 className="fw-bold mb-4">Login</h2>
+                            <h2 className="login-form-heading fw-bold mb-4">Login</h2>
                             <input
                                 className="login-form-input form-control mt-2 mb-3 rounded-3"
                                 type="email"
