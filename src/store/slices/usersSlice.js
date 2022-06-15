@@ -46,25 +46,6 @@ export const updateUser = createAsyncThunk(
     }
 );
 
-export const updateUserByInitialEmail = createAsyncThunk(
-    "usersSlice/updateUser",
-    async (updatedUser, {rejectWithValue, getState}) => {
-        const {initialEmail, ...rest} = updatedUser;
-        let id;
-        getState().usersSlice.users.forEach(user => {
-            if (user.email === initialEmail){
-                id = user.id;
-            }
-        });
-        try {
-            await updateDoc(doc(db, "users", id), {...rest});
-            return updatedUser;
-        } catch (err) {
-            return rejectWithValue(STATUSES.failed);
-        }
-    }
-);
-
 export const setUserWithCustomId = createAsyncThunk(
     "usersSlice/addNewUser",
     async (newUser, {rejectWithValue}) => {
@@ -118,14 +99,6 @@ const usersSlice = createSlice({
                 return user.id === action.payload.id ? {...user, ...action.payload} : user;
             });
         },
-        [updateUserByInitialEmail.fulfilled]: (state, action) => {
-            state.status = STATUSES.succeeded;
-            state.users = state.users.map(user => {
-                state.status = STATUSES.succeeded;
-                const {initialEmail, ...rest} = action.payload;
-                return user.email === initialEmail ? {...user, ...rest} : user;
-            });
-        },
         [setUserWithCustomId.fulfilled]: (state, action) => {
             let isSet = false;
             state.status = STATUSES.succeeded;
@@ -148,13 +121,11 @@ const usersSlice = createSlice({
         [getUsers.pending]: setPending,
         [addNewUserWithAutoId.pending]: setPending,
         [updateUser.pending]: setPending,
-        [updateUserByInitialEmail.pending]: setPending,
         [setUserWithCustomId]: setPending,
         [deleteUser.pending]: setPending,
         [getUsers.rejected]: setError,
         [addNewUserWithAutoId.rejected]: setError,
         [updateUser.rejected]: setError,
-        [updateUserByInitialEmail.rejected]: setError,
         [setUserWithCustomId]: setError,
         [deleteUser.rejected]: setError
     }

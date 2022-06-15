@@ -8,9 +8,7 @@ import {
     signInWithEmailAndPassword,
     signInWithEmailLink,
     signOut,
-    updatePassword,
-    updateEmail,
-    reauthenticateWithCredential
+    updatePassword
 } from "firebase/auth";
 import {doc, serverTimestamp, setDoc} from "firebase/firestore";
 
@@ -44,8 +42,6 @@ export const AuthContextProvider = ({children}) => {
 
     const sendResetEmail = (email) => sendPasswordResetEmail(auth, email);
     const changePassword = (user, newPassword) => updatePassword(user, newPassword);
-    const changeEmail = (user, newEmail) => updateEmail(user, newEmail);
-    const reauthenticate = (user, cred) => reauthenticateWithCredential(user, cred);
 
     function signin(email, code) {
         return signInWithEmailLink(auth, email, code).then((result) => {
@@ -82,10 +78,8 @@ export const AuthContextProvider = ({children}) => {
         signin,
         logout,
         changePassword,
-        changeEmail,
         sendLink,
         sendResetEmail,
-        reauthenticate
     };
 
     return <authContext.Provider value={values}>{children}</authContext.Provider>;
