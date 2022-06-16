@@ -27,7 +27,7 @@ const CustomInput = ({
           {...props}
         />
         {show && (
-          <span className="showPassword" onClick={onShowPassword}>
+          <span className="showPassword z-index-3" onClick={onShowPassword}>
             {show}
           </span>
         )}

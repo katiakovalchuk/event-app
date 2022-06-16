@@ -1,4 +1,5 @@
 import {createContext, useContext, useState} from "react";
+import {toast} from "react-toastify";
 import PropTypes from "prop-types";
 
 const DialogContext = createContext();
@@ -15,6 +16,13 @@ export const DialogContextProvider = ({children}) => {
     const handleCloseToast = () => setShowToast(false);
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
+
+    const notifySuccess = content => {
+        toast.success(content);
+    };
+    const notifyError = content => {
+        toast.error(content);
+    };
 
     const defaultItemEdit = {item: {}, edit: false};
     const [itemEdit, setItemEdit] = useState(defaultItemEdit);
@@ -50,6 +58,8 @@ export const DialogContextProvider = ({children}) => {
             value={{
                 showToast,
                 showModal,
+                notifySuccess,
+                notifyError,
                 toastContent,
                 itemEdit,
                 handleShowToast,

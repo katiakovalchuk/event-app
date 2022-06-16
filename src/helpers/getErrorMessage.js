@@ -5,5 +5,5 @@ export const getErrorMessage = (error, errorMessages) => {
             message = errorMessages[key];
         }
     }
-    return message;
+    return message ? message : "Failed to process. Please, try again!";
 };
