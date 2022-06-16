@@ -60,6 +60,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               </svg>
             </span>
             <input
+              disabled
               type="email"
               name="email"
               id="email"

@@ -152,6 +152,7 @@ const ProfilePage = () => {
                   </svg>
                 </span>
                 <input
+                  disabled
                   type="email"
                   onChange={handleAddFormChange}
                   name="email"
