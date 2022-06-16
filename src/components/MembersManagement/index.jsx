@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
@@ -19,7 +20,6 @@ import useModalDel from "../../hooks/useModalDel";
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
 
-// eslint-disable-next-line react/prop-types
 const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
   const [users, setUsers] = useState([]);
@@ -179,7 +179,6 @@ const Table = ({ showManagers }) => {
     addUserToast();
   };
 
-  // eslint-disable-next-line no-unused-vars
   const handleDeleteClick = async (id) => {
     setDelId(id);
     openDel();
@@ -267,5 +266,9 @@ const Table = ({ showManagers }) => {
       </Row>
     </Container>
   );
+};
+
+Table.propTypes = {
+  showManagers: PropTypes.bool,
 };
 export default Table;
