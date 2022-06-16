@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 import { getDocs } from "firebase/firestore";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
@@ -162,6 +161,14 @@ const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmi
       </Modal.Footer>
     </Modal>
   );
+};
+
+EditUser.propTypes = {
+  modalOpenEdit: PropTypes.bool,
+  editContactId: PropTypes.string,
+  closeEdit: PropTypes.func,
+  handleEditFormSubmit: PropTypes.func,
+  handleEditFormChange: PropTypes.func,
 };
 
 export default EditUser;
