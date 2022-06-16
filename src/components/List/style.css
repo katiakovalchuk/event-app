@@ -1,2 +1,23 @@
+.membersForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imageField {
+  display: flex;
+  justify-content: center;
+}
+.profileImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.search {
+  width: 50%;
+  margin-top: 10px;
+}
 
 
