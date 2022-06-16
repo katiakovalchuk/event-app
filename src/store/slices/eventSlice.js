@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getDoc, doc } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 
 import { db } from "../../lib/init-firebase.js";
 
@@ -16,9 +22,37 @@ export const getEvent = createAsyncThunk(
       const docRef = doc(db, "events", id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        const response = { ...docSnap.data(), id: docSnap.id };
-        return response;
+        return { ...docSnap.data(), id: docSnap.id };
       }
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+export const addUserToEvent = createAsyncThunk(
+  "eventSlice/addUserToEvent",
+  async ({ uid, eid }, { rejectedWithValue, dispatch }) => {
+    try {
+      await updateDoc(doc(db, "events", eid), {
+        membersList: arrayUnion(uid),
+      });
+      dispatch(addUser(uid));
+    } catch (error) {
+      console.log(error);
+      return rejectedWithValue(error);
+    }
+  }
+);
+
+export const deleteUserFromEvent = createAsyncThunk(
+  "eventSlice/deleteUserFromEvent",
+  async ({ eid, uid }, { rejectWithValue, dispatch }) => {
+    try {
+      await updateDoc(doc(db, "events", eid), {
+        membersList: arrayRemove(uid),
+      });
+      dispatch(deleteUser(uid));
     } catch (error) {
       console.log(error);
       return rejectWithValue(error.message);
@@ -43,7 +77,16 @@ const setLoading = (state) => {
 const eventSlice = createSlice({
   name: "eventSlice",
   initialState,
-  reducers: {},
+  reducers: {
+    addUser(state, action) {
+      state.event.membersList.push(action.payload);
+    },
+    deleteUser(state, action) {
+      state.event.membersList = state.event.membersList.filter(
+        (id) => id !== action.payload
+      );
+    },
+  },
   extraReducers: {
     [getEvent.rejected]: setError,
     [getEvent.pending]: setLoading,
@@ -53,5 +96,6 @@ const eventSlice = createSlice({
     },
   },
 });
+const { addUser, deleteUser } = eventSlice.actions;
 
 export default eventSlice.reducer;

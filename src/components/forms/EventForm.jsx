@@ -54,6 +54,7 @@ const EventForm = () => {
       ...data,
       eventName: capitalizeFirstLet(data.eventName),
       eventDate: moment(data.eventDate).format("yyyy-MM-DD HH:mm"),
+      membersList: [],
     };
     delete event.hasDescription;
 
