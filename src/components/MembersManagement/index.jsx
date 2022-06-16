@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { doc, setDoc, deleteDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
+import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
+import DelUser from "./DelUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
 
 import { useUserAuth } from "../../context/authContext";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
+import useModalAdd from "../../hooks/useModalAdd";
+import useModalEdit from "../../hooks/useModalEdit";
+import useModalDel from "../../hooks/useModalDel";
 
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,17 +24,14 @@ const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const { sendLink } = useUserAuth();
-
-  const [show, setShow] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleCloseEdit = () => setShowEdit(false);
-  const handleShow = () => setShow(true);
-  const handleShowEdit = () => setShowEdit(true);
+  const [delId, setDelId] = useState([]);
 
   const [editContactId, setEditContactId] = useState(null);
   const [addFormData, setAddFormData] = useState({ role: "user" });
+
+  const { modalOpenAdd, closeAdd, openAdd } = useModalAdd();
+  const { modalOpenEdit, closeEdit, openEdit } = useModalEdit();
+  const { modalOpenDel, closeDel, openDel } = useModalDel();
 
   useEffect(() => {
     if (showManagers) {
@@ -174,13 +175,14 @@ const Table = ({ showManagers }) => {
       image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     });
     getUsers();
+    closeAdd();
     addUserToast();
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleDeleteClick = async (id) => {
-    await deleteDoc(doc(usersCollectionRef, id));
-    deleteUserToast();
-    getUsers();
+    setDelId(id);
+    openDel();
   };
 
   const handleCancelClick = () => {
@@ -189,7 +191,7 @@ const Table = ({ showManagers }) => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
-    handleCloseEdit();
+    closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     updateDoc(docRef, {
       fullName: editFormData.fullName,
@@ -210,8 +212,7 @@ const Table = ({ showManagers }) => {
 
   const handleEditClick = (event, contact) => {
     setEditContactId(contact.email);
-    handleShowEdit();
-
+    openEdit();
     const formValues = {
       fullName: contact.fullName,
       phoneNumber: contact.phoneNumber,
@@ -228,7 +229,7 @@ const Table = ({ showManagers }) => {
       <Row>
         <Col md={12}>
           <div className="mt-5 d-flex justify-content-between">
-            <Button variant="primary" className="btn btn-primary " onClick={handleShow}>
+            <Button variant="primary" className="btn btn-primary " onClick={openAdd}>
               Add user
             </Button>
 
@@ -237,8 +238,9 @@ const Table = ({ showManagers }) => {
             </div>
           </div>
 
-          <AddUser {...{ show, handleClose, handleAddFormSubmit, handleAddFormChange, addFormData }} />
-          {showEdit && <EditUser {...{ showEdit, editContactId, handleCloseEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
+          <AddUser {...{ modalOpenAdd, closeAdd, handleAddFormSubmit, handleAddFormChange, addFormData }} />
+          {modalOpenEdit && <EditUser {...{ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
+          {modalOpenDel && <DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId }} />}
 
           <form onSubmit={handleEditFormSubmit}>
             <table className="table table-admin">

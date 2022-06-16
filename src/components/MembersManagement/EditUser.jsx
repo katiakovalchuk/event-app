@@ -8,7 +8,7 @@ import { getDocs } from "firebase/firestore";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { getIndex } from "../../helpers/utils.js";
 
-const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubmit, handleEditFormChange }) => {
+const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmit, handleEditFormChange }) => {
   const [users, setUsers] = useState([]);
   const getUsers = () => {
     getDocs(usersCollectionRef).then((data) => {
@@ -25,7 +25,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
   }, []);
 
   return (
-    <Modal show={showEdit} onHide={handleCloseEdit}>
+    <Modal show={modalOpenEdit} onHide={closeEdit}>
       <Modal.Header closeButton className="bg-light">
         <Modal.Title>Update user data:</Modal.Title>
       </Modal.Header>
@@ -41,6 +41,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               </svg>
             </span>
             <input
+              autoFocus
               type="text"
               id="name"
               name="fullName"
@@ -155,7 +156,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
         </form>
       </Modal.Body>
       <Modal.Footer className="bg-light">
-        <Button variant="secondary" onClick={handleCloseEdit}>
+        <Button variant="secondary" onClick={closeEdit}>
           Close
         </Button>
       </Modal.Footer>
