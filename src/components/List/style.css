@@ -2,6 +2,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 25px;
+}
+
+.members-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #060b26 !important;
+  color: white !important;
 }
 
 .imageField {

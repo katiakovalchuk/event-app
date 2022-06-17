@@ -29,12 +29,27 @@ const List = () => {
     if (users && !localusers.length) setLocalusers(users);
   }, [users]);
 
-  const sortData = (field = "scores") => {
-    const copyData = users.concat();
-    const res = copyData.sort((a, b) => {
-      return a[field] > b[field] ? 1 : -1;
-    });
-    setLocalusers(res);
+  const columns = [
+    { label: "User image", accessor: "image", sortable: false },
+    { label: "Full Name", accessor: "fullName", sortable: true },
+    { label: "Email", accessor: "email", sortable: true },
+    { label: "Scores", accessor: "scores", sortable: true },
+  ];
+
+  const handleSorting = (sortField, sortOrder) => {
+    if (sortField) {
+      const sorted = [...users].sort((a, b) => {
+        if (a[sortField] === null) return 1;
+        if (b[sortField] === null) return -1;
+        if (a[sortField] === null && b[sortField] === null) return 0;
+        return (
+          a[sortField].toString().localeCompare(b[sortField].toString(), "en", {
+            numeric: true,
+          }) * (sortOrder === "asc" ? 1 : -1)
+        );
+      });
+      setLocalusers(sorted);
+    }
   };
 
   return (
@@ -46,7 +61,11 @@ const List = () => {
           className="search"
           onChange={(e) => setQuery(e.target.value)}
         />
-        <TableForm data={search(localusers)} sortData={sortData} />
+        <TableForm
+          data={search(localusers)}
+          handleSorting={handleSorting}
+          columns={columns}
+        />
       </div>
     </>
   );
