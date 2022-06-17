@@ -8,7 +8,7 @@ import { useDialog } from "../../context/dialogContext";
 const CustomToast = ({ toastHeading, toastText, variant }) => {
   const { showToast, handleCloseToast } = useDialog();
   return (
-    <ToastContainer className="pt-5" position="top-end" delay={5000} autohide>
+    <ToastContainer className="pt-5" position="top-end" delay={5000} autohide="true">
       <Toast
         onClose={handleCloseToast}
         show={showToast}

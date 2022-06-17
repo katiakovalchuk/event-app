@@ -1,14 +1,13 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
 import { getDocs } from "firebase/firestore";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { getIndex } from "../../helpers/utils.js";
 
-const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubmit, handleEditFormChange }) => {
+const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmit, handleEditFormChange }) => {
   const [users, setUsers] = useState([]);
   const getUsers = () => {
     getDocs(usersCollectionRef).then((data) => {
@@ -25,7 +24,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
   }, []);
 
   return (
-    <Modal show={showEdit} onHide={handleCloseEdit}>
+    <Modal show={modalOpenEdit} onHide={closeEdit}>
       <Modal.Header closeButton className="bg-light">
         <Modal.Title>Update user data:</Modal.Title>
       </Modal.Header>
@@ -41,6 +40,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               </svg>
             </span>
             <input
+              autoFocus
               type="text"
               id="name"
               name="fullName"
@@ -60,6 +60,7 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
               </svg>
             </span>
             <input
+              disabled
               type="email"
               name="email"
               id="email"
@@ -154,12 +155,20 @@ const EditUser = ({ showEdit, editContactId, handleCloseEdit, handleEditFormSubm
         </form>
       </Modal.Body>
       <Modal.Footer className="bg-light">
-        <Button variant="secondary" onClick={handleCloseEdit}>
+        <Button variant="secondary" onClick={closeEdit}>
           Close
         </Button>
       </Modal.Footer>
     </Modal>
   );
+};
+
+EditUser.propTypes = {
+  modalOpenEdit: PropTypes.bool,
+  editContactId: PropTypes.string,
+  closeEdit: PropTypes.func,
+  handleEditFormSubmit: PropTypes.func,
+  handleEditFormChange: PropTypes.func,
 };
 
 export default EditUser;

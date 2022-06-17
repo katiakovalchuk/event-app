@@ -12,10 +12,22 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
         if (accessor === "action") {
           return (
             <td className="text-center" key={accessor}>
-              <Button className="btn me-2" type="button" onClick={(event) => handleEditClick(event, data)} variant="warning" size="sm">
+              <Button
+                className="btn me-2"
+                type="button"
+                onClick={(event) => handleEditClick(event, data)}
+                variant="primary"
+                size="sm"
+              >
                 Edit
               </Button>
-              <Button disabled={data.id === user.uid} type="button" onClick={() => handleDeleteClick(data.id)} variant="danger" size="sm">
+              <Button
+                disabled={data.id === user.uid}
+                type="button"
+                onClick={() => handleDeleteClick(data.id)}
+                variant="danger"
+                size="sm"
+              >
                 Delete
               </Button>
             </td>

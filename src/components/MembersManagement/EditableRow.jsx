@@ -7,6 +7,7 @@ const EditableRow = ({ editFormData, handleEditFormChange, handleCancelClick }) 
     <tr>
       <td>
         <input
+          autoFocus
           type="text"
           required="required"
           placeholder="Enter a name..."

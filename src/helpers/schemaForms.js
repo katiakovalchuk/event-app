@@ -25,29 +25,53 @@ export const eventSchema = yup.object().shape({
     otherwise: yup.string().notRequired(),
   }),
 
-  eventPlace: yup
-    .string()
-    .typeError("* Please choose a venue of the event")
-    .required("* Please choose a venue of the event")
-    .oneOf(["online", "city"]),
+    eventPlace: yup
+        .string()
+        .typeError("* Please choose a venue of the event")
+        .required("* Please choose a venue of the event")
+        .oneOf(["online", "city"]),
 
-  cityName: yup.string().when("eventPlace", {
-    is: "city",
-    then: yup
-      .string()
-      .required("* City Name is a required field")
-      .matches(
-        /^[aA-zZ0-9'-\s]+$/,
-        "Only alphabets and numbers are allowed for this field "
-      )
-      .min(2, "* Min length is 2 characters")
-      .max(30, "* Max length is 30 characters"),
-    otherwise: yup.string().notRequired(),
-  }),
-  points: yup
-    .number("* Points should be a positive number")
-    .required("* Points is a required field")
-    .typeError("* Points is a required field")
-    .positive("* Points should be a positive number")
-    .integer("* Points should be an integer number"),
+    cityName: yup.string().when("eventPlace", {
+        is: "city",
+        then: yup
+            .string()
+            .required("* City Name is a required field")
+            .matches(
+                /^[aA-zZ0-9'-\s]+$/,
+                "Only alphabets and numbers are allowed for this field "
+            )
+            .min(2, "* Min length is 2 characters")
+            .max(50, "* Max length is 50 characters"),
+        otherwise: yup.string().notRequired(),
+    }),
+    points: yup
+        .number("* Points should be a positive number")
+        .required("* Points is a required field")
+        .typeError("* Points is a required field")
+        .positive("* Points should be a positive number")
+        .integer("* Points should be an integer number"),
+});
+
+export const passwordSchema = yup.object().shape({
+    oldPassword: yup
+        .string()
+        .min(6, "* Min length is 6 characters")
+        .max(16, "* Max length is 16 characters")
+        .required("New password is a required field"),
+    newPassword: yup
+        .string()
+        .min(7, "* Min length is 7 characters")
+        .max(16, "* Max length is 16 characters")
+        .matches(
+            /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{7,}$/,
+            "Password should contain at least 7 characters, including one number and one special character(@,$,!,%,*,#,?,&)"
+        )
+        .required("New password is a required field"),
+    confirmNewPassword: yup
+        .string()
+        .oneOf(
+            [yup.ref("newPassword"), null],
+            "This field should match with New password"
+        )
+        .required("Confirm new password is a required field"),
 });

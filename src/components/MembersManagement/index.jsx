@@ -1,40 +1,53 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { doc, setDoc, deleteDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
+import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { debounce } from "lodash";
+import { ToastContainer, toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
+import DelUser from "./DelUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
 
 import { useUserAuth } from "../../context/authContext";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
+import useModalAdd from "../../hooks/useModalAdd";
+import useModalEdit from "../../hooks/useModalEdit";
+import useModalDel from "../../hooks/useModalDel";
 
 import "./style.scss";
+import "react-toastify/dist/ReactToastify.css";
 
-const Table = () => {
+const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const { sendLink } = useUserAuth();
-
-  const [show, setShow] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleCloseEdit = () => setShowEdit(false);
-  const handleShow = () => setShow(true);
-  const handleShowEdit = () => setShowEdit(true);
+  const [delId, setDelId] = useState([]);
 
   const [editContactId, setEditContactId] = useState(null);
   const [addFormData, setAddFormData] = useState({ role: "user" });
 
+  const { modalOpenAdd, closeAdd, openAdd } = useModalAdd();
+  const { modalOpenEdit, closeEdit, openEdit } = useModalEdit();
+  const { modalOpenDel, closeDel, openDel } = useModalDel();
+
   useEffect(() => {
-    document.title = "Members Management"; // or Managers Management if role is manager;
+    if (showManagers) {
+      document.title = "Managers Management";
+    } else {
+      document.title = "Members Management";
+    }
   });
 
   const getUsers = () => {
-    const q = query(usersCollectionRef, where("role", "==", "user"));
+    let q = "";
+    if (showManagers) {
+      q = query(usersCollectionRef, where("role", "==", "manager"));
+    } else {
+      q = query(usersCollectionRef, where("role", "==", "user"));
+    }
     const keys = ["fullName", "company", "email", "phoneNumber"];
     getDocs(q).then((data) => {
       setUsers(
@@ -44,6 +57,42 @@ const Table = () => {
           })
           .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
       );
+    });
+  };
+
+  const addUserToast = () => {
+    toast.success("User Account has been created", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const deleteUserToast = () => {
+    toast.success("A user account was deleted", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
+  const editUserToast = () => {
+    toast.success("Your data has been successfully saved!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
   };
 
@@ -125,13 +174,14 @@ const Table = () => {
       rank: 0,
       image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     });
-
     getUsers();
+    closeAdd();
+    addUserToast();
   };
 
   const handleDeleteClick = async (id) => {
-    await deleteDoc(doc(usersCollectionRef, id));
-    getUsers();
+    setDelId(id);
+    openDel();
   };
 
   const handleCancelClick = () => {
@@ -140,7 +190,7 @@ const Table = () => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
-    handleCloseEdit();
+    closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     updateDoc(docRef, {
       fullName: editFormData.fullName,
@@ -155,13 +205,13 @@ const Table = () => {
       })
       .catch((err) => console.log(err.message));
     setEditContactId(null);
+    editUserToast();
     getUsers();
   };
 
   const handleEditClick = (event, contact) => {
     setEditContactId(contact.email);
-    handleShowEdit();
-
+    openEdit();
     const formValues = {
       fullName: contact.fullName,
       phoneNumber: contact.phoneNumber,
@@ -178,7 +228,7 @@ const Table = () => {
       <Row>
         <Col md={12}>
           <div className="mt-5 d-flex justify-content-between">
-            <Button variant="primary" className="btn btn-primary " onClick={handleShow}>
+            <Button variant="primary" className="btn btn-primary " onClick={openAdd}>
               Add user
             </Button>
 
@@ -187,8 +237,9 @@ const Table = () => {
             </div>
           </div>
 
-          <AddUser {...{ show, handleClose, handleAddFormSubmit, handleAddFormChange, addFormData }} />
-          {showEdit && <EditUser {...{ showEdit, editContactId, handleCloseEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
+          <AddUser {...{ modalOpenAdd, closeAdd, handleAddFormSubmit, handleAddFormChange, addFormData }} />
+          {modalOpenEdit && <EditUser {...{ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
+          {modalOpenDel && <DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId }} />}
 
           <form onSubmit={handleEditFormSubmit}>
             <table className="table table-admin">
@@ -210,9 +261,14 @@ const Table = () => {
               />
             </table>
           </form>
+          <ToastContainer />
         </Col>
       </Row>
     </Container>
   );
+};
+
+Table.propTypes = {
+  showManagers: PropTypes.bool,
 };
 export default Table;
