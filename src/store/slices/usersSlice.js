@@ -167,6 +167,27 @@ export const toggleStatus = createAsyncThunk(
     }
   }
 );
+
+export const updateAdditionalInfo = createAsyncThunk(
+  "updateAdditionalInfo",
+  async (
+    { uid, id, comment, additionalPoints },
+    { rejectWithValue, dispatch }
+  ) => {
+    try {
+      const docRef = doc(db, "users", uid);
+      const colRef = collection(docRef, "eventsList");
+      await updateDoc(doc(colRef, id), {
+        comment: comment,
+        additionalPoints: additionalPoints,
+      });
+      dispatch(updateInfo({ uid, id, comment, additionalPoints }));
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
 const setError = (state, action) => {
   state.status = action.payload;
 };
@@ -194,10 +215,20 @@ const usersSlice = createSlice({
     toggleEvent(state, action) {
       const { uid, id } = action.payload;
       const currentMember = state.members.find((member) => member.id === uid);
-      const currentEvent = currentMember.eventsList.find(
-        (event) => event.id === id
+      const currentInfo = currentMember.eventsList.find(
+        (info) => info.id === id
       );
-      currentEvent.isPresent = !currentEvent.isPresent;
+      currentInfo.isPresent = !currentInfo.isPresent;
+    },
+    updateInfo(state, action) {
+      const { uid, id, comment, additionalPoints } = action.payload;
+      const currentMember = state.members.find((member) => member.id === uid);
+
+      const currentInfo = currentMember.eventsList.find(
+        (info) => info.id === id
+      );
+      currentInfo.comment = comment;
+      currentInfo.additionalPoints = additionalPoints;
     },
   },
   extraReducers: {
@@ -253,5 +284,5 @@ const usersSlice = createSlice({
     [deleteUser.rejected]: setError,
   },
 });
-const { addEvent, deleteEvent, toggleEvent } = usersSlice.actions;
+const { addEvent, deleteEvent, toggleEvent, updateInfo } = usersSlice.actions;
 export default usersSlice.reducer;
