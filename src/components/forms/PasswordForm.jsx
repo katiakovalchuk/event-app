@@ -33,9 +33,6 @@ const PasswordForm = () => {
     };
 
     const onSubmitPassword = async data => {
-        if (data.newPassword === data.oldPassword) {
-            notifyError("Old password and new password are equal!");
-        }
         if (data.newPassword !== data.oldPassword) {
             try {
                 const cred = EmailAuthProvider.credential(
@@ -50,6 +47,8 @@ const PasswordForm = () => {
             } catch (err) {
                 notifyError(getErrorMessage(err.message, errMessages));
             }
+        } else {
+            notifyError("Old password and new password are equal!");
         }
     };
     return (
