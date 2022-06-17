@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAddFormChange }) => {
+const AddUser = ({ modalOpenAdd, closeAdd, handleAddFormSubmit, addFormData, handleAddFormChange }) => {
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={modalOpenAdd} onHide={closeAdd}>
       <Modal.Header closeButton className="bg-light">
         <Modal.Title>Add user</Modal.Title>
       </Modal.Header>
@@ -20,7 +20,8 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
               </svg>
             </span>
             <input
-              required="required"
+              autoFocus
+              required
               type="text"
               id="name"
               name="fullName"
@@ -39,15 +40,7 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
                 <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z" />
               </svg>
             </span>
-            <input
-              required="required"
-              type="email"
-              name="email"
-              id="email"
-              className="form-control"
-              placeholder="Enter an email..."
-              onChange={handleAddFormChange}
-            />
+            <input required type="email" name="email" id="email" className="form-control" placeholder="Enter an email..." onChange={handleAddFormChange} />
           </div>
 
           <label htmlFor="number" className="form-label">
@@ -63,7 +56,7 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
               </svg>
             </span>
             <input
-              required="required"
+              required
               name="phoneNumber"
               type="number"
               id="number"
@@ -88,7 +81,7 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
             </span>
             <input
               name="company"
-              required="required"
+              required
               type="text"
               id="firm"
               className="form-control"
@@ -106,15 +99,7 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
                 <path d="M2.873 11.297V4.142H1.699L0 5.379v1.137l1.64-1.18h.06v5.961h1.174Zm3.213-5.09v-.063c0-.618.44-1.169 1.196-1.169.676 0 1.174.44 1.174 1.106 0 .624-.42 1.101-.807 1.526L4.99 10.553v.744h4.78v-.99H6.643v-.069L8.41 8.252c.65-.724 1.237-1.332 1.237-2.27C9.646 4.849 8.723 4 7.308 4c-1.573 0-2.36 1.064-2.36 2.15v.057h1.138Zm6.559 1.883h.786c.823 0 1.374.481 1.379 1.179.01.707-.55 1.216-1.421 1.21-.77-.005-1.326-.419-1.379-.953h-1.095c.042 1.053.938 1.918 2.464 1.918 1.478 0 2.642-.839 2.62-2.144-.02-1.143-.922-1.651-1.551-1.714v-.063c.535-.09 1.347-.66 1.326-1.678-.026-1.053-.933-1.855-2.359-1.845-1.5.005-2.317.88-2.348 1.898h1.116c.032-.498.498-.944 1.206-.944.703 0 1.206.435 1.206 1.07.005.64-.504 1.106-1.2 1.106h-.75v.96Z" />
               </svg>
             </span>
-            <input
-              required="required"
-              name="scores"
-              type="number"
-              id="scores"
-              className="form-control"
-              placeholder="Enter a score..."
-              onChange={handleAddFormChange}
-            />
+            <input required name="scores" type="number" id="scores" className="form-control" placeholder="Enter a score..." onChange={handleAddFormChange} />
           </div>
 
           <label htmlFor="startDate" className="form-label">
@@ -130,7 +115,7 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
             <input
               name="birth"
               placeholder="Enter a birth date..."
-              required="required"
+              required
               id="startDate"
               className="form-control "
               type="date"
@@ -179,7 +164,7 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
         </form>
       </Modal.Body>
       <Modal.Footer className="bg-light">
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={closeAdd}>
           Close
         </Button>
       </Modal.Footer>
@@ -188,8 +173,8 @@ const AddUser = ({ show, handleClose, handleAddFormSubmit, addFormData, handleAd
 };
 
 AddUser.propTypes = {
-  show: PropTypes.bool,
-  handleClose: PropTypes.bool,
+  modalOpenAdd: PropTypes.bool,
+  closeAdd: PropTypes.func,
   handleAddFormSubmit: PropTypes.func,
   addFormData: PropTypes.object,
   handleAddFormChange: PropTypes.func,
