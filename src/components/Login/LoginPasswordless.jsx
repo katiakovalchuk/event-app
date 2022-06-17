@@ -1,22 +1,21 @@
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
+import {ToastContainer} from "react-toastify";
 
 import {useUserAuth} from "../../context/authContext";
 import {useDialog} from "../../context/dialogContext";
 import {getUsers} from "../../store/slices/usersSlice";
 import {getErrorMessage} from "../../helpers/getErrorMessage";
 import {errMessages} from "./messages";
-import Toast from "../Toast";
 import "./style.scss";
 
 const LoginPasswordlessTemplate = () => {
     const [{email}, setCredentials] = useState({
         email: "",
     });
-    const {handleShowToast, handleCloseToast, updateToastContent} = useDialog();
-    const [error, setError] = useState(null);
     const {sendLink} = useUserAuth();
+    const {notifySuccess, notifyError} = useDialog();
     const users = useSelector(state => state.usersSlice.users);
     const dispatch = useDispatch();
 
@@ -24,37 +23,19 @@ const LoginPasswordlessTemplate = () => {
         dispatch(getUsers());
     }, []);
 
-    useEffect(() => {
-        if (error) {
-            updateToastContent(
-                "Failed to login",
-                getErrorMessage(error, errMessages)
-            );
-        }
-        if (error === "") {
-            updateToastContent(
-                "Processed successfully",
-                "Login link has been sent! Please, check email!"
-            );
-            handleShowToast();
-        }
-    }, [error]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isUserEmail = users.some((user) => user.email === email);
-        setError("");
-        handleCloseToast();
         if (isUserEmail) {
             try {
                 await sendLink(email);
                 setCredentials(prev => ({...prev, email: ""}));
+                notifySuccess("Login link has been sent! Please, check email!");
             } catch (err) {
-                setError(err.message);
+                notifyError(getErrorMessage(err.message, errMessages));
             }
         } else {
-            setError("auth/not-registered");
-            handleShowToast();
+            notifyError(getErrorMessage("auth/not-registered", errMessages));
         }
     };
 
@@ -62,7 +43,7 @@ const LoginPasswordlessTemplate = () => {
 
     return (
         <>
-            <Toast />
+            <ToastContainer limit={5}/>
             <div className="LoginTemplate d-flex justify-content-center align-items-center w-100 vh-100">
                 <div className="LoginTemplate-inner d-flex flex-column flex-md-row col-sm-9 col-xl-7">
                     <div className="d-flex flex-column justify-content-center text-center col-md-6 p-5">
@@ -74,9 +55,10 @@ const LoginPasswordlessTemplate = () => {
                         <div>
                             <form className="login-form d-flex flex-column align-items-center text-center text-white"
                                   onSubmit={handleSubmit}>
-                                <h2 className="fw-bold mb-4">Login</h2>
+                                <h2 className="login-form-heading fw-bold mb-4">Login</h2>
                                 <input className="login-form-input form-control mt-2 mb-3 rounded-3" type="email"
-                                       placeholder="Email" required value={email} onChange={handleEmailChange}/>
+                                       name="email" placeholder="Email" required value={email}
+                                       onChange={handleEmailChange}/>
                                 <button className="login-form-btn btn w-100 mt-1 rounded-3" type="submit">
                                     Login
                                 </button>

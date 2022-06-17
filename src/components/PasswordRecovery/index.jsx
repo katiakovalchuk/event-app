@@ -3,10 +3,10 @@ import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {IconContext} from "react-icons";
 import {FaUserLock} from "react-icons/fa";
+import {ToastContainer} from "react-toastify";
 
 import {useUserAuth} from "../../context/authContext";
 import {useDialog} from "../../context/dialogContext";
-import Toast from "../Toast";
 import {getUsers} from "../../store/slices/usersSlice";
 import {getErrorMessage} from "../../helpers/getErrorMessage";
 import {errMessages} from "../Login/messages";
@@ -15,7 +15,7 @@ import "./style.scss";
 const PasswordRecovery = () => {
     const [email, setEmail] = useState("");
     const [error, setError] = useState(null);
-    const {handleShowToast, handleCloseToast, updateToastContent} = useDialog();
+    const {handleCloseToast, notifySuccess, notifyError} = useDialog();
     const users = useSelector(state => state.usersSlice.users);
     const {sendResetEmail} = useUserAuth();
     const navigate = useNavigate();
@@ -26,41 +26,28 @@ const PasswordRecovery = () => {
     }, []);
 
     useEffect(() => {
-        if (error) {
-            updateToastContent(
-                "Failed to send reset link",
-                getErrorMessage(error, errMessages)
-            );
-        }
         if (error === "") {
-            updateToastContent(
-                "Processed successfully",
-                "Reset password link has been sent! Please, check email!"
-            );
-            handleShowToast();
             setTimeout(() => {
                 navigate("/login");
-            }, 1000);
+            }, 7000);
         }
     }, [error]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const isUserEmail = users.some((user) => user.email === email);
-        handleCloseToast();
         if (isUserEmail) {
             try {
                 await sendResetEmail(email);
                 setError("");
                 setEmail("");
-                handleShowToast();
+                notifySuccess("Reset password link has been sent! Please, check email!");
             } catch (err) {
                 setError(err.message);
-                handleShowToast();
+                notifyError(getErrorMessage(err.message, errMessages));
             }
         } else {
-            setError("auth/not-registered");
-            handleShowToast();
+            notifyError(getErrorMessage("auth/not-registered", errMessages));
         }
     };
 
@@ -68,12 +55,8 @@ const PasswordRecovery = () => {
 
     return (
         <>
-            <Toast/>
-            <div
-                className={`Recovery d-flex justify-content-center align-items-center w-100 vh-100 ${
-                    error === "" ? "d-none" : ""
-                }`}
-            >
+            <ToastContainer limit={5}/>
+            <div className="Recovery d-flex justify-content-center align-items-center w-100 vh-100">
                 <div className="Recovery-inner d-flex align-items-center justify-content-center p-5 col-sm-6">
                     <div className="Recovery-content w-100">
                         <div className="pt-5 pb-3 text-center text-white">
@@ -85,10 +68,11 @@ const PasswordRecovery = () => {
                             className="d-flex flex-column pt-5 px-4 align-items-center text-center text-white"
                             onSubmit={handleSubmit}
                         >
-                            <h2 className="fw-bold mb-5">Forgot Password?</h2>
+                            <h2 className="Recovery-heading fw-bold mb-5">Forgot Password?</h2>
                             <input
                                 className="Recovery-input form-control mt-1 mb-4 rounded-3"
                                 type="email"
+                                name="email"
                                 placeholder="Email"
                                 required
                                 autoComplete="on"
