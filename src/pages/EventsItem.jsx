@@ -114,7 +114,7 @@ const EventsItem = () => {
         <Container>
           <ul>
             {eventMembers?.map((member) => (
-              <EventMember key={member.id} member={member} eventId={id} />
+              <EventMember key={member.id} member={member} />
             ))}
           </ul>
         </Container>

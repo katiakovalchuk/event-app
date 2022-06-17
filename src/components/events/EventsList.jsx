@@ -10,6 +10,7 @@ import {
   selectAllEvents,
   deleteNewEvent,
 } from "../../store/slices/eventsSlice";
+import { deleteEvents } from "../../store/slices/usersSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
@@ -35,6 +36,11 @@ const EventsList = () => {
     }
   }, [status]);
 
+  const deleteEvent = (id) => {
+    dispatch(deleteEvents(id));
+    dispatch(deleteNewEvent(id));
+  };
+
   return (
     <>
       {status === "loading" && <Spinner />}
@@ -56,7 +62,7 @@ const EventsList = () => {
                 <span
                   className="event__action"
                   onClick={() => {
-                    dispatch(deleteNewEvent(event.id));
+                    deleteEvent(event.id);
                   }}
                 >
                   <GoTrashcan />

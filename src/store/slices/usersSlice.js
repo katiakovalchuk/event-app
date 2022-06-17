@@ -9,6 +9,7 @@ import {
   deleteDoc,
   where,
   query,
+  getDoc,
 } from "firebase/firestore";
 
 import { usersCollectionRef } from "../../lib/firestore.collections";
@@ -122,9 +123,8 @@ export const addEventToMember = createAsyncThunk(
     try {
       const docRef = doc(db, "users", event.uid);
       const colRef = collection(docRef, "eventsList");
-      const newDocRef = await addDoc(colRef, event);
-      const userEvent = { ...event, id: newDocRef.id };
-      dispatch(addEvent(userEvent));
+      await setDoc(doc(colRef, event.eid), event);
+      dispatch(addEvent(event));
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);
@@ -169,7 +169,7 @@ export const toggleStatus = createAsyncThunk(
 );
 
 export const updateAdditionalInfo = createAsyncThunk(
-  "updateAdditionalInfo",
+  "usersSlice/updateAdditionalInfo",
   async (
     { uid, id, comment, additionalPoints },
     { rejectWithValue, dispatch }
@@ -182,6 +182,26 @@ export const updateAdditionalInfo = createAsyncThunk(
         additionalPoints: additionalPoints,
       });
       dispatch(updateInfo({ uid, id, comment, additionalPoints }));
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteEvents = createAsyncThunk(
+  "usersSkice/deleteEvents",
+  async (id, { rejectWithValue, getState }) => {
+    const events = getState().eventsSlice.events;
+    const currentEvent = events.find((event) => event.id === id);
+    const membersList = currentEvent.membersList;
+
+    try {
+      for (let i = 0; i < membersList.length; i++) {
+        const docRef = doc(db, "users", membersList[i]);
+        const colRef = collection(docRef, "eventsList");
+        await deleteDoc(doc(colRef, id));
+      }
     } catch (error) {
       console.log(error);
       return rejectWithValue(error.message);

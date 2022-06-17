@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-// import { yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { updateAdditionalInfo } from "../../store/slices/usersSlice";
 
 import { CustomInput, CustomTextarea, CustomButton } from "../elements";
 import { useDialog } from "../../context/dialogContext";
+
+import { additinalInfo } from "../../helpers/schemaForms";
 
 import "../../styles/form.scss";
 
@@ -20,7 +22,7 @@ const InfoForm = () => {
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
-    // resolver: yupResolver(),
+    resolver: yupResolver(additinalInfo),
   });
 
   useEffect(() => {
@@ -53,10 +55,12 @@ const InfoForm = () => {
         name="additionalPoints"
         type="number"
         register={register("additionalPoints")}
-        error={!!errors?.addPoints}
-        errorText={errors?.addPoints?.message}
+        error={!!errors?.additionalPoints}
+        errorText={errors?.additionalPoints?.message}
       />
-      <CustomButton type="submit">Save changes</CustomButton>
+      <CustomButton type="submit" disabled={!isValid}>
+        Save changes
+      </CustomButton>
     </form>
   );
 };
