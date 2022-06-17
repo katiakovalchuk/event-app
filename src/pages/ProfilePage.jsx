@@ -1,57 +1,40 @@
 /* eslint-disable no-undef */
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
-
-import { updateDoc, doc, getDocs } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import { useUserAuth } from "../context/authContext";
+import { useDialog } from "../context/dialogContext";
+import { ModalForm } from "../components/elements";
+import PasswordForm from "../components/forms/PasswordForm";
 import { storage } from "../lib/init-firebase.js";
 import { usersCollectionRef } from "../lib/firestore.collections.js";
 import { getIndex } from "../helpers/utils.js";
 import { capitalizeFirstLetter } from "../helpers/utils.js";
 
 import styles from "../styles/Profile.module.scss";
+import { getUsers } from "../store/slices/usersSlice";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");
-  const [users, setUsers] = useState([]);
   const [addFormData, setAddFormData] = useState({});
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const { user } = useUserAuth();
-
-  const getUsers = () => {
-    getDocs(usersCollectionRef).then((data) => {
-      setUsers(
-        data.docs.map((item) => {
-          return { ...item.data(), id: item.id };
-        })
-      );
-    });
-  };
+  const { handleShowModal } = useDialog();
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.usersSlice.users);
 
   useEffect(() => {
-    getUsers();
+    dispatch(getUsers());
   }, []);
 
   useEffect(() => {
     document.title = "Profile page";
   });
-
-  const editUserToast = () => {
-    toast.success("Your data has been successfully saved!", {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
 
   const handleAddFormChange = (e) => {
     const { name, value } = e.target;
@@ -112,13 +95,14 @@ const ProfilePage = () => {
       birth,
       image,
     }).then((e) => {
-      editUserToast();
       console.error(e);
     });
   };
 
   return (
     <section id="profile" className="pt-4">
+      <ModalForm title="Change password" form={<PasswordForm />} />
+      <ToastContainer limit={5} />
       <Container>
         <Row>
           <Col md={8}>
@@ -152,7 +136,6 @@ const ProfilePage = () => {
                   </svg>
                 </span>
                 <input
-                  disabled
                   type="email"
                   onChange={handleAddFormChange}
                   name="email"
@@ -240,9 +223,9 @@ const ProfilePage = () => {
                 <h5 className="card-title">{users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].role)}</h5>
                 <p>Rank: {users.length && users[getIndex(users, user.email)].rank}</p>
                 <p>Scores: {users.length && users[getIndex(users, user.email)].scores}</p>
-                <Link to="/recovery" className="btn btn-warning mt-3">
+                <button className="btn btn-warning mt-3" onClick={() => handleShowModal()}>
                   Change password
-                </Link>
+                </button>
               </div>
             </div>
             <div className="card shadow rounded mt-3">
@@ -260,7 +243,6 @@ const ProfilePage = () => {
                 </div>
               </div>
             </div>
-            <ToastContainer />
           </Col>
         </Row>
       </Container>
