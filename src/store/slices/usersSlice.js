@@ -132,6 +132,40 @@ export const addEventToMember = createAsyncThunk(
   }
 );
 
+export const deleteEventFromMember = createAsyncThunk(
+  "usersSlice/deleteEventFromMember",
+  async ({ uid, id }, { rejectWithValue, dispatch }) => {
+    try {
+      const docRef = doc(db, "users", uid);
+      const colRef = collection(docRef, "eventsList");
+      await deleteDoc(doc(colRef, id));
+      dispatch(deleteEvent({ uid, id }));
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const toggleStatus = createAsyncThunk(
+  "usersSlice/toggleStatus",
+  async ({ uid, id }, { rejectWithValue, dispatch, getState }) => {
+    const currentMember = getState().usersSlice.members.find(
+      (member) => member.id === uid
+    );
+    const currentEvent = currentMember.eventsList.find(
+      (event) => event.id === id
+    );
+    try {
+      const docRef = doc(db, "users", uid);
+      const colRef = collection(docRef, "eventsList");
+      await updateDoc(doc(colRef, id), { isPresent: !currentEvent.isPresent });
+      dispatch(toggleEvent(uid, id));
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 const setError = (state, action) => {
   state.status = action.payload;
 };
@@ -149,6 +183,21 @@ const usersSlice = createSlice({
       const currentMember = state.members.find((member) => member.id === uid);
       currentMember.eventsList.push(action.payload);
     },
+    deleteEvent(state, action) {
+      const { uid, id } = action.payload;
+      const currentMember = state.members.find((member) => member.id === uid);
+      currentMember.eventsList = currentMember.eventsList.filter(
+        (member) => member.id !== id
+      );
+    },
+    toggleEvent(state, action) {
+      const { uid, id } = action.payload;
+      const currentMember = state.members.find((member) => member.id === uid);
+      const currentEvent = currentMember.eventsList.find(
+        (event) => event.id === id
+      );
+      currentEvent.isPresent = !currentEvent.isPresent;
+    },
   },
   extraReducers: {
     [getUsers.fulfilled]: (state, action) => {
@@ -157,7 +206,6 @@ const usersSlice = createSlice({
     },
     [getMembers.fulfilled]: (state, action) => {
       state.status = STATUSES.succeeded;
-      console.log(action.payload);
       state.members = action.payload;
     },
     [addNewUserWithAutoId.fulfilled]: (state, action) => {
@@ -204,5 +252,5 @@ const usersSlice = createSlice({
     [deleteUser.rejected]: setError,
   },
 });
-const { addEvent } = usersSlice.actions;
+const { addEvent, deleteEvent, toggleEvent } = usersSlice.actions;
 export default usersSlice.reducer;

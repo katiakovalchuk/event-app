@@ -8,14 +8,11 @@ import { GoCalendar } from "react-icons/go";
 import { GiTrophy } from "react-icons/gi";
 import { HiArrowLeft } from "react-icons/hi";
 
-import {
-  getEvent,
-  addUserToEvent,
-  deleteUserFromEvent,
-} from "../store/slices/eventSlice";
+import { getEvent, addUserToEvent } from "../store/slices/eventSlice";
 import { getMembers, addEventToMember } from "../store/slices/usersSlice";
 
 import { CustomButton } from "../components/elements";
+import EventMember from "../components/events/EventMember";
 
 import "../styles/event-item.scss";
 
@@ -25,7 +22,6 @@ const EventsItem = () => {
   const dispatch = useDispatch();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const members = useSelector((state) => state.usersSlice.members);
-
   const { membersList } = currentEvent;
 
   const eventMembers = members.filter((member) =>
@@ -118,25 +114,7 @@ const EventsItem = () => {
         <Container>
           <ul>
             {eventMembers?.map((member) => (
-              <li key={member.id}>
-                <input type="checkbox" />
-                <h4>{member.fullName}</h4>
-                <div>
-                  <button>change</button>
-                  <button
-                    onClick={() =>
-                      dispatch(
-                        deleteUserFromEvent({
-                          eid: id,
-                          uid: member.id,
-                        })
-                      )
-                    }
-                  >
-                    delete
-                  </button>
-                </div>
-              </li>
+              <EventMember key={member.id} member={member} eventId={id} />
             ))}
           </ul>
         </Container>
