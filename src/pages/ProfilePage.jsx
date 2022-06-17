@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Col, Container, Row} from "react-bootstrap";
 import {doc, updateDoc} from "firebase/firestore";
 import {getDownloadURL, ref, uploadBytesResumable} from "firebase/storage";
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 
 import {useUserAuth} from "../context/authContext";
 import {useDialog} from "../context/dialogContext";
@@ -24,7 +24,7 @@ const ProfilePage = () => {
     const {user} = useUserAuth();
     const {handleShowModal} = useDialog();
     const dispatch = useDispatch();
-    const users = useSelector(state => state.usersSlice.users);
+    const users = useSelector((state) => state.usersSlice.users);
 
     useEffect(() => {
         dispatch(getUsers());
@@ -33,6 +33,18 @@ const ProfilePage = () => {
     useEffect(() => {
         document.title = "Profile page";
     });
+
+    const editUserToast = () => {
+        toast.success("Your data has been successfully saved!", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
 
     const handleAddFormChange = (e) => {
         const {name, value} = e.target;
@@ -94,6 +106,7 @@ const ProfilePage = () => {
             image,
         }).then((e) => {
             console.error(e);
+            editUserToast();
         });
     };
 
@@ -233,10 +246,7 @@ const ProfilePage = () => {
                                     <h5 className="card-title">{users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].role)}</h5>
                                     <p>Rank: {users.length && users[getIndex(users, user.email)].rank}</p>
                                     <p>Scores: {users.length && users[getIndex(users, user.email)].scores}</p>
-                                    <button
-                                        className="btn btn-warning"
-                                        onClick={() => handleShowModal()}
-                                    >
+                                    <button className="btn btn-warning mt-3" onClick={() => handleShowModal()}>
                                         Change password
                                     </button>
                                 </div>
@@ -264,8 +274,7 @@ const ProfilePage = () => {
                 </Container>
             </section>
         </>
-    )
-        ;
+    );
 };
 
 export default ProfilePage;
