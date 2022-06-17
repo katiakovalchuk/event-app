@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
 import { updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 import { useUserAuth } from "../context/authContext";
 import { useDialog } from "../context/dialogContext";
@@ -35,6 +35,18 @@ const ProfilePage = () => {
   useEffect(() => {
     document.title = "Profile page";
   });
+
+  const editUserToast = () => {
+    toast.success("Your data has been successfully saved!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
 
   const handleAddFormChange = (e) => {
     const { name, value } = e.target;
@@ -96,6 +108,7 @@ const ProfilePage = () => {
       image,
     }).then((e) => {
       console.error(e);
+      editUserToast();
     });
   };
 
