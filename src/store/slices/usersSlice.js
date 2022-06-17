@@ -160,8 +160,9 @@ export const toggleStatus = createAsyncThunk(
       const docRef = doc(db, "users", uid);
       const colRef = collection(docRef, "eventsList");
       await updateDoc(doc(colRef, id), { isPresent: !currentEvent.isPresent });
-      dispatch(toggleEvent(uid, id));
+      dispatch(toggleEvent({ uid, id }));
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.message);
     }
   }

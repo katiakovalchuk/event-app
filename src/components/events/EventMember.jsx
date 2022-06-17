@@ -30,7 +30,9 @@ const EventMember = ({ member }) => {
       <input
         type="checkbox"
         checked={isPresent}
-        onChange={dispatch(toggleStatus({ uid }))}
+        onChange={() => {
+          dispatch(toggleStatus({ uid, id }));
+        }}
       />
       <h4>{fullName}</h4>
       {comment && <p>{comment}</p>}
