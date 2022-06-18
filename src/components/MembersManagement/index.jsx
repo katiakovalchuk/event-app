@@ -57,6 +57,7 @@ const Table = ({ showManagers }) => {
           })
           .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
       );
+      console.log("get users");
     });
   };
 
@@ -160,8 +161,7 @@ const Table = ({ showManagers }) => {
     setEditFormData(newFormData);
   };
 
-  const handleAddFormSubmit = async (e) => {
-    e.preventDefault();
+  const handleAddFormSubmit = async () => {
     sendLink(addFormData.email);
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       fullName: addFormData.fullName,
