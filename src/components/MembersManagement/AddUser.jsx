@@ -32,8 +32,8 @@ const AddUser = ({ modalOpenAdd, closeAdd, handleAddFormSubmit, addFormData, han
               autoFocus
               {...register("fullName", {
                 pattern: {
-                  value: /^[A-Za-z]{5,34}$/,
-                  message: "Username should be at least 5 letters and shouldn't include any special character!",
+                  value: /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/,
+                  message: "Username shouldn't include any special character or number!",
                 },
                 onChange: handleAddFormChange,
               })}
@@ -94,8 +94,8 @@ const AddUser = ({ modalOpenAdd, closeAdd, handleAddFormSubmit, addFormData, han
                   message: "This is not a valid mobile phone to me, try again!",
                 },
                 minLength: {
-                  value: 6,
-                  message: "This number is too short, not gotta fly, try again",
+                  value: 5,
+                  message: "This number is too short, not gotta fly, try again, at least 5 numbers",
                 },
                 maxLength: {
                   value: 12,

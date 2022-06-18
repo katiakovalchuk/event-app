@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-
+import { useForm } from "react-hook-form";
 import { getDocs } from "firebase/firestore";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { getIndex } from "../../helpers/utils.js";
@@ -19,6 +19,14 @@ const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmi
     });
   };
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+  });
+
   useEffect(() => {
     getUsers();
   }, []);
@@ -29,7 +37,7 @@ const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmi
         <Modal.Title>Update user data:</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={handleEditFormSubmit}>
+        <form onSubmit={handleSubmit(handleEditFormSubmit)}>
           <label htmlFor="name" className="form-label">
             Name:
           </label>
@@ -41,13 +49,20 @@ const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmi
             </span>
             <input
               autoFocus
+              {...register("fullName", {
+                pattern: {
+                  value: /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/,
+                  message: "Username shouldn't include any special character or number!",
+                },
+                onChange: handleEditFormChange,
+              })}
               type="text"
               id="name"
               name="fullName"
               className="form-control"
               placeholder={users.length && users[getIndex(users, editContactId)].fullName}
-              onChange={handleEditFormChange}
             />
+            {<span className="inputError">{errors.fullName?.message}</span>}
           </div>
 
           <label htmlFor="email" className="form-label">
@@ -84,12 +99,27 @@ const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmi
             </span>
             <input
               name="phoneNumber"
+              {...register("phoneNumber", {
+                pattern: {
+                  value: /^[0-9+-]+$/,
+                  message: "This is not a valid mobile phone to me, try again!",
+                },
+                minLength: {
+                  value: 5,
+                  message: "This number is too short, not gotta fly, try again, at least 5 numbers",
+                },
+                maxLength: {
+                  value: 12,
+                  message: "...And now it's too damn long, make sure the number is right, would you?",
+                },
+                onChange: handleEditFormChange,
+              })}
               type="number"
               id="number"
               className="form-control"
               placeholder={users.length && users[getIndex(users, editContactId)].phoneNumber}
-              onChange={handleEditFormChange}
             />
+            {<span className="inputError">{errors.phoneNumber?.message}</span>}
           </div>
 
           <label htmlFor="firm" className="form-label">
@@ -107,12 +137,19 @@ const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmi
             </span>
             <input
               name="company"
+              {...register("company", {
+                minLength: {
+                  value: 3,
+                  message: "You need to enter at least 3 characters",
+                },
+                onChange: handleEditFormChange,
+              })}
               type="text"
               id="firm"
               className="form-control"
               placeholder={users.length && users[getIndex(users, editContactId)].company}
-              onChange={handleEditFormChange}
             />
+            {<span className="inputError">{errors.company?.message}</span>}
           </div>
 
           <label htmlFor="scores" className="form-label">
@@ -126,12 +163,27 @@ const EditUser = ({ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmi
             </span>
             <input
               name="scores"
+              {...register("scores", {
+                pattern: {
+                  value: /^[0-9+]+$/,
+                  message: "Only positive numbers!",
+                },
+                minLength: {
+                  value: 1,
+                  message: "At least one number...",
+                },
+                maxLength: {
+                  value: 4,
+                  message: "Max length is 4 digits",
+                },
+                onChange: handleEditFormChange,
+              })}
               type="number"
               id="scores"
               className="form-control"
               placeholder={users.length && users[getIndex(users, editContactId)].scores}
-              onChange={handleEditFormChange}
             />
+            {<span className="inputError">{errors.scores?.message}</span>}
           </div>
 
           <label htmlFor="startDate" className="form-label">
