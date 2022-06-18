@@ -188,8 +188,7 @@ const Table = ({ showManagers }) => {
     setEditContactId(null);
   };
 
-  const handleEditFormSubmit = (event) => {
-    event.preventDefault();
+  const handleEditFormSubmit = () => {
     closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     updateDoc(docRef, {
