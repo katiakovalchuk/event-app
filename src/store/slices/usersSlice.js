@@ -123,7 +123,7 @@ export const addEventToMember = createAsyncThunk(
     try {
       const docRef = doc(db, "users", event.uid);
       const colRef = collection(docRef, "eventsList");
-      await setDoc(doc(colRef, event.eid), event);
+      await setDoc(doc(colRef, event.id), event);
       dispatch(addEvent(event));
     } catch (error) {
       console.log(error);

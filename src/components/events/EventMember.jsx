@@ -16,14 +16,16 @@ const EventMember = ({ member }) => {
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const eventId = currentEvent.id;
   const { fullName, eventsList } = member;
+  console.log(eventsList);
 
-  const currentInfo = eventsList?.find((event) => event.eid === eventId);
+  const currentInfo = eventsList?.find((event) => event.id === eventId);
+  console.log(eventId, currentInfo);
   const { isPresent, comment, additionalPoints, uid, id } = currentInfo;
 
-  const deleteUser = (eventId, uid, id) => {
+  const deleteUser = (uid, id) => {
     dispatch(
       deleteUserFromEvent({
-        eid: eventId,
+        id,
         uid,
       })
     );
@@ -46,7 +48,7 @@ const EventMember = ({ member }) => {
           <button disabled={!isPresent} onClick={() => startEdit(currentInfo)}>
             change
           </button>
-          <button onClick={() => deleteUser(eventId, uid, id)}>delete</button>
+          <button onClick={() => deleteUser(uid, id)}>delete</button>
         </div>
       </li>
       <ModalForm title="Add a new Event" form={<InfoForm />} />

@@ -55,16 +55,16 @@ const EventsItem = () => {
     dispatch(
       addEventToMember({
         uid,
-        eid: id,
+        id,
         isPresent: false,
         comment: "",
-        additionalPoints: 0,
+        additionalPoints: "",
       })
     );
     dispatch(
       addUserToEvent({
-        uid: uid,
-        eid: id,
+        uid,
+        id,
       })
     );
   };

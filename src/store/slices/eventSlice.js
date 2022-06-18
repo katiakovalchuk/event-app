@@ -32,9 +32,9 @@ export const getEvent = createAsyncThunk(
 );
 export const addUserToEvent = createAsyncThunk(
   "eventSlice/addUserToEvent",
-  async ({ uid, eid }, { rejectedWithValue, dispatch }) => {
+  async ({ id, uid }, { rejectedWithValue, dispatch }) => {
     try {
-      await updateDoc(doc(db, "events", eid), {
+      await updateDoc(doc(db, "events", id), {
         membersList: arrayUnion(uid),
       });
       dispatch(addUser(uid));
@@ -47,9 +47,9 @@ export const addUserToEvent = createAsyncThunk(
 
 export const deleteUserFromEvent = createAsyncThunk(
   "eventSlice/deleteUserFromEvent",
-  async ({ eid, uid }, { rejectWithValue, dispatch }) => {
+  async ({ id, uid }, { rejectWithValue, dispatch }) => {
     try {
-      await updateDoc(doc(db, "events", eid), {
+      await updateDoc(doc(db, "events", id), {
         membersList: arrayRemove(uid),
       });
       dispatch(deleteUser(uid));
