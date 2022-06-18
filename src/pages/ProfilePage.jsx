@@ -1,10 +1,10 @@
-/* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
 import { updateDoc, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { ToastContainer, toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 
 import { useUserAuth } from "../context/authContext";
 import { useDialog } from "../context/dialogContext";
@@ -27,6 +27,14 @@ const ProfilePage = () => {
   const { handleShowModal } = useDialog();
   const dispatch = useDispatch();
   const users = useSelector((state) => state.usersSlice.users);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+  });
 
   useEffect(() => {
     dispatch(getUsers());
@@ -87,10 +95,7 @@ const ProfilePage = () => {
     file && uploadFile();
   }, [file]);
 
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    console.log("submit", user);
-
+  const handleAdd = () => {
     const fullName = addFormData.fullName || (users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].fullName));
     const email = addFormData.email || (users.length && users[getIndex(users, user.email)].email);
     const phoneNumber = addFormData.phoneNumber || (users.length && users[getIndex(users, user.email)].phoneNumber);
@@ -119,7 +124,7 @@ const ProfilePage = () => {
       <Container>
         <Row>
           <Col md={8}>
-            <form onSubmit={handleAdd}>
+            <form onSubmit={handleSubmit(handleAdd)}>
               <label htmlFor="fullName" className="form-label">
                 Name:
               </label>
@@ -130,13 +135,21 @@ const ProfilePage = () => {
                   </svg>
                 </span>
                 <input
-                  type="text"
-                  onChange={handleAddFormChange}
-                  id="fullName"
+                  autoFocus
                   name="fullName"
+                  {...register("fullName", {
+                    pattern: {
+                      value: /^[A-Za-z0-9]{5,34}$/,
+                      message: "Username should be at least 5 characters and shouldn't include any special character!",
+                    },
+                    onChange: handleAddFormChange,
+                  })}
+                  type="text"
+                  id="fullName"
                   className="form-control"
                   placeholder={users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].fullName)}
                 />
+                {<span className={styles.inputError}>{errors.fullName?.message}</span>}
               </div>
 
               <label htmlFor="email" className="form-label">
@@ -150,14 +163,21 @@ const ProfilePage = () => {
                 </span>
                 <input
                   type="email"
-                  onChange={handleAddFormChange}
+                  disabled
+                  {...register("email", {
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: "You need to specify a valid email address",
+                    },
+                    onChange: handleAddFormChange,
+                  })}
                   name="email"
                   id="email"
                   className="form-control"
                   placeholder={users.length && users[getIndex(users, user.email)].email}
                 />
+                {<span className={styles.inputError}>{errors.email?.message}</span>}
               </div>
-
               <label htmlFor="phoneNumber" className="form-label">
                 Phone number:
               </label>
@@ -172,14 +192,28 @@ const ProfilePage = () => {
                 </span>
                 <input
                   type="tel"
-                  onChange={handleAddFormChange}
+                  {...register("phoneNumber", {
+                    pattern: {
+                      value: /^[0-9+-]+$/,
+                      message: "This is not a valid mobile phone to me, try again!",
+                    },
+                    minLength: {
+                      value: 6,
+                      message: "This number is too short, not gotta fly, try again",
+                    },
+                    maxLength: {
+                      value: 12,
+                      message: "...And now it's too damn long, make sure the number is right, would you?",
+                    },
+                    onChange: handleAddFormChange,
+                  })}
                   name="phoneNumber"
                   id="phoneNumber"
                   className="form-control"
                   placeholder={users.length && users[getIndex(users, user.email)].phoneNumber}
                 />
+                {<span className={styles.inputError}>{errors.phoneNumber?.message}</span>}
               </div>
-
               <label htmlFor="company" className="form-label">
                 Company:
               </label>
@@ -195,14 +229,20 @@ const ProfilePage = () => {
                 </span>
                 <input
                   type="text"
-                  onChange={handleAddFormChange}
+                  {...register("company", {
+                    minLength: {
+                      value: 3,
+                      message: "You need to enter at least 3 characters",
+                    },
+                    onChange: handleAddFormChange,
+                  })}
                   id="company"
                   name="company"
                   className="form-control"
                   placeholder={users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].company)}
                 />
+                {<span className={styles.inputError}>{errors.company?.message}</span>}
               </div>
-
               <label htmlFor="birth" className="form-label">
                 Date of birth:
               </label>
@@ -215,7 +255,6 @@ const ProfilePage = () => {
                 </span>
                 <input name="birth" onChange={handleAddFormChange} type="date" id="birth" className="form-control" />
               </div>
-
               <div className="mb-4 text-center">
                 <button disabled={per !== null && per < 100} type="submit" className="btn btn-secondary">
                   Save
