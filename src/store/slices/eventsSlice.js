@@ -42,7 +42,6 @@ export const deleteNewEvent = createAsyncThunk(
       await deleteDoc(doc(db, "events", id));
       dispatch(deleteEvent(id));
     } catch (error) {
-      console.log(error);
       return rejectWithValue("Sorry, Can't delete an Event");
     }
   }

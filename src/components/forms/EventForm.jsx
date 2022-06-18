@@ -26,6 +26,7 @@ import {
 
 const EventForm = () => {
   const { itemEdit, hideEdit } = useDialog();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -37,7 +38,6 @@ const EventForm = () => {
     mode: "onChange",
     resolver: yupResolver(eventSchema),
   });
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (itemEdit.edit === true) {
@@ -54,9 +54,9 @@ const EventForm = () => {
       ...data,
       eventName: capitalizeFirstLet(data.eventName),
       eventDate: moment(data.eventDate).format("yyyy-MM-DD HH:mm"),
+      membersList: [],
     };
     delete event.hasDescription;
-
     itemEdit.edit
       ? dispatch(updateNewEvent(event))
       : dispatch(addNewEvent(event));

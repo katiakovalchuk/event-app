@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 import { Button } from "react-bootstrap";
 
-const CustomButton = ({ children, ...props }) => {
+const CustomButton = ({ version, children, ...props }) => {
   return (
-    <Button className="button" {...props}>
+    <Button className={`btn btn-${version}`} {...props}>
       {children}
     </Button>
   );
@@ -13,6 +13,7 @@ const CustomButton = ({ children, ...props }) => {
 
 CustomButton.propTypes = {
   children: PropTypes.node,
+  version: PropTypes.string,
 };
 
 export default CustomButton;

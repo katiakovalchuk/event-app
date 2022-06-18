@@ -80,7 +80,7 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background-color: $primary-color;
+      background-color: darken($blue, 25%);
     }
   }
 
@@ -88,12 +88,22 @@
     position: absolute;
     width: 20px;
     height: 20px;
-    border: 2px solid $primary-color;
+    border: 2px solid darken($blue, 25%);
     border-radius: 4px;
     margin-left: -26px;
   }
 }
 
+.check.check-name {
+  margin-bottom: 0;
+  & > label {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: $primary-color;
+    margin-left: 5px;
+  }
+}
 .radio-title {
   @extend %fira-600;
   font-size: 18px;
@@ -115,7 +125,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: $primary-color;
+    background-color: darken($blue, 25%);
   }
 }
 
@@ -124,11 +134,11 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid $primary-color;
+  border: 2px solid darken($blue, 25%);
   margin-left: -26px;
 }
 
-.button {
+.btn {
   @extend %fira-600;
   font-size: 16px;
   line-height: 24px;
@@ -136,14 +146,14 @@
   padding: 10px 15px;
   width: auto;
   color: $white;
-  background-color: $button-gray;
+  background-color: $btn-blue;
   border: none;
   transition: all 0.3s ease-in-out;
 
   &:hover,
   &:focus,
   &:active {
-    background-color: darken($button-gray, 15%);
+    background-color: darken($btn-blue, 15%);
     border-color: none;
     box-shadow: none;
   }
@@ -153,6 +163,23 @@
   }
 }
 
+.btn-arrow {
+  position: absolute;
+  padding: 5px 15px;
+  top: 20px;
+  left: 20px;
+  z-index: 99;
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  margin: 0 5px;
+}
 .react-datepicker {
   font-family: $font !important;
   background-color: lighten($blue, 60%) !important;
