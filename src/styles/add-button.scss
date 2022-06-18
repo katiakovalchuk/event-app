@@ -8,7 +8,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background-color: $blue;
+  background-color: $btn-blue;
   position: fixed;
   z-index: 99;
   bottom: 50px;
@@ -23,6 +23,6 @@
   }
 
   &:hover {
-    background-color: darken($blue, 15%);
+    background-color: darken($btn-blue, 15%);
   }
 }

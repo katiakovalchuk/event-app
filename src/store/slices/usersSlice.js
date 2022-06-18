@@ -9,7 +9,6 @@ import {
   deleteDoc,
   where,
   query,
-  getDoc,
 } from "firebase/firestore";
 
 import { usersCollectionRef } from "../../lib/firestore.collections";

@@ -80,6 +80,19 @@
 }
 
 .members {
+  padding: 35px 0;
+  &__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $blue;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 30px;
+    padding: 15px 0;
+    color: $white;
+    margin-bottom: 15px;
+  }
   &__list {
   }
   &__item {
@@ -96,7 +109,7 @@
     height: 50px;
     width: 50px;
     border-radius: 50%;
-    border: 2px solid $primary-color;
+    border: 1px solid darken($bg-gray, 10%);
     margin-right: 20px;
   }
   &__img {
@@ -104,5 +117,42 @@
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
+  }
+  &__name {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    color: $primary-color;
+  }
+  &__content {
+    display: flex;
+    align-items: center;
+  }
+  &__addInfo {
+    margin-left: 50px;
+    display: flex;
+    align-items: center;
+  }
+  &__comment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+    & > svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &__points {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 26px;
+    margin-left: 10px;
+  }
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }

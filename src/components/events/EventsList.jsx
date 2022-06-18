@@ -14,7 +14,7 @@ import { deleteEvents } from "../../store/slices/usersSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
-import { CustomToast } from "../elements";
+import { CustomButton, CustomToast, ListItem } from "../elements";
 
 const EventsList = () => {
   const { startEdit, handleShowToast } = useDialog();
@@ -56,27 +56,27 @@ const EventsList = () => {
       {oderedEvents.length ? (
         <ul className="event__list">
           {oderedEvents.map((event) => (
-            <li className="event__item" key={event.id}>
+            <ListItem link key={event.id}>
               <EventPart {...event} />
               <div className="event__actions">
-                <span
-                  className="event__action"
+                <CustomButton
+                  version="action"
                   onClick={() => {
                     deleteEvent(event.id);
                   }}
                 >
                   <GoTrashcan />
-                </span>
-                <span
-                  className="event__action"
+                </CustomButton>
+                <CustomButton
+                  version="action"
                   onClick={() => {
                     startEdit(event);
                   }}
                 >
                   <RiEdit2Fill />
-                </span>
+                </CustomButton>
               </div>
-            </li>
+            </ListItem>
           ))}
         </ul>
       ) : (
