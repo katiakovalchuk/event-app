@@ -15,6 +15,7 @@ export const eventSchema = yup.object().shape(
       .date()
       .required("* Event Date is a required field")
       .typeError("* Event Date is a required field"),
+
     eventDescription: yup
       .string()
       .nullable()
@@ -55,10 +56,7 @@ export const eventSchema = yup.object().shape(
       .integer("* Points should be an integer number")
       .max(100, "* Maximum points are 100"),
   },
-  [
-    // Add Cyclic deps here because when require itself
-    ["eventDescription", "eventDescription"],
-  ]
+  [["eventDescription", "eventDescription"]]
 );
 
 export const passwordSchema = yup.object().shape({
@@ -85,17 +83,41 @@ export const passwordSchema = yup.object().shape({
     .required("* Confirm new password is a required field"),
 });
 
-export const additinalInfo = yup.object().shape({
-  comment: yup
-    .string()
-    .min(5, "* Min length is 5 characters")
-    .max(100, "* Max length is 100 characters")
-    .notRequired(),
-  additionalPoints: yup
-    .number("* Points should be a positive number")
-    .typeError("* Points is a required field")
-    .positive("* Points should be a positive number")
-    .integer("* Points should be an integer number")
-    .max(10, "* Maximum points are 10")
-    .notRequired(),
-});
+export const additinalInfo = yup.object().shape(
+  {
+    comment: yup
+      .string()
+      .nullable()
+      .notRequired()
+      .when("comment", {
+        is: (value) => value?.length,
+        then: yup
+          .string()
+          .min(5, "* Min length is 20 characters")
+          .max(100, "* Max length is 600 characters"),
+        otherwise: yup.string().notRequired(),
+      }),
+    additionalPoints: yup
+      .number()
+      .nullable()
+      .notRequired()
+      .when("additionalPoints", {
+        is: (value) => typeof value === "number" && !isNaN(value),
+        then: yup
+          .number()
+          .moreThan(-1)
+          .transform((value) => (isNaN(value) ? 0 : value))
+          .integer("* Points should be an integer number")
+          .max(10, "* Maximum additional points are 10"),
+        otherwise: yup
+          .number()
+          .transform((value) => (isNaN(value) ? 0 : value))
+          .notRequired(),
+      }),
+  },
+  [
+    ["comment", "comment"],
+    ["additionalPoints", "additionalPoints"],
+    ["comment", "additionalPoints"],
+  ]
+);

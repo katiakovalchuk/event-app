@@ -19,7 +19,7 @@ const InfoForm = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(additinalInfo),
@@ -58,7 +58,7 @@ const InfoForm = () => {
         error={!!errors?.additionalPoints}
         errorText={errors?.additionalPoints?.message}
       />
-      <CustomButton type="submit" disabled={!isValid}>
+      <CustomButton type="submit" disabled={!(isValid && isDirty)}>
         Save changes
       </CustomButton>
     </form>

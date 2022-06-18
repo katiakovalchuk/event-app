@@ -19,7 +19,7 @@ const SingleMember = ({ fullName, image, id }) => {
         id,
         isPresent: false,
         comment: "",
-        additionalPoints: "",
+        additionalPoints: 0,
       })
     );
     dispatch(
