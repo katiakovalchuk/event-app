@@ -17,12 +17,7 @@ import { eventSchema } from "../../helpers/schemaForms";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/form.scss";
 
-import {
-  CustomInput,
-  CustomTextarea,
-  CustomCheckbox,
-  CustomButton,
-} from "../elements";
+import { CustomInput, CustomTextarea, CustomButton } from "../elements";
 
 const EventForm = () => {
   const { itemEdit, hideEdit } = useDialog();
@@ -33,7 +28,7 @@ const EventForm = () => {
     watch,
     control,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(eventSchema),
@@ -44,7 +39,6 @@ const EventForm = () => {
       reset({
         ...itemEdit.item,
         eventDate: moment(itemEdit.item.eventDate).toDate(),
-        hasDescription: true,
       });
     }
   }, [itemEdit]);
@@ -56,14 +50,11 @@ const EventForm = () => {
       eventDate: moment(data.eventDate).format("yyyy-MM-DD HH:mm"),
       membersList: [],
     };
-    delete event.hasDescription;
     itemEdit.edit
       ? dispatch(updateNewEvent(event))
       : dispatch(addNewEvent(event));
     hideEdit();
   };
-
-  const hasDescription = watch("hasDescription");
   const eventPlace = watch("eventPlace");
 
   return (
@@ -109,23 +100,16 @@ const EventForm = () => {
       {errors?.eventDate && (
         <span className="error-text">{errors?.eventDate?.message}</span>
       )}
-      <CustomCheckbox
-        control={control}
-        label="Add description"
-        type="checkbox"
-        name="hasDescription"
-        register={register("hasDescription")}
+
+      <CustomTextarea
+        label="Description of the event"
+        name="eventDescription"
+        placeholder="Description of the event"
+        register={register("eventDescription")}
+        error={!!errors?.eventDescription}
+        errorText={errors?.eventDescription?.message}
       />
-      {hasDescription && (
-        <CustomTextarea
-          label="Description of the event"
-          name="eventDescription"
-          placeholder="Description of the event"
-          register={register("eventDescription")}
-          error={!!errors?.eventDescription}
-          errorText={errors?.eventDescription?.message}
-        />
-      )}
+
       <h4 className="radio-title">Please choose venue of the event</h4>
       <label className="label radio-label" htmlFor="online">
         <input
@@ -177,7 +161,7 @@ const EventForm = () => {
         error={!!errors?.points}
         errorText={errors?.points?.message}
       />
-      <CustomButton type="submit" disabled={!isValid}>
+      <CustomButton type="submit" disabled={!(isValid && isDirty)}>
         {itemEdit.edit ? "Save changes" : "Add an event"}
       </CustomButton>
     </form>
