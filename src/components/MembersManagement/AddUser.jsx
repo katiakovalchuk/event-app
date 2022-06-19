@@ -60,7 +60,7 @@ const AddUser = ({ modalOpenAdd, closeAdd, handleAddFormSubmit, addFormData, han
               required
               {...register("email", {
                 pattern: {
-                  value: /^\S+@\S+$/i,
+                  value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g,
                   message: "You need to specify a valid email address",
                 },
                 onChange: handleAddFormChange,
