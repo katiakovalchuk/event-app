@@ -158,7 +158,7 @@ const Table = ({ showManagers }) => {
 
   const handleAddFormSubmit = async () => {
     sendLink(addFormData.email);
-    await setDoc(doc(usersCollectionRef, addFormData.email), {
+    const newUser = {
       fullName: addFormData.fullName,
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
@@ -168,8 +168,11 @@ const Table = ({ showManagers }) => {
       role: addFormData.role,
       rank: 0,
       image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
+    };
+    await setDoc(doc(usersCollectionRef, addFormData.email), {
+      ...newUser,
     });
-    getUsers();
+    users.push(newUser);
     closeAdd();
     addUserToast();
   };
