@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { updateAdditionalInfo } from "../../store/slices/usersSlice";
+import { updateAdditionalInfo } from "../../store/slices/membersSlice";
 
 import { CustomInput, CustomTextarea, CustomButton } from "../elements";
 import { useDialog } from "../../context/dialogContext";
@@ -19,7 +19,7 @@ const InfoForm = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(additinalInfo),
@@ -58,7 +58,7 @@ const InfoForm = () => {
         error={!!errors?.additionalPoints}
         errorText={errors?.additionalPoints?.message}
       />
-      <CustomButton type="submit" disabled={!isValid}>
+      <CustomButton type="submit" disabled={!(isValid && isDirty)}>
         Save changes
       </CustomButton>
     </form>

@@ -10,7 +10,7 @@ import { deleteUserFromEvent } from "../../store/slices/eventSlice";
 import {
   deleteEventFromMember,
   toggleStatus,
-} from "../../store/slices/usersSlice";
+} from "../../store/slices/membersSlice";
 
 import InfoForm from "../forms/InfoForm";
 import { ModalForm, ListItem, CustomCheckbox, CustomButton } from "../elements";
@@ -52,7 +52,7 @@ const EventMember = ({ fullName, eventsList }) => {
                 <BiCommentCheck />
               </span>
             )}
-            {additionalPoints && (
+            {additionalPoints > 0 && (
               <span className="members__points">{additionalPoints}</span>
             )}
           </div>
@@ -81,7 +81,7 @@ EventMember.propTypes = {
     PropTypes.shape({
       isPresent: PropTypes.bool,
       comment: PropTypes.string,
-      additionalPoints: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+      additionalPoints: PropTypes.number,
       uid: PropTypes.string,
       id: PropTypes.string,
     })

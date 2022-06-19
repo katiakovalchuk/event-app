@@ -1,40 +1,35 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
 import { GoTrashcan } from "react-icons/go";
 import { RiEdit2Fill } from "react-icons/ri";
 
 import { useDialog } from "../../context/dialogContext";
 import {
-  getEvents,
+  getNewEvents,
   selectAllEvents,
   deleteNewEvent,
 } from "../../store/slices/eventsSlice";
-import { deleteEvents } from "../../store/slices/usersSlice";
+import { deleteEvents } from "../../store/slices/membersSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
-import { CustomButton, CustomToast, ListItem } from "../elements";
+import { CustomButton, ListItem } from "../elements";
 
 const EventsList = () => {
-  const { startEdit, handleShowToast } = useDialog();
+  const { startEdit } = useDialog();
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
-  const { status, error } = useSelector((state) => state.eventsSlice);
+  const { status } = useSelector((state) => state.eventsSlice);
 
   const oderedEvents = [...events].sort((a, b) =>
     b.eventDate.localeCompare(a.eventDate)
   );
 
   useEffect(() => {
-    dispatch(getEvents());
+    dispatch(getNewEvents());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (status === "failed") {
-      handleShowToast();
-    }
-  }, [status]);
 
   const deleteEvent = (id) => {
     dispatch(deleteEvents(id));
@@ -43,16 +38,8 @@ const EventsList = () => {
 
   return (
     <>
+      <ToastContainer limit={5} />
       {status === "loading" && <Spinner />}
-
-      {status === "failed" && (
-        <CustomToast
-          toastHeading="Server Error"
-          toastText={error}
-          variant="danger"
-        />
-      )}
-
       {oderedEvents.length ? (
         <ul className="event__list">
           {oderedEvents.map((event) => (
