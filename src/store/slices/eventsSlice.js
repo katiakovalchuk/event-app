@@ -36,7 +36,8 @@ export const addNewEvent = createAsyncThunk(
       dispatch(addEvent(newEvent));
       toast.success("The event was added successfully");
     } catch (error) {
-      return rejectWithValue("Sorry, Can't add an Event");
+      toast.error("Sorry, Can't add an Event");
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -49,7 +50,8 @@ export const deleteNewEvent = createAsyncThunk(
       dispatch(deleteEvent(id));
       toast.success("The event was deleted successfully");
     } catch (error) {
-      return rejectWithValue("Sorry, Can't delete an Event");
+      toast.error("Sorry, Can't delete an Event");
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -63,7 +65,8 @@ export const updateNewEvent = createAsyncThunk(
       dispatch(updateEvent(event));
       toast.success("The event was updated successfully");
     } catch (error) {
-      return rejectWithValue("Sorry, Can't update an Event");
+      toast.error("Sorry, Can't update an Event");
+      return rejectWithValue(error.message);
     }
   }
 );

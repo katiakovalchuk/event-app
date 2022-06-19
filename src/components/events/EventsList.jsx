@@ -18,10 +18,10 @@ import Spinner from "../Spinner";
 import { CustomButton, ListItem } from "../elements";
 
 const EventsList = () => {
-  const { startEdit, notifyError } = useDialog();
+  const { startEdit } = useDialog();
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
-  const { status, error } = useSelector((state) => state.eventsSlice);
+  const { status } = useSelector((state) => state.eventsSlice);
 
   const oderedEvents = [...events].sort((a, b) =>
     b.eventDate.localeCompare(a.eventDate)
@@ -30,12 +30,6 @@ const EventsList = () => {
   useEffect(() => {
     dispatch(getNewEvents());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (status === "failed") {
-      notifyError(error);
-    }
-  }, [status]);
 
   const deleteEvent = (id) => {
     dispatch(deleteEvents(id));
