@@ -5,7 +5,7 @@
   &__list {
     display: flex;
     flex-direction: column;
-    margin: 50px 0;
+    margin: 30px 0 50px 0;
     background-color: lighten($bg-gray, 15%);
   }
 
@@ -50,5 +50,8 @@
   &__place {
   }
   &__date {
+  }
+  &-search {
+    width: 350px;
   }
 }
