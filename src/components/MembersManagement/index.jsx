@@ -116,11 +116,6 @@ const Table = ({ showManagers }) => {
     birth: "",
   });
 
-  const [pageNumber, setPageNumber] = useState(0);
-
-  const usersPerPage = 5; // show more?
-  const pagesVisited = pageNumber * usersPerPage;
-
   const columns = [
     { label: "Full Name", accessor: "fullName", sortable: true },
     { label: "Email", accessor: "email", sortable: true },
@@ -247,11 +242,8 @@ const Table = ({ showManagers }) => {
                 tableData={users}
                 {...{
                   editContactId,
-                  pagesVisited,
-                  usersPerPage,
                   editFormData,
                   columns,
-                  setPageNumber,
                   handleDeleteClick,
                   handleEditClick,
                   handleEditFormChange,
