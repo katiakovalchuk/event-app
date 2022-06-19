@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
 import { addUserToEvent } from "../../store/slices/eventSlice";
-import { addEventToMember } from "../../store/slices/usersSlice";
+import { addEventToMember } from "../../store/slices/membersSlice";
 
 import { ListItem, CustomButton } from "../elements";
 import "../../styles/event-item.scss";

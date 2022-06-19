@@ -8,7 +8,7 @@ import "../../styles/event-item.scss";
 
 const AllMembers = () => {
   const currentEvent = useSelector((state) => state.eventSlice.event);
-  const members = useSelector((state) => state.usersSlice.members);
+  const members = useSelector((state) => state.membersSlice.members);
   const { membersList } = currentEvent;
 
   const otherMembers = members.filter(

@@ -11,7 +11,7 @@ import {
   selectAllEvents,
   deleteNewEvent,
 } from "../../store/slices/eventsSlice";
-import { deleteEvents } from "../../store/slices/usersSlice";
+import { deleteEvents } from "../../store/slices/membersSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";

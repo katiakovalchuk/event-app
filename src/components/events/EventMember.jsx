@@ -10,7 +10,7 @@ import { deleteUserFromEvent } from "../../store/slices/eventSlice";
 import {
   deleteEventFromMember,
   toggleStatus,
-} from "../../store/slices/usersSlice";
+} from "../../store/slices/membersSlice";
 
 import InfoForm from "../forms/InfoForm";
 import { ModalForm, ListItem, CustomCheckbox, CustomButton } from "../elements";

@@ -5,7 +5,7 @@ import EventMember from "./EventMember";
 
 const EventMembers = () => {
   const currentEvent = useSelector((state) => state.eventSlice.event);
-  const members = useSelector((state) => state.usersSlice.members);
+  const members = useSelector((state) => state.membersSlice.members);
   const { membersList } = currentEvent;
 
   const eventMembers = members.filter((member) =>
