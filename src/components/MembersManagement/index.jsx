@@ -172,13 +172,13 @@ const Table = ({ showManagers }) => {
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
     });
-    users.push(newUser);
+    setUsers([...users, newUser]);
     closeAdd();
     addUserToast();
   };
 
-  const handleDeleteClick = async (id) => {
-    setDelId(id);
+  const handleDeleteClick = (data) => {
+    setDelId(data.email);
     openDel();
   };
 
@@ -236,7 +236,7 @@ const Table = ({ showManagers }) => {
 
           <AddUser {...{ modalOpenAdd, closeAdd, handleAddFormSubmit, handleAddFormChange, addFormData }} />
           {modalOpenEdit && <EditUser {...{ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
-          {modalOpenDel && <DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId, setUsers, users }} />}
+          {<DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId, setUsers, users }} />}
 
           <form onSubmit={handleEditFormSubmit}>
             <table className="table table-admin">

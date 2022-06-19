@@ -7,7 +7,7 @@ import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { doc, deleteDoc } from "firebase/firestore";
 import { getIndex } from "../../helpers/utils.js";
 
-const DelUser = ({ modalOpenDel, closeDel, getUsers, deleteUserToast, delId, setUsers, users }) => {
+const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, users }) => {
   const deleteDocument = async (id) => {
     await deleteDoc(doc(usersCollectionRef, id));
   };
