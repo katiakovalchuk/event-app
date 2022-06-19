@@ -1,22 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Row, Col } from "react-bootstrap";
-import { updateDoc, doc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { ToastContainer, toast } from "react-toastify";
+import { Col, Container, Row } from "react-bootstrap";
+import { doc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
-
 import { useUserAuth } from "../context/authContext";
 import { useDialog } from "../context/dialogContext";
 import { ModalForm } from "../components/elements";
 import PasswordForm from "../components/forms/PasswordForm";
+import { getUsers } from "../store/slices/usersSlice";
 import { storage } from "../lib/init-firebase.js";
 import { usersCollectionRef } from "../lib/firestore.collections.js";
-import { getIndex } from "../helpers/utils.js";
-import { capitalizeFirstLetter } from "../helpers/utils.js";
+import { capitalizeFirstLetter, getIndex } from "../helpers/utils.js";
 
 import styles from "../styles/Profile.module.scss";
-import { getUsers } from "../store/slices/usersSlice";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");

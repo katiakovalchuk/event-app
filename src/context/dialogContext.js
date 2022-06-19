@@ -5,15 +5,8 @@ import PropTypes from "prop-types";
 const DialogContext = createContext();
 
 export const DialogContextProvider = ({children}) => {
-    const [showToast, setShowToast] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [toastContent, setToastContent] = useState({
-        heading: "Inner error",
-        body: "Please contact our support team for additional information!",
-    });
 
-    const handleShowToast = () => setShowToast(true);
-    const handleCloseToast = () => setShowToast(false);
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
 
@@ -26,17 +19,6 @@ export const DialogContextProvider = ({children}) => {
 
     const defaultItemEdit = {item: {}, edit: false};
     const [itemEdit, setItemEdit] = useState(defaultItemEdit);
-
-    const updateToastContent = (
-        toastHeading = toastContent.heading,
-        toastBody = toastContent.body
-    ) => {
-        setToastContent((prev) => ({
-            ...prev,
-            heading: toastHeading,
-            body: toastBody,
-        }));
-    };
 
     const startEdit = (item) => {
         setItemEdit({
@@ -56,17 +38,12 @@ export const DialogContextProvider = ({children}) => {
     return (
         <DialogContext.Provider
             value={{
-                showToast,
                 showModal,
                 notifySuccess,
                 notifyError,
-                toastContent,
                 itemEdit,
-                handleShowToast,
-                handleCloseToast,
                 handleShowModal,
                 handleCloseModal,
-                updateToastContent,
                 startEdit,
                 hideEdit,
             }}

@@ -1,25 +1,26 @@
-import React, { useState } from "react";
-import { Events } from "./users";
-import TableForm from "./TableForm";
+import React from "react";
 import "./EventTable.css";
+import logo from "../../assets/images/logo.png";
 
 const EventTable = () => {
-  const [query, setQuery] = useState("");
-  const keys = ["event_name", "event_city", "email"];
-  const search = (data) => {
-    return data.filter((item) =>
-      keys.some((key) => item[key].toLowerCase().includes(query))
-    );
-  };
   return (
-    <div className="event">
-      <input
-        type="text"
-        placeholder="Search..."
-        className="search"
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <TableForm data={search(Events)} className="table_form" />
+    <div className="event-wrapper">
+      <div className="home-header">
+        <img src={logo} alt="app-logo" />
+        <h1>Web application поДія</h1>
+      </div>
+      <div className="app-description animate-charcter">
+        Hello. Welcome to поДія app. This is new start-up application, that can
+        help you create you personal events and add wishlist with your users. We
+        have a lot of benefits:
+        <ul>
+          <li> - personal account;</li>
+          <li> - different roles for users;</li>
+          <li> - for different type of roles;</li>
+          <li> - unique permissions;</li>
+          <li> - scores for events.</li>
+        </ul>
+      </div>
     </div>
   );
 };

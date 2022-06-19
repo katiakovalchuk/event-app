@@ -75,6 +75,16 @@
   width: 100%;
 }
 
+.navbar-menu {
+  display: flex;
+  align-items: center;
+}
+
+.app-logo {
+  width: 68px;
+  height: 68px;
+}
+
 .navbar-toggle {
   background-color: #060b26;
   width: 100%;

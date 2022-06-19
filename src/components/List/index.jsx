@@ -5,13 +5,15 @@ import TableForm from "./TableForm";
 
 const List = () => {
   const [query, setQuery] = useState("");
-  const keys = ["fullName", "city", "email"];
+  const [localusers, setLocalusers] = useState([]);
+  const keys = ["fullName", "image", "email", "score"];
   const search = (data) => {
     if (data.length) {
       const result = data.filter((item) =>
-        keys.some((key) => item[key]?.toLowerCase().includes(query.toLowerCase()))
+        keys.some((key) =>
+          item[key]?.toLowerCase().includes(query.toLowerCase())
+        )
       );
-      console.log(result);
       return result;
     }
     return null;
@@ -22,15 +24,49 @@ const List = () => {
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (users && !localusers.length) setLocalusers(users);
+  }, [users]);
+
+  const columns = [
+    { label: "User image", accessor: "image", sortable: false },
+    { label: "Full Name", accessor: "fullName", sortable: true },
+    { label: "Email", accessor: "email", sortable: true },
+    { label: "Scores", accessor: "scores", sortable: true },
+  ];
+
+  const handleSorting = (sortField, sortOrder) => {
+    if (sortField) {
+      const sorted = [...users].sort((a, b) => {
+        if (a[sortField] === null) return 1;
+        if (b[sortField] === null) return -1;
+        if (a[sortField] === null && b[sortField] === null) return 0;
+        return (
+          a[sortField].toString().localeCompare(b[sortField].toString(), "en", {
+            numeric: true,
+          }) * (sortOrder === "asc" ? 1 : -1)
+        );
+      });
+      setLocalusers(sorted);
+    }
+  };
+
   return (
     <>
-      <input
-        type="text"
-        placeholder="Search..."
-        className="search"
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <TableForm data={search(users)} />
+      <div className="membersForm">
+        <input
+          type="text"
+          placeholder="Search..."
+          className="search"
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <TableForm
+          data={search(localusers)}
+          handleSorting={handleSorting}
+          columns={columns}
+        />
+      </div>
     </>
   );
 };
