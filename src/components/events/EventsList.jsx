@@ -11,7 +11,7 @@ import {
   selectAllEvents,
   deleteNewEvent,
 } from "../../store/slices/eventsSlice";
-import { deleteEvents } from "../../store/slices/membersSlice";
+import { deleteAllMembersFromEvent } from "../../store/slices/membersSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
@@ -32,7 +32,7 @@ const EventsList = () => {
   }, [dispatch]);
 
   const deleteEvent = (id) => {
-    dispatch(deleteEvents(id));
+    dispatch(deleteAllMembersFromEvent(id));
     dispatch(deleteNewEvent(id));
   };
 
@@ -67,7 +67,7 @@ const EventsList = () => {
           ))}
         </ul>
       ) : (
-        <h3 className="text-center">Please add your first Event</h3>
+        <h3 className="check-text">Please add your first event</h3>
       )}
     </>
   );

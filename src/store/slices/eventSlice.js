@@ -59,6 +59,22 @@ export const deleteUserFromEvent = createAsyncThunk(
   }
 );
 
+export const deleteNewMembersList = createAsyncThunk(
+  "eventSlice/deleteNewMembersList",
+  async (id, { rejectWithValue, dispatch }) => {
+    try {
+      await updateDoc(doc(db, "events", id), {
+        membersList: [],
+      });
+      dispatch(deleteMembersList());
+      toast.success("All users was unregistered successfully");
+    } catch (error) {
+      toast.error("Sorry, can't unregister all users");
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // helpers
 const setSuccess = (state) => {
   state.status = "succeeded";
@@ -88,6 +104,9 @@ const eventSlice = createSlice({
         (id) => id !== action.payload
       );
     },
+    deleteMembersList(state) {
+      state.event.membersList = [];
+    },
   },
   extraReducers: {
     [getNewEvent.fulfilled]: setSuccess,
@@ -99,8 +118,11 @@ const eventSlice = createSlice({
     [deleteUserFromEvent.fulfilled]: setSuccess,
     [deleteUserFromEvent.rejected]: setError,
     [deleteUserFromEvent.pending]: setLoading,
+    [deleteNewMembersList.fulfilled]: setSuccess,
+    [deleteNewMembersList.rejected]: setError,
+    [deleteNewMembersList.pending]: setLoading,
   },
 });
-const { getEvent, addUser, deleteUser } = eventSlice.actions;
+const { getEvent, addUser, deleteUser, deleteMembersList } = eventSlice.actions;
 
 export default eventSlice.reducer;

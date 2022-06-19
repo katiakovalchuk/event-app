@@ -126,11 +126,10 @@ export const updateAdditionalInfo = createAsyncThunk(
   }
 );
 
-export const deleteEvents = createAsyncThunk(
+export const deleteAllMembersFromEvent = createAsyncThunk(
   "membersSlice/deleteEvents",
   async (id, { rejectWithValue, getState }) => {
-    const events = getState().eventsSlice.events;
-    const currentEvent = events.find((event) => event.id === id);
+    const currentEvent = getState().eventSlice.event;
     const membersList = currentEvent.membersList;
 
     try {
@@ -140,11 +139,12 @@ export const deleteEvents = createAsyncThunk(
         await deleteDoc(doc(colRef, id));
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Sorry, can't delete event");
       return rejectWithValue(error.message);
     }
   }
 );
+
 // helpers
 const setSuccess = (state) => {
   state.status = "succeeded";
@@ -214,6 +214,9 @@ const membersSlice = createSlice({
     [updateAdditionalInfo.fulfilled]: setSuccess,
     [updateAdditionalInfo.rejected]: setError,
     [updateAdditionalInfo.pending]: setLoading,
+    [deleteAllMembersFromEvent.fulfilled]: setSuccess,
+    [deleteAllMembersFromEvent.rejected]: setError,
+    [deleteAllMembersFromEvent.pending]: setLoading,
   },
 });
 const { getMembers, addEvent, deleteEvent, toggleEvent, updateInfo } =
