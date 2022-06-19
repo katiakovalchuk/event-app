@@ -57,7 +57,7 @@ const Table = ({ showManagers }) => {
           })
           .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
       );
-      console.log("get users");
+      console.table(users);
     });
   };
 
@@ -233,7 +233,7 @@ const Table = ({ showManagers }) => {
 
           <AddUser {...{ modalOpenAdd, closeAdd, handleAddFormSubmit, handleAddFormChange, addFormData }} />
           {modalOpenEdit && <EditUser {...{ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
-          {modalOpenDel && <DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId }} />}
+          {modalOpenDel && <DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId, setUsers, users }} />}
 
           <form onSubmit={handleEditFormSubmit}>
             <table className="table table-admin">

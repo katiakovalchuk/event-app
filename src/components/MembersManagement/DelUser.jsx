@@ -1,19 +1,22 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { doc, deleteDoc } from "firebase/firestore";
-// eslint-disable-next-line react/prop-types
-const DelUser = ({ modalOpenDel, closeDel, getUsers, deleteUserToast, delId }) => {
+import { getIndex } from "../../helpers/utils.js";
+
+const DelUser = ({ modalOpenDel, closeDel, getUsers, deleteUserToast, delId, setUsers, users }) => {
   const deleteDocument = async (id) => {
     await deleteDoc(doc(usersCollectionRef, id));
   };
 
   function deleteUser() {
+    const userIndex = getIndex(users, delId);
     deleteDocument(delId);
+    setUsers(users.filter((user, index) => index !== userIndex));
     deleteUserToast();
-    getUsers();
     closeDel();
   }
 
