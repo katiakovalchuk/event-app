@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
 import { GoTrashcan } from "react-icons/go";
 import { RiEdit2Fill } from "react-icons/ri";
 
 import { useDialog } from "../../context/dialogContext";
 import {
-  getEvents,
+  getNewEvents,
   selectAllEvents,
   deleteNewEvent,
 } from "../../store/slices/eventsSlice";
@@ -14,10 +15,10 @@ import { deleteEvents } from "../../store/slices/usersSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
-import { CustomButton, CustomToast, ListItem } from "../elements";
+import { CustomButton, ListItem } from "../elements";
 
 const EventsList = () => {
-  const { startEdit, handleShowToast } = useDialog();
+  const { startEdit, notifyError } = useDialog();
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
   const { status, error } = useSelector((state) => state.eventsSlice);
@@ -27,12 +28,12 @@ const EventsList = () => {
   );
 
   useEffect(() => {
-    dispatch(getEvents());
+    dispatch(getNewEvents());
   }, [dispatch]);
 
   useEffect(() => {
     if (status === "failed") {
-      handleShowToast();
+      notifyError(error);
     }
   }, [status]);
 
@@ -43,16 +44,8 @@ const EventsList = () => {
 
   return (
     <>
+      <ToastContainer limit={5} />
       {status === "loading" && <Spinner />}
-
-      {status === "failed" && (
-        <CustomToast
-          toastHeading="Server Error"
-          toastText={error}
-          variant="danger"
-        />
-      )}
-
       {oderedEvents.length ? (
         <ul className="event__list">
           {oderedEvents.map((event) => (
