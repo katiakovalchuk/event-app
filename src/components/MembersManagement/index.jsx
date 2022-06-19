@@ -57,6 +57,7 @@ const Table = ({ showManagers }) => {
           })
           .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
       );
+      console.log("get users");
     });
   };
 
@@ -115,11 +116,6 @@ const Table = ({ showManagers }) => {
     birth: "",
   });
 
-  const [pageNumber, setPageNumber] = useState(0);
-
-  const usersPerPage = 5; // show more?
-  const pagesVisited = pageNumber * usersPerPage;
-
   const columns = [
     { label: "Full Name", accessor: "fullName", sortable: true },
     { label: "Email", accessor: "email", sortable: true },
@@ -160,8 +156,7 @@ const Table = ({ showManagers }) => {
     setEditFormData(newFormData);
   };
 
-  const handleAddFormSubmit = async (e) => {
-    e.preventDefault();
+  const handleAddFormSubmit = async () => {
     sendLink(addFormData.email);
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       fullName: addFormData.fullName,
@@ -188,8 +183,7 @@ const Table = ({ showManagers }) => {
     setEditContactId(null);
   };
 
-  const handleEditFormSubmit = (event) => {
-    event.preventDefault();
+  const handleEditFormSubmit = () => {
     closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     updateDoc(docRef, {
@@ -248,11 +242,8 @@ const Table = ({ showManagers }) => {
                 tableData={users}
                 {...{
                   editContactId,
-                  pagesVisited,
-                  usersPerPage,
                   editFormData,
                   columns,
-                  setPageNumber,
                   handleDeleteClick,
                   handleEditClick,
                   handleEditFormChange,

@@ -1,9 +1,13 @@
 /* eslint-disable react/prop-types */
-import ReactPaginate from "react-paginate";
+import Pagination from "../elements/Pagination";
 import ReadOnlyRow from "./ReadOnlyRow";
+import { useState } from "react";
 
-const TableBody = ({ tableData, columns, pagesVisited, setPageNumber, handleDeleteClick, usersPerPage, handleEditClick }) => {
+const TableBody = ({ tableData, columns, handleDeleteClick, handleEditClick }) => {
+  const [pageNumber, setPageNumber] = useState(0);
+  const usersPerPage = 5; // show more?
   const pageCount = Math.ceil(tableData && tableData.length / usersPerPage);
+  const pagesVisited = pageNumber * usersPerPage;
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
@@ -31,18 +35,7 @@ const TableBody = ({ tableData, columns, pagesVisited, setPageNumber, handleDele
         {!!tableData.length && (
           <tr className="no-data">
             <td colSpan="7">
-              <ReactPaginate
-                breakLabel="..."
-                previousLabel={"Previous"}
-                nextLabel={"Next"}
-                pageCount={pageCount}
-                onPageChange={changePage}
-                containerClassName={"pagination justify-content-center"}
-                pageLinkClassName={"page-link"}
-                previousLinkClassName={"page-link"}
-                nextLinkClassName={"page-link"}
-                activeLinkClassName={"page-item active"}
-              />
+              <Pagination {...{ pageCount, changePage }} />
             </td>
           </tr>
         )}
