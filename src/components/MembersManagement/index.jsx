@@ -57,7 +57,7 @@ const Table = ({ showManagers }) => {
           })
           .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
       );
-      console.log("get users");
+      console.table(users);
     });
   };
 
@@ -158,7 +158,7 @@ const Table = ({ showManagers }) => {
 
   const handleAddFormSubmit = async () => {
     sendLink(addFormData.email);
-    await setDoc(doc(usersCollectionRef, addFormData.email), {
+    const newUser = {
       fullName: addFormData.fullName,
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
@@ -168,14 +168,17 @@ const Table = ({ showManagers }) => {
       role: addFormData.role,
       rank: 0,
       image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
+    };
+    await setDoc(doc(usersCollectionRef, addFormData.email), {
+      ...newUser,
     });
-    getUsers();
+    setUsers([...users, newUser]);
     closeAdd();
     addUserToast();
   };
 
-  const handleDeleteClick = async (id) => {
-    setDelId(id);
+  const handleDeleteClick = (data) => {
+    setDelId(data.email);
     openDel();
   };
 
@@ -186,21 +189,31 @@ const Table = ({ showManagers }) => {
   const handleEditFormSubmit = () => {
     closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
-    updateDoc(docRef, {
+    const user = {
       fullName: editFormData.fullName,
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
       company: editFormData.company,
       scores: editFormData.scores,
       birth: editFormData.birth,
+    };
+    updateDoc(docRef, {
+      ...user,
     })
       .then((res) => {
         console.log(res);
       })
       .catch((err) => console.log(err.message));
+
+    const newUsers = users.map((obj) => {
+      if (obj.email === editContactId) {
+        return { ...user };
+      }
+      return obj;
+    });
+    setUsers([...newUsers]);
     setEditContactId(null);
     editUserToast();
-    getUsers();
   };
 
   const handleEditClick = (event, contact) => {
@@ -233,7 +246,7 @@ const Table = ({ showManagers }) => {
 
           <AddUser {...{ modalOpenAdd, closeAdd, handleAddFormSubmit, handleAddFormChange, addFormData }} />
           {modalOpenEdit && <EditUser {...{ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
-          {modalOpenDel && <DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId }} />}
+          {<DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId, setUsers, users }} />}
 
           <form onSubmit={handleEditFormSubmit}>
             <table className="table table-admin">
