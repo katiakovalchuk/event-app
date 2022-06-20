@@ -189,21 +189,31 @@ const Table = ({ showManagers }) => {
   const handleEditFormSubmit = () => {
     closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
-    updateDoc(docRef, {
+    const user = {
       fullName: editFormData.fullName,
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
       company: editFormData.company,
       scores: editFormData.scores,
       birth: editFormData.birth,
+    };
+    updateDoc(docRef, {
+      ...user,
     })
       .then((res) => {
         console.log(res);
       })
       .catch((err) => console.log(err.message));
+
+    const newUsers = users.map((obj) => {
+      if (obj.email === editContactId) {
+        return { ...user };
+      }
+      return obj;
+    });
+    setUsers([...newUsers]);
     setEditContactId(null);
     editUserToast();
-    getUsers();
   };
 
   const handleEditClick = (event, contact) => {
