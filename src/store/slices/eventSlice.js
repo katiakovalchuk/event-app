@@ -6,7 +6,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
-
+import { toast } from "react-toastify";
 import { db } from "../../lib/init-firebase.js";
 
 const initialState = {
@@ -15,17 +15,16 @@ const initialState = {
   event: [],
 };
 
-export const getEvent = createAsyncThunk(
-  "eventSlice/getEvent",
-  async (id, { rejectWithValue }) => {
+export const getNewEvent = createAsyncThunk(
+  "eventSlice/getNewEvent",
+  async (id, { rejectWithValue, dispatch }) => {
     try {
       const docRef = doc(db, "events", id);
       const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        return { ...docSnap.data(), id: docSnap.id };
-      }
+      const event = { ...docSnap.data(), id: docSnap.id };
+      dispatch(getEvent(event));
     } catch (error) {
-      console.log(error);
+      toast.error("Sorry, can't get event");
       return rejectWithValue(error.message);
     }
   }
@@ -39,8 +38,8 @@ export const addUserToEvent = createAsyncThunk(
       });
       dispatch(addUser(uid));
     } catch (error) {
-      console.log(error);
-      return rejectedWithValue(error);
+      toast.error("Sorry, can't register user");
+      return rejectedWithValue(error.message);
     }
   }
 );
@@ -54,16 +53,16 @@ export const deleteUserFromEvent = createAsyncThunk(
       });
       dispatch(deleteUser(uid));
     } catch (error) {
-      console.log(error);
+      toast.error("Sorry, can't unregister user");
       return rejectWithValue(error.message);
     }
   }
 );
 
-//helpers
-// const setSuccess = (state) => {
-//   state.status = "succeeded";
-// };
+// helpers
+const setSuccess = (state) => {
+  state.status = "succeeded";
+};
 const setError = (state, action) => {
   state.status = "failed";
   state.error = action.payload;
@@ -78,6 +77,9 @@ const eventSlice = createSlice({
   name: "eventSlice",
   initialState,
   reducers: {
+    getEvent(state, action) {
+      state.event = action.payload;
+    },
     addUser(state, action) {
       state.event.membersList.push(action.payload);
     },
@@ -88,14 +90,17 @@ const eventSlice = createSlice({
     },
   },
   extraReducers: {
-    [getEvent.rejected]: setError,
-    [getEvent.pending]: setLoading,
-    [getEvent.fulfilled]: (state, action) => {
-      state.status = "succeeded";
-      state.event = action.payload;
-    },
+    [getNewEvent.fulfilled]: setSuccess,
+    [getNewEvent.rejected]: setError,
+    [getNewEvent.pending]: setLoading,
+    [addUserToEvent.fulfilled]: setSuccess,
+    [addUserToEvent.rejected]: setError,
+    [addUserToEvent.pending]: setLoading,
+    [deleteUserFromEvent.fulfilled]: setSuccess,
+    [deleteUserFromEvent.rejected]: setError,
+    [deleteUserFromEvent.pending]: setLoading,
   },
 });
-const { addUser, deleteUser } = eventSlice.actions;
+const { getEvent, addUser, deleteUser } = eventSlice.actions;
 
 export default eventSlice.reducer;

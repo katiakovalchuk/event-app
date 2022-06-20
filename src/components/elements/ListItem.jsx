@@ -5,7 +5,7 @@ import "../../styles/list-item.scss";
 
 const ListItem = ({ children, link, ...props }) => {
   return (
-    <li className={`list-item ${link ? "list-item--hover" : ""}`} {...props}>
+    <li className={`list-item my-2 ${link ? "list-item--hover" : ""}`} {...props}>
       {children}
     </li>
   );
