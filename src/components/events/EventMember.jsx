@@ -21,7 +21,8 @@ const EventMember = ({ fullName, eventsList }) => {
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const eventId = currentEvent.id;
 
-  const currentInfo = eventsList?.find((event) => event.id === eventId);
+  const currentInfo =
+    eventsList.length && eventsList.find((event) => event.id === eventId);
   const { isPresent, comment, additionalPoints, uid, id } = currentInfo;
 
   const deleteUser = (uid, id) => {
@@ -31,7 +32,7 @@ const EventMember = ({ fullName, eventsList }) => {
         uid,
       })
     );
-    dispatch(deleteEventFromMember({ id, uid }));
+    dispatch(deleteEventFromMember({ uid, id }));
   };
   return (
     <>
@@ -46,6 +47,7 @@ const EventMember = ({ fullName, eventsList }) => {
               dispatch(toggleStatus({ uid, id }));
             }}
           />
+
           <div className="members__addInfo">
             {comment && (
               <span className="members__comment">
@@ -70,6 +72,7 @@ const EventMember = ({ fullName, eventsList }) => {
           </CustomButton>
         </div>
       </ListItem>
+
       <ModalForm title="Additional Information" form={<InfoForm />} />
     </>
   );

@@ -18,8 +18,8 @@ const EventMembers = () => {
     membersList.includes(member.id)
   );
   const deleteAllMembers = (id) => {
-    dispatch(deleteAllMembersFromEvent(id));
     dispatch(deleteNewMembersList(id));
+    dispatch(deleteAllMembersFromEvent(id));
   };
   return (
     <section className="members">
@@ -38,7 +38,7 @@ const EventMembers = () => {
         </div>
         {eventMembers.length ? (
           <ul className="members__list">
-            {eventMembers?.map((member) => (
+            {eventMembers.map((member) => (
               <EventMember key={member.id} {...member} />
             ))}
           </ul>

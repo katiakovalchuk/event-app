@@ -1,12 +1,15 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
-
+import { addEventToAllMembers } from "../../store/slices/membersSlice";
+import { addAllUserEvent } from "../../store/slices/eventSlice";
 import SingleMember from "./SingleMember";
+import { CustomButton } from "../elements";
 
 import "../../styles/event-item.scss";
 
 const AllMembers = () => {
+  const dispatch = useDispatch();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const members = useSelector((state) => state.membersSlice.members);
   const { membersList } = currentEvent;
@@ -15,10 +18,33 @@ const AllMembers = () => {
     (member) => !membersList.includes(member.id)
   );
 
+  const addAllMembers = (id) => {
+    dispatch(
+      addEventToAllMembers({
+        id,
+        comment: "",
+        additionalPoints: 0,
+        isPresent: false,
+      })
+    );
+    dispatch(addAllUserEvent(id));
+  };
+
   return (
     <section className="members">
       <Container>
         <h4 className="members__title">Event App Users</h4>
+        <div className="members__statistic">
+          {otherMembers.length > 1 && (
+            <CustomButton
+              onClick={() => {
+                addAllMembers(currentEvent.id);
+              }}
+            >
+              Add All
+            </CustomButton>
+          )}
+        </div>
         {otherMembers.length ? (
           <ul className="members__list">
             {otherMembers?.map((member) => (

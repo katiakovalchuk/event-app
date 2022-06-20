@@ -127,8 +127,8 @@ export const updateAdditionalInfo = createAsyncThunk(
 );
 
 export const deleteAllMembersFromEvent = createAsyncThunk(
-  "membersSlice/deleteEvents",
-  async (id, { rejectWithValue, getState }) => {
+  "membersSlice/deleteAllMembersFromEvent",
+  async (id, { rejectWithValue, getState, dispatch }) => {
     const currentEvent = getState().eventSlice.event;
     const membersList = currentEvent.membersList;
 
@@ -137,9 +137,35 @@ export const deleteAllMembersFromEvent = createAsyncThunk(
         const docRef = doc(db, "users", membersList[i]);
         const colRef = collection(docRef, "eventsList");
         await deleteDoc(doc(colRef, id));
+        dispatch(deleteEvent({ uid: membersList[i], id }));
       }
     } catch (error) {
       toast.error("Sorry, can't delete event");
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addEventToAllMembers = createAsyncThunk(
+  "membersSlice/addAllMembersToEvent",
+  async (event, { rejectWithValue, getState, dispatch }) => {
+    const members = getState().membersSlice.members;
+
+    const currentEvent = getState().eventSlice.event;
+    const membersList = currentEvent.membersList;
+    const unregisteredMem = members.filter(
+      (member) => !membersList.includes(member.id)
+    );
+
+    try {
+      unregisteredMem.map(async (member) => {
+        const docRef = doc(db, "users", member.id);
+        const colRef = collection(docRef, "eventsList");
+        await setDoc(doc(colRef, event.id), event);
+        dispatch(addEvent({ ...event, uid: member.id }));
+      });
+    } catch (error) {
+      toast.error("Sorry, can't register all users");
       return rejectWithValue(error.message);
     }
   }
@@ -160,7 +186,7 @@ const setLoading = (state) => {
 };
 
 const membersSlice = createSlice({
-  name: "usersSlice",
+  name: "membersSlice",
   initialState,
   reducers: {
     getMembers(state, action) {
@@ -217,6 +243,9 @@ const membersSlice = createSlice({
     [deleteAllMembersFromEvent.fulfilled]: setSuccess,
     [deleteAllMembersFromEvent.rejected]: setError,
     [deleteAllMembersFromEvent.pending]: setLoading,
+    [addEventToAllMembers.fulfilled]: setSuccess,
+    [addEventToAllMembers.rejected]: setError,
+    [addEventToAllMembers.pending]: setLoading,
   },
 });
 const { getMembers, addEvent, deleteEvent, toggleEvent, updateInfo } =
