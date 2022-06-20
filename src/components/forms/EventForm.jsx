@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import DatePicker from "react-datepicker";
+import { ToastContainer } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -17,12 +18,7 @@ import { eventSchema } from "../../helpers/schemaForms";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/form.scss";
 
-import {
-  CustomInput,
-  CustomTextarea,
-  CustomCheckbox,
-  CustomButton,
-} from "../elements";
+import { CustomInput, CustomTextarea, CustomButton } from "../elements";
 
 const EventForm = () => {
   const { itemEdit, hideEdit } = useDialog();
@@ -33,7 +29,7 @@ const EventForm = () => {
     watch,
     control,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
   } = useForm({
     mode: "onChange",
     resolver: yupResolver(eventSchema),
@@ -44,7 +40,6 @@ const EventForm = () => {
       reset({
         ...itemEdit.item,
         eventDate: moment(itemEdit.item.eventDate).toDate(),
-        hasDescription: true,
       });
     }
   }, [itemEdit]);
@@ -56,67 +51,60 @@ const EventForm = () => {
       eventDate: moment(data.eventDate).format("yyyy-MM-DD HH:mm"),
       membersList: [],
     };
-    delete event.hasDescription;
     itemEdit.edit
       ? dispatch(updateNewEvent(event))
       : dispatch(addNewEvent(event));
     hideEdit();
   };
-
-  const hasDescription = watch("hasDescription");
   const eventPlace = watch("eventPlace");
 
   return (
-    <form
-      className="form"
-      autoComplete="off"
-      onSubmit={handleSubmit(onSubmitEventForm)}
-    >
-      <CustomInput
-        label="Event Name"
-        icon={<MdEventNote />}
-        name="eventName"
-        type="text"
-        placeholder="Event Name"
-        register={register("eventName")}
-        error={!!errors?.eventName}
-        errorText={errors?.eventName?.message}
-      />
-      <Controller
-        control={control}
-        name="eventDate"
-        render={({ field }) => (
-          <DatePicker
-            className="input-input form-control"
-            onChange={(date) => field.onChange(date)}
-            selected={field.value}
-            isClearable
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            dateFormat="yyyy-MM-dd HH:mm"
-            placeholderText="Choose date and time"
-            customInput={
-              <CustomInput
-                version="date"
-                label="Date of the Event"
-                icon={<AiOutlineClockCircle />}
-              />
-            }
-          />
+    <>
+      <ToastContainer limit={5} />
+
+      <form
+        className="form"
+        autoComplete="off"
+        onSubmit={handleSubmit(onSubmitEventForm)}
+      >
+        <CustomInput
+          label="Event Name"
+          icon={<MdEventNote />}
+          name="eventName"
+          type="text"
+          placeholder="Event Name"
+          register={register("eventName")}
+          error={!!errors?.eventName}
+          errorText={errors?.eventName?.message}
+        />
+        <Controller
+          control={control}
+          name="eventDate"
+          render={({ field }) => (
+            <DatePicker
+              className="input-input form-control"
+              onChange={(date) => field.onChange(date)}
+              selected={field.value}
+              isClearable
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="yyyy-MM-dd HH:mm"
+              placeholderText="Choose date and time"
+              customInput={
+                <CustomInput
+                  version="date"
+                  label="Date of the Event"
+                  icon={<AiOutlineClockCircle />}
+                />
+              }
+            />
+          )}
+        />
+        {errors?.eventDate && (
+          <span className="error-text">{errors?.eventDate?.message}</span>
         )}
-      />
-      {errors?.eventDate && (
-        <span className="error-text">{errors?.eventDate?.message}</span>
-      )}
-      <CustomCheckbox
-        control={control}
-        label="Add description"
-        type="checkbox"
-        name="hasDescription"
-        register={register("hasDescription")}
-      />
-      {hasDescription && (
+
         <CustomTextarea
           label="Description of the event"
           name="eventDescription"
@@ -125,62 +113,63 @@ const EventForm = () => {
           error={!!errors?.eventDescription}
           errorText={errors?.eventDescription?.message}
         />
-      )}
-      <h4 className="radio-title">Please choose venue of the event</h4>
-      <label className="label radio-label" htmlFor="online">
-        <input
-          className="radio-input"
-          control={control}
-          value="online"
-          name="eventPlace"
-          id="online"
-          {...register("eventPlace")}
-          type="radio"
-        />
-        <span className="radio-style"></span>
-        Online
-      </label>
-      <label className="label radio-label" htmlFor="city">
-        <input
-          className="radio-input"
-          control={control}
-          value="city"
-          name="eventPlace"
-          id="city"
-          {...register("eventPlace")}
-          type="radio"
-        />
-        <span className="radio-style"></span>
-        City
-      </label>
-      {errors?.eventPlace && (
-        <span className="error-text">{errors?.eventPlace?.message}</span>
-      )}
-      {eventPlace === "city" && (
+
+        <h4 className="radio-title">Please choose venue of the event</h4>
+        <label className="label radio-label" htmlFor="online">
+          <input
+            className="radio-input"
+            control={control}
+            value="online"
+            name="eventPlace"
+            id="online"
+            {...register("eventPlace")}
+            type="radio"
+          />
+          <span className="radio-style"></span>
+          Online
+        </label>
+        <label className="label radio-label" htmlFor="city">
+          <input
+            className="radio-input"
+            control={control}
+            value="city"
+            name="eventPlace"
+            id="city"
+            {...register("eventPlace")}
+            type="radio"
+          />
+          <span className="radio-style"></span>
+          City
+        </label>
+        {errors?.eventPlace && (
+          <span className="error-text">{errors?.eventPlace?.message}</span>
+        )}
+        {eventPlace === "city" && (
+          <CustomInput
+            label="Place of the event"
+            icon={<MdPlace />}
+            name="cityName"
+            type="text"
+            placeholder="City Name"
+            register={register("cityName")}
+            error={!!errors?.cityName}
+            errorText={errors?.cityName?.message}
+          />
+        )}
         <CustomInput
-          label="Place of the event"
-          icon={<MdPlace />}
-          name="cityName"
-          type="text"
-          placeholder="City Name"
-          register={register("cityName")}
-          error={!!errors?.cityName}
-          errorText={errors?.cityName?.message}
+          version="number"
+          label="Points for the event"
+          type="number"
+          name="points"
+          register={register("points")}
+          error={!!errors?.points}
+          errorText={errors?.points?.message}
         />
-      )}
-      <CustomInput
-        version="number"
-        label="Points for the event"
-        type="number"
-        name="points"
-        register={register("points")}
-        error={!!errors?.points}
-        errorText={errors?.points?.message}
-      />
-      <CustomButton type="submit" disabled={!isValid}>
-        {itemEdit.edit ? "Save changes" : "Add an event"}
-      </CustomButton>
-    </form>
+        <CustomButton type="submit" disabled={!(isValid && isDirty)}>
+          {itemEdit.edit ? "Save changes" : "Add an event"}
+        </CustomButton>
+      </form>
+    </>
   );
 };
 

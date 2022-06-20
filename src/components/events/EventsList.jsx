@@ -1,24 +1,25 @@
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import {ToastContainer} from "react-toastify";
 import {GoTrashcan} from "react-icons/go";
 import {RiEdit2Fill} from "react-icons/ri";
 
 import {useDialog} from "../../context/dialogContext";
 import {usePagination} from "../../hooks/usePagination";
-import {deleteNewEvent, getEvents, selectAllEvents,} from "../../store/slices/eventsSlice";
-import {deleteEvents} from "../../store/slices/usersSlice";
+import {deleteNewEvent, getNewEvents, selectAllEvents,} from "../../store/slices/eventsSlice";
+import {deleteEvents} from "../../store/slices/membersSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
 import Pagination from "../Pagination";
-import {CustomButton, CustomToast, ListItem} from "../elements";
+import {CustomButton, ListItem} from "../elements";
 import {search} from "../../helpers/utils";
 
 const EventsList = () => {
-    const {startEdit, handleShowToast} = useDialog();
+    const {startEdit} = useDialog();
     const dispatch = useDispatch();
     const events = useSelector(selectAllEvents);
-    const {status, error} = useSelector((state) => state.eventsSlice);
+    const {status} = useSelector((state) => state.eventsSlice);
     const [query, setQuery] = useState("");
     const keys = ["eventDate", "eventName", "eventPlace", "cityName", "eventDescription"];
 
@@ -34,14 +35,8 @@ const EventsList = () => {
     } = usePagination({query, status, data: searchedEvents});
 
     useEffect(() => {
-        dispatch(getEvents());
+        dispatch(getNewEvents());
     }, [dispatch]);
-
-    useEffect(() => {
-        if (status === "failed") {
-            handleShowToast();
-        }
-    }, [status]);
 
     const deleteEvent = (id) => {
         dispatch(deleteEvents(id));
@@ -50,15 +45,8 @@ const EventsList = () => {
 
     return (
         <>
+            <ToastContainer limit={5}/>
             {status === "loading" && <Spinner/>}
-
-            {status === "failed" && (
-                <CustomToast
-                    toastHeading="Server Error"
-                    toastText={error}
-                    variant="danger"
-                />
-            )}
             <div className="d-flex justify-content-end">
                 <input className="event-search form-control me-2 mt-5" type="search" placeholder="Search..."
                        aria-label="Search"
