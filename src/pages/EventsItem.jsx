@@ -17,6 +17,7 @@ const EventsItem = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { status } = useSelector((state) => state.eventSlice);
+
   useEffect(() => {
     dispatch(getNewEvent(id));
   }, [id]);

@@ -11,11 +11,12 @@
   background: $bg-gray;
   transition: all 0.3s ease-in-out;
   &:not(:last-child) {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
 }
 
 .list-item--hover {
+  height: 90px;
   &:hover {
     box-shadow: $shadow;
   }

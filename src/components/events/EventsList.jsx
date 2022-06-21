@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { GoTrashcan } from "react-icons/go";
 import { RiEdit2Fill } from "react-icons/ri";
+// import { BiDownArrow, BiUpArrow } from "react-icons/bi";
 
 import { useDialog } from "../../context/dialogContext";
 import { usePagination } from "../../hooks/usePagination";
@@ -28,8 +29,8 @@ const EventsList = () => {
   const keys = [
     "eventDate",
     "eventName",
-    "eventPlace",
     "cityName",
+    "eventPlace",
     "eventDescription",
   ];
 
@@ -62,6 +63,7 @@ const EventsList = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
+
       {currentItems?.length ? (
         <div className="mb-5">
           <ul className="event__list">
@@ -75,7 +77,7 @@ const EventsList = () => {
                       deleteEvent(event.id);
                     }}
                   >
-                    <GoTrashcan />
+                    <GoTrashcan className="icon" />
                   </CustomButton>
                   <CustomButton
                     version="action"
@@ -83,7 +85,7 @@ const EventsList = () => {
                       startEdit(event);
                     }}
                   >
-                    <RiEdit2Fill />
+                    <RiEdit2Fill className="icon" />
                   </CustomButton>
                 </div>
               </ListItem>
@@ -95,10 +97,8 @@ const EventsList = () => {
             handlePageClick={handlePageClick}
           />
         </div>
-      ) : events.length ? (
-        <h3 className="text-center my-3">No events found</h3>
       ) : (
-        <h3 className="text-center my-3">Please add your first Event</h3>
+        <h3 className="check-text my-5">Sorry, there are no events</h3>
       )}
     </>
   );

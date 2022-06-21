@@ -32,7 +32,7 @@ const AllMembers = () => {
 
   return (
     <section className="members">
-      <Container>
+      <Container fluid="xl">
         <h4 className="members__title">Event App Users</h4>
         {otherMembers.length > 1 && (
           <div className="members__statistic">

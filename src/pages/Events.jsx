@@ -11,7 +11,7 @@ const Events = () => {
   const { handleShowModal } = useDialog();
 
   return (
-    <Container>
+    <Container fluid="xl">
       <AddButton onClick={handleShowModal} />
       <EventsList />
       <ModalForm title="Add a new Event" form={<EventForm />} />
