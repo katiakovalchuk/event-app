@@ -34,17 +34,19 @@ const AllMembers = () => {
     <section className="members">
       <Container>
         <h4 className="members__title">Event App Users</h4>
-        <div className="members__statistic">
-          {otherMembers.length > 1 && (
-            <CustomButton
-              onClick={() => {
-                addAllMembers(currentEvent.id);
-              }}
-            >
-              Add All
-            </CustomButton>
-          )}
-        </div>
+        {otherMembers.length > 1 && (
+          <div className="members__statistic">
+            <div className="members__statistic-right">
+              <CustomButton
+                onClick={() => {
+                  addAllMembers(currentEvent.id);
+                }}
+              >
+                Add All
+              </CustomButton>
+            </div>
+          </div>
+        )}
         {otherMembers.length ? (
           <ul className="members__list">
             {otherMembers?.map((member) => (

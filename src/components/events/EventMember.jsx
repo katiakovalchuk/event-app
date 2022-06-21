@@ -39,7 +39,7 @@ const EventMember = ({ fullName, eventsList }) => {
       <ListItem>
         <div className="members__content">
           <CustomCheckbox
-            name
+            version="name"
             label={fullName}
             type="checkbox"
             checked={isPresent}

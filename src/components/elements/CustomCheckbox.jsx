@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 import "../../styles/form.scss";
 
-const CustomCheckbox = ({ label, id, register, name, ...props }) => {
+const CustomCheckbox = ({ label, id, register, version, ...props }) => {
   return (
-    <div className={`check ${name ? "check-name" : ""}`}>
+    <div className={`check check-${version}`}>
       <label className="label" htmlFor={id}>
         <input className="check-input" {...register} {...props} />
         <span className="check-style"></span>
@@ -19,7 +19,7 @@ CustomCheckbox.propTypes = {
   label: PropTypes.string,
   id: PropTypes.string,
   register: PropTypes.object,
-  name: PropTypes.bool,
+  version: PropTypes.string,
 };
 
 export default CustomCheckbox;

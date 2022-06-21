@@ -80,8 +80,7 @@ export const addAllUserEvent = createAsyncThunk(
   async (id, { rejectWithValue, dispatch, getState }) => {
     const members = getState().membersSlice.members;
 
-    const currentEvent = getState().eventSlice.event;
-    const membersList = currentEvent.membersList;
+    const membersList = getState().eventSlice.event.membersList;
     const unregisteredMem = members.filter(
       (member) => !membersList.includes(member.id)
     );
