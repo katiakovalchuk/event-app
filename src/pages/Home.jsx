@@ -1,7 +1,7 @@
 import {useSelector} from "react-redux";
 
 import EventTable from "../components/EventTable/EventTable";
-import {MembersManagement} from "./index";
+import {Events, MembersManagement} from "./index";
 import {ROLES} from "../store/data";
 
 const Home = () => {
@@ -9,7 +9,7 @@ const Home = () => {
 
     return <>
         {
-            role === ROLES.manager ? <div>Manager event page</div> :
+            role === ROLES.manager ? <Events /> :
                 role === ROLES.admin ? <MembersManagement/> :
                     role === ROLES.user && <EventTable/>
         }

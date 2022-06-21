@@ -95,7 +95,7 @@ const PasswordForm = () => {
                     onShowPassword={onShowPassword}
                 />
             </div>
-            <CustomButton type="submit" disabled={!isValid}>
+            <CustomButton className="mt-3" type="submit" disabled={!isValid}>
                 Save Changes
             </CustomButton>
         </form>

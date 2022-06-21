@@ -3,19 +3,17 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
     onAuthStateChanged,
+    reauthenticateWithCredential,
     sendPasswordResetEmail,
     sendSignInLinkToEmail,
     signInWithEmailAndPassword,
     signInWithEmailLink,
     signOut,
-    updatePassword,
-    reauthenticateWithCredential
+    updatePassword
 } from "firebase/auth";
-import {doc, serverTimestamp, setDoc} from "firebase/firestore";
 import PropTypes from "prop-types";
 
 import {auth} from "../lib/init-firebase";
-import {usersCollectionRef} from "../lib/firestore.collections.js";
 import {getUsers} from "../store/slices/usersSlice";
 
 const authContext = createContext();
@@ -48,18 +46,6 @@ export const AuthContextProvider = ({children}) => {
     function signin(email, code) {
         return signInWithEmailLink(auth, email, code).then((result) => {
             setUser(result.user);
-
-            const isUserEmail = users.some((user) => user.email === email);
-            if (!isUserEmail) {
-                setDoc(doc(usersCollectionRef, result.user.uid), {
-                    name: email,
-                    id: result.user.uid,
-                    email,
-                    userImage:
-                        "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/profile-1.png?alt=media&token=6e911220-745f-4fab-918d-497af8aa1566",
-                    timeStamp: serverTimestamp(),
-                });
-            }
             return true;
         });
     }

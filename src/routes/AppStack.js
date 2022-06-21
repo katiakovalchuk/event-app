@@ -43,11 +43,11 @@ export const AppStack = () => {
         <Route element={<ProtectedRoute isAllowed={role === "user"} />}>
           <Route path="profile" element={<ProfilePage />} />
           <Route path="members" element={<MembersPage />} />
-          <Route path="events" element={<Events />} />
-          <Route path="events/:id" element={<EventsItem />} />
+          <Route path="events" element={<div>User event page here</div>} />
         </Route>
         <Route element={<ProtectedRoute isAllowed={role === "manager"} />}>
-          <Route path="event-page" />
+          <Route path="/" element={<Events />} />
+          <Route path="events/:id" element={<EventsItem />} />
         </Route>
         <Route element={<ProtectedRoute isAllowed={role === "admin"} />}>
           <Route path="managers-management" element={<ManagersManagement />} />

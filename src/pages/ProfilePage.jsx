@@ -273,7 +273,7 @@ const ProfilePage = () => {
                 <h5 className="card-title">{users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].role)}</h5>
                 <p>Rank: {users.length && users[getIndex(users, user.email)].rank}</p>
                 <p>Scores: {users.length && users[getIndex(users, user.email)].scores}</p>
-                <button className="btn btn-warning mt-3" onClick={() => handleShowModal()}>
+                <button className="btn btn-secondary mt-3" onClick={() => handleShowModal()}>
                   Change password
                 </button>
               </div>
