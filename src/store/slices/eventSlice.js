@@ -59,6 +59,46 @@ export const deleteUserFromEvent = createAsyncThunk(
   }
 );
 
+export const deleteNewMembersList = createAsyncThunk(
+  "eventSlice/deleteNewMembersList",
+  async (id, { rejectWithValue, dispatch }) => {
+    try {
+      await updateDoc(doc(db, "events", id), {
+        membersList: [],
+      });
+      dispatch(deleteMembersList());
+      toast.success("All users were unregistered successfully");
+    } catch (error) {
+      toast.error("Sorry, can't unregister all users");
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addAllUserEvent = createAsyncThunk(
+  "eventSlice/addAllUserToMembersList",
+  async (id, { rejectWithValue, dispatch, getState }) => {
+    const members = getState().membersSlice.members;
+
+    const membersList = getState().eventSlice.event.membersList;
+    const unregisteredMem = members.filter(
+      (member) => !membersList.includes(member.id)
+    );
+    try {
+      unregisteredMem.map(async (member) => {
+        await updateDoc(doc(db, "events", id), {
+          membersList: arrayUnion(member.id),
+        });
+        dispatch(addUser(member.id));
+      });
+      toast.success("All users were registered successfully");
+    } catch (error) {
+      toast.error("Sorry, can't register all users");
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // helpers
 const setSuccess = (state) => {
   state.status = "succeeded";
@@ -88,6 +128,9 @@ const eventSlice = createSlice({
         (id) => id !== action.payload
       );
     },
+    deleteMembersList(state) {
+      state.event.membersList = [];
+    },
   },
   extraReducers: {
     [getNewEvent.fulfilled]: setSuccess,
@@ -99,8 +142,14 @@ const eventSlice = createSlice({
     [deleteUserFromEvent.fulfilled]: setSuccess,
     [deleteUserFromEvent.rejected]: setError,
     [deleteUserFromEvent.pending]: setLoading,
+    [deleteNewMembersList.fulfilled]: setSuccess,
+    [deleteNewMembersList.rejected]: setError,
+    [deleteNewMembersList.pending]: setLoading,
+    [addAllUserEvent.fulfilled]: setSuccess,
+    [addAllUserEvent.rejected]: setError,
+    [addAllUserEvent.pending]: setLoading,
   },
 });
-const { getEvent, addUser, deleteUser } = eventSlice.actions;
+const { getEvent, addUser, deleteUser, deleteMembersList } = eventSlice.actions;
 
 export default eventSlice.reducer;

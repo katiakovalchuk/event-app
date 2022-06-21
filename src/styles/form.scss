@@ -104,6 +104,34 @@
     margin-left: 5px;
   }
 }
+
+.check.check-big {
+  padding-left: 40px;
+  .check-input {
+    @extend %checkbox-hidden;
+    padding-left: 38px;
+
+    &:checked + .check-style::before {
+      @extend %absolute-50;
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .check-style {
+    width: 30px;
+    height: 30px;
+    margin-left: -38px;
+  }
+
+  & > label {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    color: $primary-color;
+    margin-left: 5px;
+  }
+}
 .radio-title {
   @extend %fira-600;
   font-size: 18px;
@@ -179,8 +207,23 @@
   width: 50px;
   border-radius: 50%;
   margin: 0 5px;
+
+  @media (max-width: 540px) {
+    height: 40px;
+    width: 40px;
+  }
 }
+
 .btn-cancel {
+  background-color: $error;
+  transition: all 0.3s ease-in-out;
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: darken($error, 10%);
+    border-color: none;
+    box-shadow: none;
+  }
 }
 .react-datepicker {
   font-family: $font !important;

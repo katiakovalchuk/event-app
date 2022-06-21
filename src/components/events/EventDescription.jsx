@@ -27,7 +27,7 @@ const EventDescription = () => {
   };
   return (
     <section className="eventItem">
-      <Container>
+      <Container fluid="xl">
         <CustomButton onClick={goBack} version="arrow">
           <HiArrowLeft size="30px" />
         </CustomButton>

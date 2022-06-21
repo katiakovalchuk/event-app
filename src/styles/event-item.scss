@@ -155,4 +155,23 @@
     align-items: center;
     justify-content: center;
   }
+
+  &__statistic {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  &__statistic-right {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  &__amount {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 26px;
+    margin-right: 20px;
+  }
 }

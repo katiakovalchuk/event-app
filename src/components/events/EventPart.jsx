@@ -19,7 +19,7 @@ const EventPart = ({
       <div className="event__left">
         <h4 className="event__name">{eventName}</h4>
         {eventDescription && (
-          <p className="event__descr">{ellipsify(eventDescription, 250)}</p>
+          <p className="event__descr">{ellipsify(eventDescription, 100)}</p>
         )}
       </div>
       <div className="event__right">

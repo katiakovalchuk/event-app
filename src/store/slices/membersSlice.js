@@ -19,6 +19,7 @@ const initialState = {
   status: null,
   error: null,
   members: [],
+  selectAll: false,
 };
 
 export const getNewMembers = createAsyncThunk(
@@ -73,6 +74,7 @@ export const deleteEventFromMember = createAsyncThunk(
   async ({ uid, id }, { rejectWithValue, dispatch }) => {
     try {
       const docRef = doc(db, "users", uid);
+      console.log(docRef);
       const colRef = collection(docRef, "eventsList");
       await deleteDoc(doc(colRef, id));
       dispatch(deleteEvent({ uid, id }));
@@ -126,25 +128,83 @@ export const updateAdditionalInfo = createAsyncThunk(
   }
 );
 
-export const deleteEvents = createAsyncThunk(
-  "membersSlice/deleteEvents",
-  async (id, { rejectWithValue, getState }) => {
-    const events = getState().eventsSlice.events;
-    const currentEvent = events.find((event) => event.id === id);
-    const membersList = currentEvent.membersList;
+export const deleteAllMembersFromEvent = createAsyncThunk(
+  "membersSlice/deleteAllMembersFromEvent",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    const membersList = getState().eventSlice.event.membersList;
 
     try {
       for (let i = 0; i < membersList.length; i++) {
         const docRef = doc(db, "users", membersList[i]);
         const colRef = collection(docRef, "eventsList");
         await deleteDoc(doc(colRef, id));
+        dispatch(deleteEvent({ uid: membersList[i], id }));
       }
     } catch (error) {
-      console.log(error);
+      toast.error("Sorry, can't delete event");
       return rejectWithValue(error.message);
     }
   }
 );
+
+export const addEventToAllMembers = createAsyncThunk(
+  "membersSlice/addAllMembersToEvent",
+  async (event, { rejectWithValue, getState, dispatch }) => {
+    const members = getState().membersSlice.members;
+
+    const membersList = getState().eventSlice.event.membersList;
+    const unregisteredMem = members.filter(
+      (member) => !membersList.includes(member.id)
+    );
+
+    try {
+      unregisteredMem.map(async (member) => {
+        const docRef = doc(db, "users", member.id);
+        const colRef = collection(docRef, "eventsList");
+        await setDoc(doc(colRef, event.id), event);
+        dispatch(addEvent({ ...event, uid: member.id }));
+      });
+    } catch (error) {
+      toast.error("Sorry, can't register all users");
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const showIsPresentForAllMembers = createAsyncThunk(
+  "membersSlice/showIsPresentToAllMembers",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    const membersList = getState().eventSlice.event.membersList;
+    try {
+      for (let i = 0; i < membersList.length; i++) {
+        const docRef = doc(db, "users", membersList[i]);
+        const colRef = collection(docRef, "eventsList");
+        await updateDoc(doc(colRef, id), { isPresent: true });
+        dispatch(showIsPresent({ uid: membersList[i], id }));
+      }
+    } catch (error) {
+      return rejectWithValue("Sorry, can't select all users");
+    }
+  }
+);
+
+export const hideIsPresentForAllMembers = createAsyncThunk(
+  "membersSlice/hideIsPresentToAllMembers",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    const membersList = getState().eventSlice.event.membersList;
+    try {
+      for (let i = 0; i < membersList.length; i++) {
+        const docRef = doc(db, "users", membersList[i]);
+        const colRef = collection(docRef, "eventsList");
+        await updateDoc(doc(colRef, id), { isPresent: false });
+        dispatch(hideIsPresent({ uid: membersList[i], id }));
+      }
+    } catch (error) {
+      return rejectWithValue("Sorry, can't take selecting back");
+    }
+  }
+);
+
 // helpers
 const setSuccess = (state) => {
   state.status = "succeeded";
@@ -160,7 +220,7 @@ const setLoading = (state) => {
 };
 
 const membersSlice = createSlice({
-  name: "usersSlice",
+  name: "membersSlice",
   initialState,
   reducers: {
     getMembers(state, action) {
@@ -169,6 +229,7 @@ const membersSlice = createSlice({
 
     addEvent(state, action) {
       const { uid } = action.payload;
+      console.log(action.payload);
       const currentMember = state.members.find((member) => member.id === uid);
       currentMember.eventsList.push(action.payload);
     },
@@ -197,6 +258,25 @@ const membersSlice = createSlice({
       currentInfo.comment = comment;
       currentInfo.additionalPoints = additionalPoints;
     },
+    toggleSelectAll(state) {
+      state.selectAll = !state.selectAll;
+    },
+    showIsPresent(state, action) {
+      const { uid, id } = action.payload;
+      const currentMember = state.members.find((member) => member.id === uid);
+      const currentInfo = currentMember.eventsList.find(
+        (info) => info.id === id
+      );
+      currentInfo.isPresent = true;
+    },
+    hideIsPresent(state, action) {
+      const { uid, id } = action.payload;
+      const currentMember = state.members.find((member) => member.id === uid);
+      const currentInfo = currentMember.eventsList.find(
+        (info) => info.id === id
+      );
+      currentInfo.isPresent = false;
+    },
   },
   extraReducers: {
     [getNewMembers.fulfilled]: setSuccess,
@@ -214,8 +294,28 @@ const membersSlice = createSlice({
     [updateAdditionalInfo.fulfilled]: setSuccess,
     [updateAdditionalInfo.rejected]: setError,
     [updateAdditionalInfo.pending]: setLoading,
+    [deleteAllMembersFromEvent.fulfilled]: setSuccess,
+    [deleteAllMembersFromEvent.rejected]: setError,
+    [deleteAllMembersFromEvent.pending]: setLoading,
+    [addEventToAllMembers.fulfilled]: setSuccess,
+    [addEventToAllMembers.rejected]: setError,
+    [addEventToAllMembers.pending]: setLoading,
+    [showIsPresentForAllMembers.fulfilled]: setSuccess,
+    [showIsPresentForAllMembers.rejected]: setError,
+    [showIsPresentForAllMembers.pending]: setLoading,
+    [hideIsPresentForAllMembers.fulfilled]: setSuccess,
+    [hideIsPresentForAllMembers.rejected]: setError,
+    [hideIsPresentForAllMembers.pending]: setLoading,
   },
 });
-const { getMembers, addEvent, deleteEvent, toggleEvent, updateInfo } =
-  membersSlice.actions;
+export const {
+  getMembers,
+  addEvent,
+  deleteEvent,
+  toggleEvent,
+  updateInfo,
+  toggleSelectAll,
+  showIsPresent,
+  hideIsPresent,
+} = membersSlice.actions;
 export default membersSlice.reducer;
