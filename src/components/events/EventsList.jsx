@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { GoTrashcan } from "react-icons/go";
 import { RiEdit2Fill } from "react-icons/ri";
-// import { BiDownArrow, BiUpArrow } from "react-icons/bi";
+import { BiDownArrow, BiUpArrow } from "react-icons/bi";
 
 import { useDialog } from "../../context/dialogContext";
 import { usePagination } from "../../hooks/usePagination";
@@ -26,6 +26,7 @@ const EventsList = () => {
   const events = useSelector(selectAllEvents);
   const { status } = useSelector((state) => state.eventsSlice);
   const [query, setQuery] = useState("");
+  const [asc, setAsc] = useState(true);
   const keys = [
     "eventDate",
     "eventName",
@@ -34,10 +35,15 @@ const EventsList = () => {
     "eventDescription",
   ];
 
-  const oderedEvents = [...events].sort((a, b) =>
-    b.eventDate.localeCompare(a.eventDate)
-  );
+  const handleOrder = () => setAsc((prev) => !prev);
+
+  const oderedEvents = asc
+    ? [...events].sort((a, b) => b.eventDate.localeCompare(a.eventDate))
+    : [...events].sort((a, b) => a.eventDate.localeCompare(b.eventDate));
+  console.log(oderedEvents);
+
   const searchedEvents = search(oderedEvents, keys, query);
+
   const { pageCount, currentPage, handlePageClick, currentItems } =
     usePagination({ query, status, data: searchedEvents });
 
@@ -63,6 +69,8 @@ const EventsList = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
+
+      <div onClick={handleOrder}>{asc ? <BiUpArrow /> : <BiDownArrow />}</div>
 
       {currentItems?.length ? (
         <div className="mb-5">
