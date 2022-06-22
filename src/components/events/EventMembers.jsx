@@ -29,8 +29,6 @@ const EventMembers = () => {
       : dispatch(hideIsPresentForAllMembers(currentEvent.id));
   }, [selectAll]);
 
-  localStorage.setItem("selectAll", JSON.stringify(selectAll));
-
   const deleteAllMembers = (id) => {
     dispatch(deleteNewMembersList(id));
     dispatch(deleteAllMembersFromEvent(id));
