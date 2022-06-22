@@ -17,22 +17,18 @@ const CustomInput = ({
 }) => {
   return (
     <>
-      {label && <label className="label form-label">{label}</label>}
+      {label && <label className="label form-label ">{label}</label>}
       <span className="input-item input-group">
-        {icon && <span className="input-icon input-group-text">{icon}</span>}
+        {icon && <span className=" input-group-text">{icon}</span>}
 
-        <input
-          className={`input-input form-control ${version}`}
-          {...register}
-          {...props}
-        />
+        <input className={`form-control ${version}`} {...register} {...props} />
         {show && (
           <span className="showPassword z-index-3" onClick={onShowPassword}>
             {show}
           </span>
         )}
       </span>
-      {error && <span className="error-text">{errorText}</span>}
+      <span className="error-text text-danger">{error && errorText}</span>
     </>
   );
 };

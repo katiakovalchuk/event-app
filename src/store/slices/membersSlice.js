@@ -63,6 +63,7 @@ export const addEventToMember = createAsyncThunk(
       await setDoc(doc(colRef, event.id), event);
       dispatch(addEvent(event));
     } catch (error) {
+      console.log(error);
       toast.error("Sorry, Can't register user");
       return rejectWithValue(error);
     }
@@ -72,6 +73,7 @@ export const addEventToMember = createAsyncThunk(
 export const deleteEventFromMember = createAsyncThunk(
   "membersSlice/deleteEventFromMember",
   async ({ uid, id }, { rejectWithValue, dispatch }) => {
+    console.log(uid);
     try {
       const docRef = doc(db, "users", uid);
       console.log(docRef);
@@ -229,7 +231,6 @@ const membersSlice = createSlice({
 
     addEvent(state, action) {
       const { uid } = action.payload;
-      console.log(action.payload);
       const currentMember = state.members.find((member) => member.id === uid);
       currentMember.eventsList.push(action.payload);
     },
