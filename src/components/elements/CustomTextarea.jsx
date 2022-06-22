@@ -6,9 +6,9 @@ import "../../styles/form.scss";
 const CustomTextarea = ({ label, register, error, errorText, ...props }) => {
   return (
     <>
-      {label && <label className="label form-label">{label}</label>}
-      <textarea className="textarea" {...register} {...props} />
-      {error && <span className="error-text">{errorText}</span>}
+      {label && <label className="form-label">{label}</label>}
+      <textarea className="form-control textarea" {...register} {...props} />
+      <span className="error-text text-danger">{error && errorText}</span>
     </>
   );
 };
