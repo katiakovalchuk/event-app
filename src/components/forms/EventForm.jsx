@@ -101,10 +101,10 @@ const EventForm = () => {
             />
           )}
         />
-        {errors?.eventDate && (
-          <span className="error-text">{errors?.eventDate?.message}</span>
-        )}
 
+        <span className="error-text text-danger">
+          {errors?.eventDate?.message}
+        </span>
         <CustomTextarea
           label="Description of the event"
           name="eventDescription"
@@ -113,8 +113,7 @@ const EventForm = () => {
           error={!!errors?.eventDescription}
           errorText={errors?.eventDescription?.message}
         />
-
-        <h4 className="radio-title">Please choose venue of the event</h4>
+        <h4 className="radio-title mt-2">Please choose venue of the event</h4>
         <label className="label radio-label" htmlFor="online">
           <input
             className="radio-input"
@@ -141,9 +140,11 @@ const EventForm = () => {
           <span className="radio-style"></span>
           City
         </label>
-        {errors?.eventPlace && (
-          <span className="error-text">{errors?.eventPlace?.message}</span>
-        )}
+
+        <span className="error-text text-danger">
+          {errors?.eventPlace?.message}
+        </span>
+
         {eventPlace === "city" && (
           <CustomInput
             label="Place of the event"
@@ -165,7 +166,11 @@ const EventForm = () => {
           error={!!errors?.points}
           errorText={errors?.points?.message}
         />
-        <CustomButton type="submit" disabled={!(isValid && isDirty)}>
+        <CustomButton
+          className="mt-3"
+          type="submit"
+          disabled={!(isValid && isDirty)}
+        >
           {itemEdit.edit ? "Save changes" : "Add an event"}
         </CustomButton>
       </form>

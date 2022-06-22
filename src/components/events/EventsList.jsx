@@ -74,18 +74,19 @@ const EventsList = () => {
                   <CustomButton
                     version="action"
                     onClick={() => {
-                      deleteEvent(event.id);
-                    }}
-                  >
-                    <GoTrashcan className="icon" />
-                  </CustomButton>
-                  <CustomButton
-                    version="action"
-                    onClick={() => {
                       startEdit(event);
                     }}
                   >
                     <RiEdit2Fill className="icon" />
+                  </CustomButton>
+                  <CustomButton
+                    version="action"
+                    variant="danger"
+                    onClick={() => {
+                      deleteEvent(event.id);
+                    }}
+                  >
+                    <GoTrashcan className="icon" />
                   </CustomButton>
                 </div>
               </ListItem>
