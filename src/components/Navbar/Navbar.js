@@ -55,7 +55,7 @@ function Navbar() {
                   <li key={index} className={item.cName}>
                     <Link className="d-flex" to={item.path}>
                       {item.icon}
-                      <span>{item.title}</span>
+                      <span className="link-span">{item.title}</span>
                     </Link>
                   </li>
                 );

@@ -56,7 +56,7 @@ const EventMembers = () => {
                 Users: {eventMembers.length}
               </span>
               <CustomButton
-                version="cancel"
+                variant="danger"
                 onClick={() => {
                   deleteAllMembers(currentEvent.id);
                 }}

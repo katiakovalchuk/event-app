@@ -67,7 +67,12 @@ const EventMember = ({ fullName, eventsList }) => {
           >
             <BiCommentAdd />
           </CustomButton>
-          <CustomButton version="action" onClick={() => deleteUser(uid, id)}>
+
+          <CustomButton
+            variant="danger"
+            version="action"
+            onClick={() => deleteUser(uid, id)}
+          >
             <GoTrashcan />
           </CustomButton>
         </div>
