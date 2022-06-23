@@ -17,7 +17,7 @@ const CustomInput = ({
 }) => {
   return (
     <>
-      {label && <label className="label form-label ">{label}</label>}
+      {label && <label className="label form-label fw-bold">{label}</label>}
       <span className="input-item input-group">
         {icon && <span className=" input-group-text">{icon}</span>}
 
@@ -28,7 +28,7 @@ const CustomInput = ({
           </span>
         )}
       </span>
-      <span className="error-text text-danger">{error && errorText}</span>
+      <div className="error-text text-danger">{error && errorText}</div>
     </>
   );
 };
