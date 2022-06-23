@@ -175,6 +175,9 @@ const Table = ({ showManagers }) => {
     setUsers([...users, newUser]);
     closeAdd();
     addUserToast();
+    if (showManagers) {
+      getUsers();
+    }
   };
 
   const handleDeleteClick = (data) => {
