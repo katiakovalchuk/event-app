@@ -8,7 +8,7 @@ const CustomTextarea = ({ label, register, error, errorText, ...props }) => {
     <>
       {label && <label className="form-label">{label}</label>}
       <textarea className="form-control textarea" {...register} {...props} />
-      <span className="error-text text-danger">{error && errorText}</span>
+      <div className="error-text text-danger">{error && errorText}</div>
     </>
   );
 };

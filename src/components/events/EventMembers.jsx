@@ -18,12 +18,6 @@ const EventMembers = () => {
     membersList.includes(member.id)
   );
 
-  // useEffect(() => {
-  //   selectAll
-  //     ? dispatch(showIsPresentForAllMembers(currentEvent.id))
-  //     : dispatch(hideIsPresentForAllMembers(currentEvent.id));
-  // }, [selectAll]);
-
   const deleteAllMembers = (id) => {
     dispatch(deleteNewMembersList(id));
     dispatch(deleteAllMembersFromEvent(id));
@@ -35,15 +29,6 @@ const EventMembers = () => {
         <h4 className="members__title">Registered Users</h4>
         {eventMembers.length > 1 && (
           <div className="members__statistic">
-            {/* <CustomCheckbox
-              version="big"
-              type="checkbox"
-              label="Select All"
-              checked={selectAll}
-              onChange={() => {
-                dispatch(toggleSelectAll());
-              }}
-            /> */}
             <div className="members__statistic-right">
               <span className="members__amount">
                 Users: {eventMembers.length}

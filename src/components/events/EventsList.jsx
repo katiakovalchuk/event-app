@@ -135,7 +135,7 @@ const EventsList = () => {
         <div className="mb-5">
           <div className="event__sort" onClick={handleOrder}>
             <span>Name</span>
-            {order === "asc" ? <BiUpArrow /> : <BiDownArrow />}
+            {order === "asc" ? <BiDownArrow /> : <BiUpArrow />}
           </div>
           <ul className="event__list">
             {displaysEvents.map((event) => (

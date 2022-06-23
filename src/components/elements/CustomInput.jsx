@@ -28,7 +28,7 @@ const CustomInput = ({
           </span>
         )}
       </span>
-      <span className="error-text text-danger">{error && errorText}</span>
+      <div className="error-text text-danger">{error && errorText}</div>
     </>
   );
 };
