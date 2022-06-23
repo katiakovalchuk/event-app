@@ -24,7 +24,7 @@ const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
   const [users, setUsers] = useState([]);
   const { sendLink } = useUserAuth();
-  const [delId, setDelId] = useState([]);
+  const [delId, setDelId] = useState("");
 
   const [editContactId, setEditContactId] = useState(null);
   const [addFormData, setAddFormData] = useState({ role: "user" });

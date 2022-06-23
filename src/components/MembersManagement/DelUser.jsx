@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
+import PropTypes from "prop-types";
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -37,6 +36,15 @@ const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, use
       </Modal.Body>
     </Modal>
   );
+};
+
+DelUser.propTypes = {
+  modalOpenDel: PropTypes.bool.isRequired,
+  closeDel: PropTypes.func.isRequired,
+  deleteUserToast: PropTypes.func.isRequired,
+  delId: PropTypes.string.isRequired,
+  setUsers: PropTypes.func.isRequired,
+  users: PropTypes.array.isRequired,
 };
 
 export default DelUser;
