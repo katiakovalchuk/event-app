@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
+
 import { addEventToAllMembers } from "../../store/slices/membersSlice";
 import { addAllUserEvent } from "../../store/slices/eventSlice";
 import SingleMember from "./SingleMember";

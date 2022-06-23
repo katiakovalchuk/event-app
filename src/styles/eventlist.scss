@@ -2,12 +2,42 @@
 @import "./scss/variable";
 
 .event {
+  padding-top: 50px;
+  &__func {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: start;
+    }
+  }
+  &__filter {
+    display: flex;
+    align-items: center;
+
+    @media (max-width: 768px) {
+      margin-bottom: 15px;
+    }
+  }
+  &__sort {
+    padding: 2px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid darken($bg-gray, 10%);
+    background-color: darken($bg-gray, 15%);
+    border-radius: 0.375rem;
+    margin-bottom: 2px;
+    cursor: pointer;
+  }
   &__list {
     display: flex;
     flex-direction: column;
-    margin: 30px 0 50px 0;
     background-color: lighten($bg-gray, 15%);
-    min-height: 500px;
+    min-height: 65vh;
   }
 
   &__actions {
@@ -80,5 +110,9 @@
   }
   &-search {
     width: 350px;
+
+    @media (max-width: 540px) {
+      width: 100%;
+    }
   }
 }

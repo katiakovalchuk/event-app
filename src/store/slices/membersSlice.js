@@ -265,6 +265,9 @@ const membersSlice = createSlice({
     toggleSelectAll(state) {
       state.selectAll = !state.selectAll;
     },
+    hideSelectAll(state) {
+      state.selectAll = false;
+    },
     showIsPresent(state, action) {
       const { uid, id } = action.payload;
       const currentMember = state.members.find((member) => member.id === uid);
@@ -319,6 +322,7 @@ export const {
   toggleEvent,
   updateInfo,
   toggleSelectAll,
+  hideSelectAll,
   showIsPresent,
   hideIsPresent,
 } = membersSlice.actions;

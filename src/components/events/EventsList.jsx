@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { GoTrashcan } from "react-icons/go";
@@ -6,7 +7,6 @@ import { RiEdit2Fill } from "react-icons/ri";
 import { BiDownArrow, BiUpArrow } from "react-icons/bi";
 
 import { useDialog } from "../../context/dialogContext";
-import { usePagination } from "../../hooks/usePagination";
 import {
   deleteNewEvent,
   getNewEvents,
@@ -25,8 +25,13 @@ const EventsList = () => {
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
   const { status } = useSelector((state) => state.eventsSlice);
+
   const [query, setQuery] = useState("");
-  const [asc, setAsc] = useState(true);
+  const [order, setOrder] = useState("asc");
+  const [pageNumber, setPageNumber] = useState(0);
+  const [filterBtn, setFilterBtn] = useState("all");
+  const today = moment().format("yyyy-MM-DD");
+
   const keys = [
     "eventDate",
     "eventName",
@@ -35,34 +40,90 @@ const EventsList = () => {
     "eventDescription",
   ];
 
-  const handleOrder = () => setAsc((prev) => !prev);
-
-  const oderedEvents = asc
-    ? [...events].sort((a, b) => b.eventDate.localeCompare(a.eventDate))
-    : [...events].sort((a, b) => a.eventDate.localeCompare(b.eventDate));
-  console.log(oderedEvents);
-
-  const searchedEvents = search(oderedEvents, keys, query);
-
-  const { pageCount, currentPage, handlePageClick, currentItems } =
-    usePagination({ query, status, data: searchedEvents });
-
   useEffect(() => {
     dispatch(getNewEvents());
   }, [dispatch]);
 
-  const deleteEvent = (id) => {
-    dispatch(deleteAllMembersFromEvent(id));
-    dispatch(deleteNewEvent(id));
+  const filteredEvents =
+    filterBtn === "all"
+      ? events
+      : filterBtn === "future"
+      ? events.filter((event) => moment(event.eventDate).isAfter(today))
+      : events.filter((event) => moment(event.eventDate).isBefore(today));
+
+  const sortedEvents =
+    order === "asc"
+      ? [...filteredEvents].sort((a, b) =>
+          b.eventDate.localeCompare(a.eventDate)
+        )
+      : [...filteredEvents].sort((a, b) =>
+          a.eventDate.localeCompare(b.eventDate)
+        );
+
+  const searchedEvents = search(sortedEvents, keys, query);
+
+  //pagination
+  const itemsPerPage = 6;
+  const pageVisited = pageNumber * itemsPerPage;
+  const displaysEvents = searchedEvents.slice(
+    pageVisited,
+    pageVisited + itemsPerPage
+  );
+
+  const pageCount = Math.ceil(searchedEvents.length / itemsPerPage);
+  const handlePageClick = ({ selected }) => {
+    setPageNumber(selected);
+  };
+
+  //sort
+  const handleOrder = () =>
+    setOrder((prev) => (prev === "asc" ? "dsc" : "asc"));
+
+  //filter
+  const filterAll = () => {
+    setFilterBtn("all");
+  };
+  const filterFuture = () => {
+    setFilterBtn("future");
+  };
+  const filterPast = () => {
+    setFilterBtn("past");
+  };
+
+  const deleteEvent = (event) => {
+    if (event.membersList.lenght) {
+      dispatch(deleteAllMembersFromEvent(event.id));
+    }
+    dispatch(deleteNewEvent(event.id));
   };
 
   return (
-    <>
+    <section className="event">
       <ToastContainer limit={5} />
       {status === "loading" && <Spinner />}
-      <div className="d-flex justify-content-end">
+      <div className="event__func">
+        <div className="event__filter">
+          <CustomButton
+            className={`tab ${filterBtn === "all" && "tab-active"}`}
+            onClick={filterAll}
+          >
+            All
+          </CustomButton>
+          <CustomButton
+            className={`tab ${filterBtn === "future" && "tab-active"}`}
+            onClick={filterFuture}
+          >
+            Future
+          </CustomButton>
+          <CustomButton
+            className={`tab ${filterBtn === "past" && "tab-active"}`}
+            onClick={filterPast}
+          >
+            Past
+          </CustomButton>
+        </div>
         <input
-          className="event-search form-control me-2 mt-5"
+          className="event-search form-control"
           type="search"
           placeholder="Search..."
           aria-label="Search"
@@ -70,17 +131,19 @@ const EventsList = () => {
         />
       </div>
 
-      <div onClick={handleOrder}>{asc ? <BiUpArrow /> : <BiDownArrow />}</div>
-
-      {currentItems?.length ? (
+      {displaysEvents?.length ? (
         <div className="mb-5">
+          <div className="event__sort" onClick={handleOrder}>
+            <span>Name</span>
+            {order === "asc" ? <BiUpArrow /> : <BiDownArrow />}
+          </div>
           <ul className="event__list">
-            {currentItems.map((event) => (
+            {displaysEvents.map((event) => (
               <ListItem link key={event.id}>
                 <EventPart {...event} />
                 <div className="event__actions">
                   <CustomButton
-                    version="action"
+                    className="action"
                     onClick={() => {
                       startEdit(event);
                     }}
@@ -88,10 +151,10 @@ const EventsList = () => {
                     <RiEdit2Fill className="icon" />
                   </CustomButton>
                   <CustomButton
-                    version="action"
+                    className="action"
                     variant="danger"
                     onClick={() => {
-                      deleteEvent(event.id);
+                      deleteEvent(event);
                     }}
                   >
                     <GoTrashcan className="icon" />
@@ -100,16 +163,17 @@ const EventsList = () => {
               </ListItem>
             ))}
           </ul>
-          <Pagination
-            pageCount={pageCount}
-            currentPage={currentPage}
-            handlePageClick={handlePageClick}
-          />
+          <div className="mt-3">
+            <Pagination
+              pageCount={pageCount}
+              handlePageClick={handlePageClick}
+            />
+          </div>
         </div>
       ) : (
         <h3 className="check-text my-5">Sorry, there are no events</h3>
       )}
-    </>
+    </section>
   );
 };
 

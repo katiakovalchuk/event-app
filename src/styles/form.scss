@@ -72,7 +72,7 @@
   & > label {
     font-weight: 500;
     font-size: 18px;
-    line-height: 22px;
+    line-height: 19px;
     margin-left: 5px;
   }
 }
@@ -137,7 +137,7 @@
   margin-left: -26px;
 }
 
-.button-arrow {
+.arrow {
   position: absolute;
   padding: 5px 15px;
   top: 20px;
@@ -145,7 +145,7 @@
   z-index: 99;
 }
 
-.button-action {
+.action {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,7 +159,7 @@
     width: 40px;
   }
 }
-.button-add {
+.add {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,6 +177,17 @@
     color: $white;
     width: 30px;
     height: 30px;
+  }
+}
+
+.tab {
+  padding: 8px 26px;
+  border-radius: 20px;
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+  &.tab-active {
+    background-color: darken($blue, 25%);
   }
 }
 

@@ -58,7 +58,11 @@ const InfoForm = () => {
         error={!!errors?.additionalPoints}
         errorText={errors?.additionalPoints?.message}
       />
-      <CustomButton type="submit" disabled={!(isValid && isDirty)}>
+      <CustomButton
+        className="my-3"
+        type="submit"
+        disabled={!(isValid && isDirty)}
+      >
         Save changes
       </CustomButton>
     </form>

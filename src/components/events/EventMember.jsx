@@ -61,7 +61,7 @@ const EventMember = ({ fullName, eventsList }) => {
         </div>
         <div className="members__actions">
           <CustomButton
-            version="action"
+            className="action"
             disabled={!isPresent}
             onClick={() => startEdit(currentInfo)}
           >
@@ -70,7 +70,7 @@ const EventMember = ({ fullName, eventsList }) => {
 
           <CustomButton
             variant="danger"
-            version="action"
+            className="action"
             onClick={() => deleteUser(uid, id)}
           >
             <GoTrashcan />

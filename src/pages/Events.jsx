@@ -13,7 +13,7 @@ const Events = () => {
 
   return (
     <Container fluid="xl">
-      <CustomButton variant="primary" version="add" onClick={handleShowModal}>
+      <CustomButton variant="primary" className="add" onClick={handleShowModal}>
         <BsPlusLg />
       </CustomButton>
       <EventsList />
