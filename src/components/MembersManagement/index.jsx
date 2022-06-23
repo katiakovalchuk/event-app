@@ -252,21 +252,23 @@ const Table = ({ showManagers }) => {
           {<DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId, setUsers, users }} />}
 
           <form onSubmit={handleEditFormSubmit}>
-            <table className="table table-admin">
-              <TableHead {...{ columns, handleSorting }} />
-              <TableBody
-                tableData={users}
-                {...{
-                  editContactId,
-                  editFormData,
-                  columns,
-                  handleDeleteClick,
-                  handleEditClick,
-                  handleEditFormChange,
-                  handleCancelClick,
-                }}
-              />
-            </table>
+            <div className="table-responsive">
+              <table className="table table-admin">
+                <TableHead {...{ columns, handleSorting }} />
+                <TableBody
+                  tableData={users}
+                  {...{
+                    editContactId,
+                    editFormData,
+                    columns,
+                    handleDeleteClick,
+                    handleEditClick,
+                    handleEditFormChange,
+                    handleCancelClick,
+                  }}
+                />
+              </table>
+            </div>
           </form>
           <ToastContainer />
         </Col>
