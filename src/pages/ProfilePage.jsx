@@ -9,7 +9,7 @@ import {useUserAuth} from "../context/authContext";
 import {useDialog} from "../context/dialogContext";
 import {ModalForm} from "../components/elements";
 import PasswordForm from "../components/forms/PasswordForm";
-import ConfirmPasswordForm from "../components/forms/ConfirmPasswordForm";
+import ConfirmForm from "../components/forms/ConfirmForm";
 import {getUsers} from "../store/slices/usersSlice";
 import {storage} from "../lib/init-firebase.js";
 import {usersCollectionRef} from "../lib/firestore.collections.js";
@@ -157,7 +157,7 @@ const ProfilePage = () => {
       {
         requireConfirm ? (
           <ModalForm title="Confirm to change password?" form={
-            <ConfirmPasswordForm handleConfirmation={handleSubmitConfirmation} />
+            <ConfirmForm handleConfirmation={handleSubmitConfirmation} />
           }/>
         ) : (
           <ModalForm title="Change password" form={<PasswordForm requestData={requestData}/>}/>
@@ -327,7 +327,10 @@ const ProfilePage = () => {
                   className="card-title">{users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].role)}</h5>
                 <p>Rank: {users.length && users[getIndex(users, user.email)].rank}</p>
                 <p>Scores: {users.length && users[getIndex(users, user.email)].scores}</p>
-                <button className="btn btn-secondary mt-3" onClick={() => handleShowModal()}>
+                <button className="btn btn-secondary mt-3" onClick={() => {
+                  handleShowModal();
+                  removeRequireConfirm();
+                }}>
                   Change password
                 </button>
               </div>

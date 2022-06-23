@@ -23,12 +23,12 @@ const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, use
   return (
     <Modal size="sm" show={modalOpenDel} onHide={closeDel} aria-labelledby="example-modal-sizes-title-sm">
       <Modal.Header closeButton>
-        <Modal.Title id="example-modal-sizes-title-sm">Are you sure want to delete?</Modal.Title>
+        <Modal.Title id="example-modal-sizes-title-sm">Do You confirm deleting user?</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="d-flex justify-content-around">
           <Button variant="danger" onClick={deleteUser}>
-            Yes
+            Confirm
           </Button>
           <Button variant="secondary" onClick={closeDel}>
             Cancel

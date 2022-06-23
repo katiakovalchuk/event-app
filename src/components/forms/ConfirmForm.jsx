@@ -1,10 +1,11 @@
+import {useEffect} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {useDialog} from "../../context/dialogContext";
-import {useEffect} from "react";
 import PropTypes from "prop-types";
 
-const ConfirmPasswordForm = ({handleConfirmation}) => {
+import {useDialog} from "../../context/dialogContext";
+
+const ConfirmForm = ({handleConfirmation}) => {
   const {handleCloseModal, removeRequireConfirm, requireConfirm} = useDialog();
   let timerId;
 
@@ -19,7 +20,7 @@ const ConfirmPasswordForm = ({handleConfirmation}) => {
     <div className="d-flex justify-content-end">
       <Form className="d-flex justify-content-around w-50" onSubmit={handleConfirmation}>
         <Button
-          variant="info"
+          variant="primary"
           type="submit"
         >
           Confirm
@@ -40,8 +41,8 @@ const ConfirmPasswordForm = ({handleConfirmation}) => {
   );
 };
 
-export default ConfirmPasswordForm;
+export default ConfirmForm;
 
-ConfirmPasswordForm.propTypes = {
+ConfirmForm.propTypes = {
   handleConfirmation: PropTypes.func,
 };
