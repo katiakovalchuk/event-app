@@ -6,9 +6,13 @@ const DialogContext = createContext();
 
 export const DialogContextProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
+  const [requireConfirm, setRequireConfirm] = useState(false);
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+
+  const addRequireConfirm = () => setRequireConfirm(true);
+  const removeRequireConfirm = () => setRequireConfirm(false);
 
   const notifySuccess = (content) => {
     toast.success(content);
@@ -35,17 +39,28 @@ export const DialogContextProvider = ({ children }) => {
     handleCloseModal();
   };
 
+  const [deleteMode, setDeleteMode] = useState(false);
+
+  const setDelete = () => setDeleteMode(true);
+  const removeDelete = () => setDeleteMode(false);
+
   return (
     <DialogContext.Provider
       value={{
         showModal,
+        requireConfirm,
         notifySuccess,
         notifyError,
         itemEdit,
         handleShowModal,
         handleCloseModal,
+        addRequireConfirm,
+        removeRequireConfirm,
         startEdit,
         hideEdit,
+        deleteMode,
+        setDelete,
+        removeDelete
       }}
     >
       {children}

@@ -19,6 +19,7 @@ import useModalDel from "../../hooks/useModalDel";
 
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
+import {useDialog} from "../../context/dialogContext";
 
 const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
@@ -32,6 +33,8 @@ const Table = ({ showManagers }) => {
   const { modalOpenAdd, closeAdd, openAdd } = useModalAdd();
   const { modalOpenEdit, closeEdit, openEdit } = useModalEdit();
   const { modalOpenDel, closeDel, openDel } = useModalDel();
+
+  const {removeRequireConfirm} = useDialog();
 
   useEffect(() => {
     if (showManagers) {
@@ -156,7 +159,9 @@ const Table = ({ showManagers }) => {
     setEditFormData(newFormData);
   };
 
-  const handleAddFormSubmit = async () => {
+  const handleAddFormSubmit = async e => {
+    e.preventDefault();
+    closeAdd();
     sendLink(addFormData.email);
     const newUser = {
       fullName: addFormData.fullName,
@@ -173,8 +178,8 @@ const Table = ({ showManagers }) => {
       ...newUser,
     });
     setUsers([...users, newUser]);
-    closeAdd();
     addUserToast();
+    removeRequireConfirm();
     if (showManagers) {
       getUsers();
     }
@@ -217,6 +222,7 @@ const Table = ({ showManagers }) => {
     setUsers([...newUsers]);
     setEditContactId(null);
     editUserToast();
+    removeRequireConfirm();
   };
 
   const handleEditClick = (event, contact) => {
@@ -238,7 +244,10 @@ const Table = ({ showManagers }) => {
       <Row>
         <Col md={12}>
           <div className="mt-5 d-flex justify-content-between">
-            <Button variant="primary" className="btn btn-primary " onClick={openAdd}>
+            <Button variant="primary" className="btn btn-primary " onClick={() => {
+              openAdd();
+              removeRequireConfirm();
+            }}>
               Add user
             </Button>
 

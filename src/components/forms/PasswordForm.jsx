@@ -4,6 +4,7 @@ import { EmailAuthProvider } from "firebase/auth";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { yupResolver } from "@hookform/resolvers/yup";
+import PropTypes from "prop-types";
 
 import { CustomButton, CustomInput } from "../elements";
 import { useUserAuth } from "../../context/authContext";
@@ -14,7 +15,7 @@ import { getErrorMessage } from "../../helpers/getErrorMessage";
 
 import "../../styles/form.scss";
 
-const PasswordForm = () => {
+const PasswordForm = ({requestData}) => {
   const {
     register,
     handleSubmit,
@@ -24,24 +25,26 @@ const PasswordForm = () => {
     mode: "onChange",
     resolver: yupResolver(passwordSchema),
   });
-  const { user, changePassword, reauthenticate } = useUserAuth();
-  const { notifySuccess, notifyError, handleCloseModal } = useDialog();
+  const { user, reauthenticate } = useUserAuth();
+  const { notifyError, addRequireConfirm } = useDialog();
   const [showPassword, setShowPassword] = useState(false);
 
   const onShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const onSubmitPassword = async (data) => {
+  const onSubmitPassword = async data => {
     if (data.newPassword !== data.oldPassword) {
       try {
-        const cred = EmailAuthProvider.credential(user.email, data.oldPassword);
+        const cred = EmailAuthProvider.credential(
+          user.email,
+          data.oldPassword
+        );
         await reauthenticate(user, cred);
-        await changePassword(user, data.newPassword);
+        requestData(data);
         reset();
-        notifySuccess("Password has been changed!");
-        handleCloseModal();
-      } catch (err) {
+        addRequireConfirm();
+      } catch (err){
         notifyError(getErrorMessage(err.message, errMessages));
       }
     } else {
@@ -110,7 +113,7 @@ const PasswordForm = () => {
           onShowPassword={onShowPassword}
         />
       </div>
-      <CustomButton className="mt-3" type="submit" disabled={!isValid}>
+      <CustomButton className="mt-4" type="submit" disabled={!isValid}>
         Save Changes
       </CustomButton>
     </form>
@@ -118,3 +121,7 @@ const PasswordForm = () => {
 };
 
 export default PasswordForm;
+
+PasswordForm.propTypes = {
+  requestData: PropTypes.func,
+};

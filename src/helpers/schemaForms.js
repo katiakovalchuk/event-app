@@ -71,7 +71,7 @@ export const passwordSchema = yup.object().shape({
     .max(16, "* Max length is 16 characters")
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{7,}$/,
-      "* Password should contain at least 7 characters, including one number and one special character(@,$,!,%,*,#,?,&)"
+      "* Password should contain number and special character (@,$,!,%,*,#,?,&)"
     )
     .required("New password is a required field"),
   confirmNewPassword: yup

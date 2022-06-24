@@ -2,9 +2,11 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { useUserAuth } from "../../context/authContext";
+import {useDialog} from "../../context/dialogContext";
 
 const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
   const { user } = useUserAuth();
+  const {removeRequireConfirm} = useDialog();
   return (
     <tr key={data.id}>
       {columns.map(({ accessor }) => {
@@ -12,7 +14,10 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
         if (accessor === "action") {
           return (
             <td className="text-center" key={accessor}>
-              <Button className="btn me-2" type="button" onClick={(event) => handleEditClick(event, data)} variant="primary" size="sm">
+              <Button className="btn me-2" type="button" onClick={(event) => {
+                handleEditClick(event, data);
+                removeRequireConfirm();
+              }} variant="primary" size="sm">
                 Edit
               </Button>
               <Button disabled={data.id === user.uid} type="button" onClick={() => handleDeleteClick(data)} variant="danger" size="sm">
