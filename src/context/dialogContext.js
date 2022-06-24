@@ -39,6 +39,11 @@ export const DialogContextProvider = ({ children }) => {
     handleCloseModal();
   };
 
+  const [deleteMode, setDeleteMode] = useState(false);
+
+  const setDelete = () => setDeleteMode(true);
+  const removeDelete = () => setDeleteMode(false);
+
   return (
     <DialogContext.Provider
       value={{
@@ -53,6 +58,9 @@ export const DialogContextProvider = ({ children }) => {
         removeRequireConfirm,
         startEdit,
         hideEdit,
+        deleteMode,
+        setDelete,
+        removeDelete
       }}
     >
       {children}

@@ -5,23 +5,22 @@ import { GoTrashcan } from "react-icons/go";
 import { RiEdit2Fill } from "react-icons/ri";
 // import { BiDownArrow, BiUpArrow } from "react-icons/bi";
 
-import { useDialog } from "../../context/dialogContext";
+import {useDialog} from "../../context/dialogContext";
 import { usePagination } from "../../hooks/usePagination";
 import {
-  deleteNewEvent,
   getNewEvents,
   selectAllEvents,
 } from "../../store/slices/eventsSlice";
-import { deleteAllMembersFromEvent } from "../../store/slices/membersSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
 import Pagination from "../Pagination";
-import { CustomButton, ListItem } from "../elements";
+import {CustomButton, ListItem} from "../elements";
 import { search } from "../../helpers/utils";
+import PropTypes from "prop-types";
 
-const EventsList = () => {
-  const { startEdit } = useDialog();
+const EventsList = ({requestIdToDelete}) => {
+  const { startEdit, setDelete, handleShowModal, addRequireConfirm, removeRequireConfirm } = useDialog();
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
   const { status } = useSelector((state) => state.eventsSlice);
@@ -44,11 +43,6 @@ const EventsList = () => {
   useEffect(() => {
     dispatch(getNewEvents());
   }, [dispatch]);
-
-  const deleteEvent = (id) => {
-    dispatch(deleteAllMembersFromEvent(id));
-    dispatch(deleteNewEvent(id));
-  };
 
   return (
     <>
@@ -75,6 +69,7 @@ const EventsList = () => {
                     version="action"
                     onClick={() => {
                       startEdit(event);
+                      removeRequireConfirm();
                     }}
                   >
                     <RiEdit2Fill className="icon" />
@@ -83,7 +78,10 @@ const EventsList = () => {
                     version="action"
                     variant="danger"
                     onClick={() => {
-                      deleteEvent(event.id);
+                      addRequireConfirm();
+                      setDelete();
+                      handleShowModal();
+                      requestIdToDelete(event.id);
                     }}
                   >
                     <GoTrashcan className="icon" />
@@ -106,3 +104,7 @@ const EventsList = () => {
 };
 
 export default EventsList;
+
+EventsList.propTypes = {
+  requestIdToDelete: PropTypes.func,
+};

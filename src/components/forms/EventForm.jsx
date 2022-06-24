@@ -3,26 +3,22 @@ import DatePicker from "react-datepicker";
 import { ToastContainer } from "react-toastify";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import moment from "moment";
-import { useDispatch } from "react-redux";
 
-import { addNewEvent, updateNewEvent } from "../../store/slices/eventsSlice";
 import { useDialog } from "../../context/dialogContext";
 
 import { MdEventNote, MdPlace } from "react-icons/md";
 import { AiOutlineClockCircle } from "react-icons/ai";
 
-import { capitalizeFirstLet } from "../../helpers/string";
 import { eventSchema } from "../../helpers/schemaForms";
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/form.scss";
 
 import { CustomInput, CustomTextarea, CustomButton } from "../elements";
+import PropTypes from "prop-types";
 
-const EventForm = () => {
-  const { itemEdit, hideEdit } = useDialog();
-  const dispatch = useDispatch();
+const EventForm = ({requestData}) => {
+  const { itemEdit, addRequireConfirm } = useDialog();
   const {
     register,
     handleSubmit,
@@ -44,18 +40,6 @@ const EventForm = () => {
     }
   }, [itemEdit]);
 
-  const onSubmitEventForm = (data) => {
-    const event = {
-      ...data,
-      eventName: capitalizeFirstLet(data.eventName),
-      eventDate: moment(data.eventDate).format("yyyy-MM-DD HH:mm"),
-      membersList: [],
-    };
-    itemEdit.edit
-      ? dispatch(updateNewEvent(event))
-      : dispatch(addNewEvent(event));
-    hideEdit();
-  };
   const eventPlace = watch("eventPlace");
 
   return (
@@ -65,7 +49,10 @@ const EventForm = () => {
       <form
         className="form"
         autoComplete="off"
-        onSubmit={handleSubmit(onSubmitEventForm)}
+        onSubmit={handleSubmit(data => {
+          addRequireConfirm();
+          requestData(data);
+        })}
       >
         <CustomInput
           label="Event Name"
@@ -179,3 +166,7 @@ const EventForm = () => {
 };
 
 export default EventForm;
+
+EventForm.propTypes = {
+  requestData: PropTypes.func,
+};
