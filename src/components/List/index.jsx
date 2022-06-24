@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../store/slices/usersSlice";
 import TableForm from "./TableForm";
@@ -55,21 +54,19 @@ const List = () => {
 
   return (
     <>
-      <Container fluid="xl">
-        <div className="membersForm ">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="search form-control"
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <TableForm
-            data={search(localusers)}
-            handleSorting={handleSorting}
-            columns={columns}
-          />
-        </div>
-      </Container>
+      <div className="membersForm">
+        <input
+          type="text"
+          placeholder="Search..."
+          className="search"
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <TableForm
+          data={search(localusers)}
+          handleSorting={handleSorting}
+          columns={columns}
+        />
+      </div>
     </>
   );
 };
