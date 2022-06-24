@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  getDocs,
+  where,
+  query,
+} from "firebase/firestore";
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
@@ -58,7 +65,11 @@ const Table = ({ showManagers }) => {
           .map((item) => {
             return { ...item.data(), id: item.id };
           })
-          .filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
+          .filter((item) =>
+            keys.some((key) =>
+              item[key].toLowerCase().includes(query_.toLowerCase())
+            )
+          )
       );
       console.table(users);
     });
@@ -172,7 +183,8 @@ const Table = ({ showManagers }) => {
       birth: addFormData.birth,
       role: addFormData.role,
       rank: 0,
-      image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     };
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
@@ -244,24 +256,62 @@ const Table = ({ showManagers }) => {
       <Row>
         <Col md={12}>
           <div className="mt-5 d-flex justify-content-between">
-            <Button variant="primary" className="btn btn-primary " onClick={() => {
-              openAdd();
-              removeRequireConfirm();
-            }}>
+            <Button
+              variant="primary"
+              className="btn btn-primary "
+              onClick={openAdd}
+            >
               Add user
             </Button>
 
             <div>
-              <input onChange={search} className="form-control me-2" type="search" placeholder="Search..." aria-label="Search"></input>
+              <input
+                onChange={search}
+                className="form-control me-2"
+                type="search"
+                placeholder="Search..."
+                aria-label="Search"
+              ></input>
             </div>
           </div>
 
-          <AddUser {...{ modalOpenAdd, closeAdd, handleAddFormSubmit, handleAddFormChange, addFormData }} />
-          {modalOpenEdit && <EditUser {...{ modalOpenEdit, editContactId, closeEdit, handleEditFormSubmit, handleEditFormChange, addFormData }} />}
-          {<DelUser {...{ modalOpenDel, closeDel, getUsers, deleteUserToast, delId, setUsers, users }} />}
+          <AddUser
+            {...{
+              modalOpenAdd,
+              closeAdd,
+              handleAddFormSubmit,
+              handleAddFormChange,
+              addFormData,
+            }}
+          />
+          {modalOpenEdit && (
+            <EditUser
+              {...{
+                modalOpenEdit,
+                editContactId,
+                closeEdit,
+                handleEditFormSubmit,
+                handleEditFormChange,
+                addFormData,
+              }}
+            />
+          )}
+          {
+            <DelUser
+              {...{
+                modalOpenDel,
+                closeDel,
+                getUsers,
+                deleteUserToast,
+                delId,
+                setUsers,
+                users,
+              }}
+            />
+          }
 
           <form onSubmit={handleEditFormSubmit}>
-            <div className="table-responsive">
+            <div className="table-responsive-lg">
               <table className="table table-admin">
                 <TableHead {...{ columns, handleSorting }} />
                 <TableBody
