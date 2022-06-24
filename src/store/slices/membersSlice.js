@@ -130,6 +130,27 @@ export const updateAdditionalInfo = createAsyncThunk(
   }
 );
 
+export const deleteEventFromAllUsers = createAsyncThunk(
+  "membersSlice/deleteEventFromAllUsers",
+  async (id, { rejectWithValue, getState, dispatch }) => {
+    const events = getState().eventsSlice.events;
+    const currentEvent = events.find((event) => event.id === id);
+    const membersList = currentEvent.membersList;
+
+    try {
+      for (let i = 0; i < membersList.length; i++) {
+        const docRef = doc(db, "users", membersList[i]);
+        const colRef = collection(docRef, "eventsList");
+        await deleteDoc(doc(colRef, id));
+        dispatch(deleteEvent({ uid: membersList[i], id }));
+      }
+    } catch (error) {
+      toast.error("Sorry, can't delete event");
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const deleteAllMembersFromEvent = createAsyncThunk(
   "membersSlice/deleteAllMembersFromEvent",
   async (id, { rejectWithValue, getState, dispatch }) => {
@@ -139,12 +160,11 @@ export const deleteAllMembersFromEvent = createAsyncThunk(
       for (let i = 0; i < membersList.length; i++) {
         const docRef = doc(db, "users", membersList[i]);
         const colRef = collection(docRef, "eventsList");
-        console.log(colRef);
         await deleteDoc(doc(colRef, id));
         dispatch(deleteEvent({ uid: membersList[i], id }));
       }
     } catch (error) {
-      toast.error("Sorry, can't delete event");
+      toast.error("Sorry, can't unregister all users");
       return rejectWithValue(error.message);
     }
   }
@@ -245,6 +265,9 @@ const membersSlice = createSlice({
     [updateAdditionalInfo.fulfilled]: setSuccess,
     [updateAdditionalInfo.rejected]: setError,
     [updateAdditionalInfo.pending]: setLoading,
+    [deleteEventFromAllUsers.fulfilled]: setSuccess,
+    [deleteEventFromAllUsers.rejected]: setError,
+    [deleteEventFromAllUsers.pending]: setLoading,
     [deleteAllMembersFromEvent.fulfilled]: setSuccess,
     [deleteAllMembersFromEvent.rejected]: setError,
     [deleteAllMembersFromEvent.pending]: setLoading,
