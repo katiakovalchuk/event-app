@@ -1,35 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
 
 import {
   deleteAllMembersFromEvent,
-  toggleSelectAll,
-  showIsPresentForAllMembers,
-  hideIsPresentForAllMembers,
+  getNewMembers,
 } from "../../store/slices/membersSlice";
 import { deleteNewMembersList } from "../../store/slices/eventSlice";
+import { search } from "../../helpers/utils";
+import { usePagination } from "../../hooks/usePagination";
 
 import EventMember from "./EventMember";
-import { CustomButton, CustomCheckbox } from "../elements";
+import { CustomButton } from "../elements";
+import Pagination from "../elements/Pagination";
 
 const EventMembers = () => {
   const dispatch = useDispatch();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const { membersList } = currentEvent;
-  const { members, selectAll } = useSelector((state) => state.membersSlice);
+  const { members, status } = useSelector((state) => state.membersSlice);
+  const [query, setQuery] = useState("");
 
   const eventMembers = members.filter((member) =>
     membersList.includes(member.id)
   );
+  const keys = ["fullName"];
+  const searchedEventMembers = search(eventMembers, keys, query);
+
+  const { pageCount, currentPage, handlePageClick, currentItems } =
+    usePagination({ query, status, data: searchedEventMembers });
 
   useEffect(() => {
-    selectAll
-      ? dispatch(showIsPresentForAllMembers(currentEvent.id))
-      : dispatch(hideIsPresentForAllMembers(currentEvent.id));
-  }, [selectAll]);
-
-  localStorage.setItem("selectAll", JSON.stringify(selectAll));
+    dispatch(getNewMembers());
+  }, [dispatch]);
 
   const deleteAllMembers = (id) => {
     dispatch(deleteNewMembersList(id));
@@ -38,40 +41,48 @@ const EventMembers = () => {
 
   return (
     <section className="members">
+      <h4 className="members__title">Registered Users</h4>
       <Container fluid="xl">
-        <h4 className="members__title">Registered Users</h4>
-        {eventMembers.length > 1 && (
-          <div className="members__statistic">
-            <CustomCheckbox
-              version="big"
-              type="checkbox"
-              label="Select All"
-              checked={selectAll}
-              onChange={() => {
-                dispatch(toggleSelectAll());
+        <div className="members__statistic">
+          <input
+            className="event-search form-control"
+            type="search"
+            placeholder="Search..."
+            aria-label="Search"
+            onChange={(e) => setQuery(e.target.value)}
+          />
+
+          <div className="members__statistic-right">
+            <span className="members__amount">
+              Users: {eventMembers.length}
+            </span>
+            <CustomButton
+              variant="danger"
+              onClick={() => {
+                deleteAllMembers(currentEvent.id);
               }}
-            />
-            <div className="members__statistic-right">
-              <span className="members__amount">
-                Users: {eventMembers.length}
-              </span>
-              <CustomButton
-                variant="danger"
-                onClick={() => {
-                  deleteAllMembers(currentEvent.id);
-                }}
-              >
-                Delete All
-              </CustomButton>
-            </div>
+            >
+              Delete All
+            </CustomButton>
           </div>
-        )}
-        {eventMembers.length ? (
-          <ul className="members__list">
-            {eventMembers.map((member) => (
-              <EventMember key={member.id} {...member} />
-            ))}
-          </ul>
+        </div>
+
+        {currentItems.length ? (
+          <>
+            <ul className="members__list">
+              {currentItems.map((member) => (
+                <EventMember key={member.id} {...member} />
+              ))}
+            </ul>
+
+            <div className="mt-3">
+              <Pagination
+                pageCount={pageCount}
+                handlePageClick={handlePageClick}
+                currentPage={currentPage}
+              />
+            </div>
+          </>
         ) : (
           <p className="check-text">Please register users to the Event</p>
         )}
