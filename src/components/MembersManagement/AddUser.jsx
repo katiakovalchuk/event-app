@@ -9,11 +9,17 @@ const AddUser = ({ modalOpenAdd, closeAdd, handleAddFormSubmit, addFormData, han
   const {
     register,
     handleSubmit,
+    // reset,
     formState: { errors },
   } = useForm({
     mode: "onBlur",
   });
   const {requireConfirm, addRequireConfirm} = useDialog();
+
+  // function submit() {
+  //   reset();
+  //   handleAddFormSubmit();
+  // }
 
   return (
     <Modal show={modalOpenAdd} onHide={closeAdd}>

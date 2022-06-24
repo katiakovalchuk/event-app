@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import { getNewEvent } from "../store/slices/eventSlice";
-import { getNewMembers } from "../store/slices/membersSlice";
 
 import AllMembers from "../components/events/AllMembers";
 import EventMembers from "../components/events/EventMembers";
@@ -21,10 +20,6 @@ const EventsItem = () => {
   useEffect(() => {
     dispatch(getNewEvent(id));
   }, [id]);
-
-  useEffect(() => {
-    dispatch(getNewMembers());
-  }, [dispatch]);
 
   return (
     <>

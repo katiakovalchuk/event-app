@@ -154,7 +154,7 @@ const EventForm = ({requestData}) => {
           errorText={errors?.points?.message}
         />
         <CustomButton
-          className="mt-3"
+          className="my-3"
           type="submit"
           disabled={!(isValid && isDirty)}
         >

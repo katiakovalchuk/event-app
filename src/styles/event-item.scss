@@ -80,12 +80,12 @@
 }
 
 .members {
-  padding: 35px 0;
+  padding: 0 0 30px;
   &__title {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: $blue;
+    background-color: darken($blue, 15%);
     font-weight: 700;
     font-size: 26px;
     line-height: 30px;
@@ -94,6 +94,8 @@
     margin-bottom: 15px;
   }
   &__list {
+    min-height: 30vh;
+    transition: all 0.3s ease-in-out;
   }
   &__item {
     display: flex;
@@ -160,7 +162,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin: 20px 0;
   }
   &__statistic-right {
     display: flex;
