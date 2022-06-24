@@ -58,12 +58,6 @@ export const SidebarData = {
       path: "/managers-management",
       icon: <RiIcons.RiUserStarLine size={36} />,
       cName: "nav-text size-large",
-<<<<<<< HEAD
-    }
-  ]
-};
-=======
     },
   ],
 };
->>>>>>> 204266a ([TASK] dark/light mode, styling fixes)
