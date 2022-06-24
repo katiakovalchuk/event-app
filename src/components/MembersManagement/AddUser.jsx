@@ -7,10 +7,16 @@ const AddUser = ({ modalOpenAdd, closeAdd, handleAddFormSubmit, addFormData, han
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     mode: "onBlur",
   });
+
+  function submit() {
+    reset();
+    handleAddFormSubmit();
+  }
 
   return (
     <Modal show={modalOpenAdd} onHide={closeAdd}>
@@ -18,7 +24,7 @@ const AddUser = ({ modalOpenAdd, closeAdd, handleAddFormSubmit, addFormData, han
         <Modal.Title>Add user</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <form onSubmit={handleSubmit(handleAddFormSubmit)}>
+        <form onSubmit={handleSubmit(submit)}>
           <label htmlFor="name" className="form-label">
             Name:
           </label>
