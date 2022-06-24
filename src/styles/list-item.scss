@@ -16,7 +16,7 @@
 }
 
 .list-item--hover {
-  height: 90px;
+  padding: 0 15px 0 0;
   &:hover {
     box-shadow: $shadow;
   }

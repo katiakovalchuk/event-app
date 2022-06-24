@@ -7,6 +7,7 @@ import { RiEdit2Fill } from "react-icons/ri";
 import { BiDownArrow, BiUpArrow } from "react-icons/bi";
 
 import { useDialog } from "../../context/dialogContext";
+import { usePaginate2 } from "../../hooks/usePaginate2";
 import {
   deleteNewEvent,
   getNewEvents,
@@ -28,7 +29,6 @@ const EventsList = () => {
 
   const [query, setQuery] = useState("");
   const [order, setOrder] = useState("asc");
-  const [pageNumber, setPageNumber] = useState(0);
   const [filterBtn, setFilterBtn] = useState("all");
   const today = moment().format("yyyy-MM-DD");
 
@@ -62,18 +62,10 @@ const EventsList = () => {
 
   const searchedEvents = search(sortedEvents, keys, query);
 
-  //pagination
-  const itemsPerPage = 6;
-  const pageVisited = pageNumber * itemsPerPage;
-  const displaysEvents = searchedEvents.slice(
-    pageVisited,
-    pageVisited + itemsPerPage
-  );
-
-  const pageCount = Math.ceil(searchedEvents.length / itemsPerPage);
-  const handlePageClick = ({ selected }) => {
-    setPageNumber(selected);
-  };
+  const { pageCount, handlePageClick, displayItems } = usePaginate2({
+    data: searchedEvents,
+    itemsPerPage: 6,
+  });
 
   //sort
   const handleOrder = () =>
@@ -131,14 +123,14 @@ const EventsList = () => {
         />
       </div>
 
-      {displaysEvents?.length ? (
+      {displayItems?.length ? (
         <div className="mb-5">
           <div className="event__sort" onClick={handleOrder}>
             <span>Name</span>
             {order === "asc" ? <BiDownArrow /> : <BiUpArrow />}
           </div>
           <ul className="event__list">
-            {displaysEvents.map((event) => (
+            {displayItems.map((event) => (
               <ListItem link key={event.id}>
                 <EventPart {...event} />
                 <div className="event__actions">
