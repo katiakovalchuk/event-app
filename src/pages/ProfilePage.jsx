@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Container, Row } from "react-bootstrap";
@@ -179,7 +180,7 @@ const ProfilePage = () => {
         />
       )}
       <ToastContainer limit={5} />
-      <Container>
+      <Container fluid="xl">
         <Row>
           <Col md={8}>
             <form onSubmit={handleSubmit(handleAdd)} className="profileForm">
@@ -434,10 +435,7 @@ const ProfilePage = () => {
                 </p>
                 <button
                   className="btn btn-secondary mt-3"
-                  onClick={() => {
-                    handleShowModal();
-                    removeRequireConfirm();
-                  }}
+                  onClick={() => handleShowModal()}
                 >
                   Change password
                 </button>
