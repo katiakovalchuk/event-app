@@ -82,11 +82,9 @@ const EventsList = () => {
     setFilterBtn("past");
   };
 
-  const deleteEvent = (event) => {
-    if (event.membersList.lenght) {
-      dispatch(deleteAllMembersFromEvent(event.id));
-    }
-    dispatch(deleteNewEvent(event.id));
+  const deleteEvent = (id) => {
+    dispatch(deleteAllMembersFromEvent(id));
+    dispatch(deleteNewEvent(id));
   };
 
   return (
@@ -146,7 +144,7 @@ const EventsList = () => {
                     className="action"
                     variant="danger"
                     onClick={() => {
-                      deleteEvent(event);
+                      deleteEvent(event.id);
                     }}
                   >
                     <GoTrashcan className="icon" />

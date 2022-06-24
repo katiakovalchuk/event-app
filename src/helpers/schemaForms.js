@@ -93,8 +93,8 @@ export const additinalInfo = yup.object().shape(
         is: (value) => value?.length,
         then: yup
           .string()
-          .min(5, "* Min length is 20 characters")
-          .max(100, "* Max length is 600 characters"),
+          .min(5, "* Min length is 5 characters")
+          .max(100, "* Max length is 100 characters"),
         otherwise: yup.string().notRequired(),
       }),
     additionalPoints: yup
