@@ -1,15 +1,12 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  where,
-  query,
-} from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
+import { getUsers } from "../../store/slices/usersSlice";
+
 import PropTypes from "prop-types";
 
 import AddUser from "./AddUser";
@@ -26,11 +23,11 @@ import useModalDel from "../../hooks/useModalDel";
 
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
-import {useDialog} from "../../context/dialogContext";
+import { useDialog } from "../../context/dialogContext";
 
 const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
-  const [users, setUsers] = useState([]);
+
   const { sendLink } = useUserAuth();
   const [delId, setDelId] = useState("");
 
@@ -41,7 +38,13 @@ const Table = ({ showManagers }) => {
   const { modalOpenEdit, closeEdit, openEdit } = useModalEdit();
   const { modalOpenDel, closeDel, openDel } = useModalDel();
 
-  const {removeRequireConfirm} = useDialog();
+  const { removeRequireConfirm } = useDialog();
+
+  const dispatch = useDispatch();
+
+  const users = useSelector((state) => state.usersSlice.users);
+
+  const [allUsers, setUsers] = useState(users);
 
   useEffect(() => {
     if (showManagers) {
@@ -51,28 +54,24 @@ const Table = ({ showManagers }) => {
     }
   });
 
-  const getUsers = () => {
-    let q = "";
-    if (showManagers) {
-      q = query(usersCollectionRef, where("role", "==", "manager"));
-    } else {
-      q = query(usersCollectionRef, where("role", "==", "user"));
-    }
+  const getAllUsers = () => {
+    // let q = "";
+    // if (showManagers) {
+    //   q = query(usersCollectionRef, where("role", "==", "manager"));
+    // } else {
+    //   q = query(usersCollectionRef, where("role", "==", "user"));
+    // }
     const keys = ["fullName", "company", "email", "phoneNumber"];
-    getDocs(q).then((data) => {
-      setUsers(
-        data.docs
-          .map((item) => {
-            return { ...item.data(), id: item.id };
-          })
-          .filter((item) =>
-            keys.some((key) =>
-              item[key].toLowerCase().includes(query_.toLowerCase())
-            )
-          )
-      );
-      console.table(users);
-    });
+    // getDocs(q).then((data) => {
+    setUsers(
+      // data.docs
+      //   .map((item) => {
+      //     return { ...item.data(), id: item.id };
+      //   })
+      users.filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
+    );
+    console.table(users);
+    // });
   };
 
   const addUserToast = () => {
@@ -116,8 +115,12 @@ const Table = ({ showManagers }) => {
   }, 350);
 
   useEffect(() => {
+    dispatch(getUsers());
+  }, []);
+
+  useEffect(() => {
     if (query_.length === 0 || query_.length > 2) {
-      getUsers();
+      getAllUsers();
     }
   }, [query_]);
 
@@ -170,7 +173,7 @@ const Table = ({ showManagers }) => {
     setEditFormData(newFormData);
   };
 
-  const handleAddFormSubmit = async e => {
+  const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     closeAdd();
     sendLink(addFormData.email);
@@ -183,8 +186,7 @@ const Table = ({ showManagers }) => {
       birth: addFormData.birth,
       role: addFormData.role,
       rank: 0,
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
+      image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     };
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
@@ -193,7 +195,7 @@ const Table = ({ showManagers }) => {
     addUserToast();
     removeRequireConfirm();
     if (showManagers) {
-      getUsers();
+      getAllUsers();
     }
   };
 
@@ -256,21 +258,19 @@ const Table = ({ showManagers }) => {
       <Row>
         <Col md={12}>
           <div className="mt-5 d-flex justify-content-between">
-            <Button variant="primary" className="btn btn-primary " onClick={() => {
-              openAdd();
-              removeRequireConfirm();
-            }}>
+            <Button
+              variant="primary"
+              className="btn btn-primary "
+              onClick={() => {
+                openAdd();
+                removeRequireConfirm();
+              }}
+            >
               Add user
             </Button>
 
             <div>
-              <input
-                onChange={search}
-                className="form-control me-2"
-                type="search"
-                placeholder="Search..."
-                aria-label="Search"
-              ></input>
+              <input onChange={search} className="form-control me-2" type="search" placeholder="Search..." aria-label="Search"></input>
             </div>
           </div>
 
@@ -300,7 +300,6 @@ const Table = ({ showManagers }) => {
               {...{
                 modalOpenDel,
                 closeDel,
-                getUsers,
                 deleteUserToast,
                 delId,
                 setUsers,
@@ -314,7 +313,7 @@ const Table = ({ showManagers }) => {
               <table className="table table-admin">
                 <TableHead {...{ columns, handleSorting }} />
                 <TableBody
-                  tableData={users}
+                  tableData={allUsers}
                   {...{
                     editContactId,
                     editFormData,
