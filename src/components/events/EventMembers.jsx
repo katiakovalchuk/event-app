@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
 
-import { deleteAllMembersFromEvent } from "../../store/slices/membersSlice";
+import {
+  deleteAllMembersFromEvent,
+  getNewMembers,
+} from "../../store/slices/membersSlice";
 import { deleteNewMembersList } from "../../store/slices/eventSlice";
 import { search } from "../../helpers/utils";
-import { usePaginate2 } from "../../hooks/usePaginate2";
+import { usePagination } from "../../hooks/usePagination";
 
 import EventMember from "./EventMember";
 import { CustomButton } from "../elements";
@@ -15,7 +18,7 @@ const EventMembers = () => {
   const dispatch = useDispatch();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const { membersList } = currentEvent;
-  const { members } = useSelector((state) => state.membersSlice);
+  const { members, status } = useSelector((state) => state.membersSlice);
   const [query, setQuery] = useState("");
 
   const eventMembers = members.filter((member) =>
@@ -24,10 +27,12 @@ const EventMembers = () => {
   const keys = ["fullName"];
   const searchedEventMembers = search(eventMembers, keys, query);
 
-  const { pageCount, handlePageClick, displayItems } = usePaginate2({
-    data: searchedEventMembers,
-    itemsPerPage: 4,
-  });
+  const { pageCount, currentPage, handlePageClick, currentItems } =
+    usePagination({ query, status, data: searchedEventMembers });
+
+  useEffect(() => {
+    dispatch(getNewMembers());
+  }, [dispatch]);
 
   const deleteAllMembers = (id) => {
     dispatch(deleteNewMembersList(id));
@@ -62,10 +67,10 @@ const EventMembers = () => {
           </div>
         </div>
 
-        {displayItems.length ? (
+        {currentItems.length ? (
           <>
             <ul className="members__list">
-              {displayItems.map((member) => (
+              {currentItems.map((member) => (
                 <EventMember key={member.id} {...member} />
               ))}
             </ul>
@@ -74,6 +79,7 @@ const EventMembers = () => {
               <Pagination
                 pageCount={pageCount}
                 handlePageClick={handlePageClick}
+                currentPage={currentPage}
               />
             </div>
           </>

@@ -7,7 +7,7 @@ export const usePagination = ({
   status = STATUSES.succeeded,
   itemsPerPage = 5,
 }) => {
-  const [currentItems, setCurrentItems] = useState(null);
+  const [currentItems, setCurrentItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -28,6 +28,7 @@ export const usePagination = ({
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % data.length;
     setItemOffset(newOffset);
+    console.log(newOffset);
   };
 
   return {

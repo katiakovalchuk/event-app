@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
 
-import { addEventToAllMembers } from "../../store/slices/membersSlice";
+import {
+  addEventToAllMembers,
+  getNewMembers,
+} from "../../store/slices/membersSlice";
 import { addAllUserEvent } from "../../store/slices/eventSlice";
 
 import { usePaginate2 } from "../../hooks/usePaginate2";
@@ -30,6 +33,10 @@ const AllMembers = () => {
     data: searchedAllMembers,
     itemsPerPage: 4,
   });
+
+  useEffect(() => {
+    dispatch(getNewMembers());
+  }, [dispatch]);
 
   const addAllMembers = (id) => {
     dispatch(
