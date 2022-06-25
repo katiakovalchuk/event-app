@@ -1,12 +1,9 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
+
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
-import { getUsers } from "../../store/slices/usersSlice";
-
 import PropTypes from "prop-types";
 
 import AddUser from "./AddUser";
@@ -40,11 +37,7 @@ const Table = ({ showManagers }) => {
 
   const { removeRequireConfirm } = useDialog();
 
-  const dispatch = useDispatch();
-
-  const users = useSelector((state) => state.usersSlice.users);
-
-  const [allUsers, setUsers] = useState(users);
+  const [allUsers, setUsers] = useState([]);
 
   useEffect(() => {
     if (showManagers) {
@@ -54,24 +47,29 @@ const Table = ({ showManagers }) => {
     }
   });
 
-  const getAllUsers = () => {
-    // let q = "";
-    // if (showManagers) {
-    //   q = query(usersCollectionRef, where("role", "==", "manager"));
-    // } else {
-    //   q = query(usersCollectionRef, where("role", "==", "user"));
-    // }
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const getUsers = () => {
+    let q = "";
+    if (showManagers) {
+      q = query(usersCollectionRef, where("role", "==", "manager"));
+    } else {
+      q = query(usersCollectionRef, where("role", "==", "user"));
+    }
+    getDocs(q).then((data) => {
+      setUsers(
+        data.docs.map((item) => {
+          return { ...item.data(), id: item.id };
+        })
+      );
+    });
+  };
+
+  const searchData = (data) => {
     const keys = ["fullName", "company", "email", "phoneNumber"];
-    // getDocs(q).then((data) => {
-    setUsers(
-      // data.docs
-      //   .map((item) => {
-      //     return { ...item.data(), id: item.id };
-      //   })
-      users.filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())))
-    );
-    console.table(users);
-    // });
+    return data.filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())));
   };
 
   const addUserToast = () => {
@@ -114,16 +112,6 @@ const Table = ({ showManagers }) => {
     setQuery(e.target.value);
   }, 350);
 
-  useEffect(() => {
-    dispatch(getUsers());
-  }, []);
-
-  useEffect(() => {
-    if (query_.length === 0 || query_.length > 2) {
-      getAllUsers();
-    }
-  }, [query_]);
-
   const [editFormData, setEditFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -145,7 +133,7 @@ const Table = ({ showManagers }) => {
 
   const handleSorting = (sortField, sortOrder) => {
     if (sortField) {
-      const sorted = [...users].sort((a, b) => {
+      const sorted = [...allUsers].sort((a, b) => {
         if (a[sortField] === null) return 1;
         if (b[sortField] === null) return -1;
         if (a[sortField] === null && b[sortField] === null) return 0;
@@ -191,12 +179,10 @@ const Table = ({ showManagers }) => {
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
     });
-    setUsers([...users, newUser]);
+    setUsers([...allUsers, newUser]);
     addUserToast();
     removeRequireConfirm();
-    if (showManagers) {
-      getAllUsers();
-    }
+    getUsers();
   };
 
   const handleDeleteClick = (data) => {
@@ -227,7 +213,7 @@ const Table = ({ showManagers }) => {
       })
       .catch((err) => console.log(err.message));
 
-    const newUsers = users.map((obj) => {
+    const newUsers = allUsers.map((obj) => {
       if (obj.email === editContactId) {
         return { ...user };
       }
@@ -303,7 +289,7 @@ const Table = ({ showManagers }) => {
                 deleteUserToast,
                 delId,
                 setUsers,
-                users,
+                allUsers,
               }}
             />
           }
@@ -313,7 +299,7 @@ const Table = ({ showManagers }) => {
               <table className="table table-admin">
                 <TableHead {...{ columns, handleSorting }} />
                 <TableBody
-                  tableData={allUsers}
+                  tableData={searchData(allUsers)}
                   {...{
                     editContactId,
                     editFormData,

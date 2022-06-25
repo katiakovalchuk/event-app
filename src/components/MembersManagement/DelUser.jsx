@@ -6,15 +6,15 @@ import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { doc, deleteDoc } from "firebase/firestore";
 import { getIndex } from "../../helpers/utils.js";
 
-const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, users }) => {
+const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, allUsers }) => {
   const deleteDocument = async (id) => {
     await deleteDoc(doc(usersCollectionRef, id));
   };
 
   function deleteUser() {
-    const userIndex = getIndex(users, delId);
+    const userIndex = getIndex(allUsers, delId);
     deleteDocument(delId);
-    setUsers(users.filter((user, index) => index !== userIndex));
+    setUsers(allUsers.filter((user, index) => index !== userIndex));
     deleteUserToast();
     closeDel();
   }
@@ -44,7 +44,7 @@ DelUser.propTypes = {
   deleteUserToast: PropTypes.func.isRequired,
   delId: PropTypes.string.isRequired,
   setUsers: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
+  allUsers: PropTypes.array.isRequired,
 };
 
 export default DelUser;
