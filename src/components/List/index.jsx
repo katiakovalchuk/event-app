@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../store/slices/usersSlice";
 import TableForm from "./TableForm";
+import SearchInput from "../elements/SearchInput";
 
 const List = () => {
   const [query, setQuery] = useState("");
@@ -55,11 +56,8 @@ const List = () => {
   return (
     <>
       <div className="membersForm">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="search"
-          onChange={(e) => setQuery(e.target.value)}
+        <SearchInput
+          handleChange={(e) => setQuery(e.target.value)}
         />
         <TableForm
           data={search(localusers)}

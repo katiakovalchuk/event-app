@@ -16,6 +16,7 @@ import {
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
 import Pagination from "../Pagination";
+import SearchInput from "../elements/SearchInput";
 import {CustomButton, ListItem} from "../elements";
 import { search } from "../../helpers/utils";
 import PropTypes from "prop-types";
@@ -106,12 +107,8 @@ const EventsList = ({requestIdToDelete}) => {
             Past
           </CustomButton>
         </div>
-        <input
-          className="event-search form-control"
-          type="search"
-          placeholder="Search..."
-          aria-label="Search"
-          onChange={(e) => setQuery(e.target.value)}
+        <SearchInput
+          handleChange={(e) => setQuery(e.target.value)}
         />
       </div>
 
