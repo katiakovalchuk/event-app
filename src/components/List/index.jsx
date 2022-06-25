@@ -3,6 +3,7 @@ import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../../store/slices/usersSlice";
 import TableForm from "./TableForm";
+import SearchInput from "../elements/SearchInput";
 
 const List = () => {
   const [query, setQuery] = useState("");
@@ -57,11 +58,8 @@ const List = () => {
     <>
       <Container fluid="xl">
         <div className="membersForm ">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="search form-control"
-            onChange={(e) => setQuery(e.target.value)}
+          <SearchInput
+            handleChange={(e) => setQuery(e.target.value)}
           />
           <TableForm
             data={search(localusers)}
