@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
 
@@ -6,7 +7,7 @@ import {
   addEventToAllMembers,
   getNewMembers,
 } from "../../store/slices/membersSlice";
-import { addAllUserEvent } from "../../store/slices/eventSlice";
+import { getNewEvent, addAllUserEvent } from "../../store/slices/eventSlice";
 
 import { usePaginate2 } from "../../hooks/usePaginate2";
 import { search } from "../../helpers/utils";
@@ -19,6 +20,7 @@ import "../../styles/event-item.scss";
 
 const AllMembers = () => {
   const dispatch = useDispatch();
+  const { id } = useParams();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const members = useSelector((state) => state.membersSlice.members);
   const { membersList } = currentEvent;
@@ -33,6 +35,10 @@ const AllMembers = () => {
     data: searchedAllMembers,
     itemsPerPage: 4,
   });
+
+  useEffect(() => {
+    dispatch(getNewEvent(id));
+  }, [dispatch, id]);
 
   useEffect(() => {
     dispatch(getNewMembers());
@@ -74,7 +80,7 @@ const AllMembers = () => {
                   addAllMembers(currentEvent.id);
                 }}
               >
-                Add All
+                Register All
               </CustomButton>
             </div>
           )}

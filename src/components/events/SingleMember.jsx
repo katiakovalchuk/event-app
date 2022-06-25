@@ -17,7 +17,6 @@ const SingleMember = ({ fullName, image, id }) => {
       addEventToMember({
         uid,
         id,
-        isPresent: false,
         comment: "",
         additionalPoints: 0,
       })
@@ -37,7 +36,9 @@ const SingleMember = ({ fullName, image, id }) => {
         </div>
         <h4 className="members__name">{fullName}</h4>
       </div>
-      <CustomButton onClick={() => createList(id, eventId)}>Add</CustomButton>
+      <CustomButton onClick={() => createList(id, eventId)}>
+        Register
+      </CustomButton>
     </ListItem>
   );
 };

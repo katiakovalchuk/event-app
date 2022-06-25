@@ -1,5 +1,6 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 
@@ -8,9 +9,13 @@ import { GoCalendar } from "react-icons/go";
 import { GiTrophy } from "react-icons/gi";
 import { HiArrowLeft } from "react-icons/hi";
 
+import { getNewEvent } from "../../store/slices/eventSlice";
+
 import { CustomButton } from "../elements";
 
 const EventDescription = () => {
+  const dispatch = useDispatch();
+  const { id } = useParams();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const {
     eventName,
@@ -21,6 +26,10 @@ const EventDescription = () => {
     points,
   } = currentEvent;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(getNewEvent(id));
+  }, [id]);
 
   const goBack = () => {
     navigate(-1);
