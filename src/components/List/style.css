@@ -1,15 +1,23 @@
 .membersForm {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   margin: 25px;
+}
+
+.table-responsive-md {
+  width: 100%;
+}
+
+th, td {
+  border: none !important;
 }
 
 .members-table th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: #060b26 !important;
+  background-color: #4285f4 !important;
   color: white !important;
 }
 
@@ -27,6 +35,14 @@
 .search {
   width: 50%;
   margin-top: 10px;
+  margin-right: 10px;
 }
 
+@media (max-width: 768px) {
+  .profileForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
 
