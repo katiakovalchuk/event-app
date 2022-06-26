@@ -59,6 +59,7 @@ export const deleteNewEvent = createAsyncThunk(
 export const updateNewEvent = createAsyncThunk(
   "eventsSlice/updateNewEvent",
   async (event, { rejectWithValue, dispatch }) => {
+    console.log(event);
     const { id, ...rest } = event;
     try {
       await updateDoc(doc(db, "events", id), { ...rest });

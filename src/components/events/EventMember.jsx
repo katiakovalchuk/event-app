@@ -20,7 +20,6 @@ const EventMember = ({ image, fullName, eventsList }) => {
 
   const currentInfo =
     eventsList.length > 0 && eventsList.find((event) => event.id === eventId);
-  const { comment, additionalPoints, uid, id } = currentInfo;
 
   const deleteUser = (uid, id) => {
     dispatch(
@@ -43,13 +42,15 @@ const EventMember = ({ image, fullName, eventsList }) => {
               </div>
               <h4 className="members__name">{fullName}</h4>
               <div className="members__addInfo">
-                {comment && (
+                {currentInfo?.comment && (
                   <span className="members__comment">
                     <BiCommentCheck />
                   </span>
                 )}
-                {additionalPoints > 0 && (
-                  <span className="members__points">{additionalPoints}</span>
+                {currentInfo?.additionalPoints > 0 && (
+                  <span className="members__points">
+                    {currentInfo?.additionalPoints}
+                  </span>
                 )}
               </div>
             </div>
@@ -64,7 +65,7 @@ const EventMember = ({ image, fullName, eventsList }) => {
               <CustomButton
                 variant="danger"
                 className="action"
-                onClick={() => deleteUser(uid, id)}
+                onClick={() => deleteUser(currentInfo.uid, currentInfo.id)}
               >
                 <GoTrashcan />
               </CustomButton>

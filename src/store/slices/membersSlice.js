@@ -176,6 +176,19 @@ export const addEventToAllMembers = createAsyncThunk(
   }
 );
 
+export const addPointsToMember = createAsyncThunk(
+  "membersSlice/addPointsToMember",
+  async ({ uid, updatedScore }, { rejectWithValue }) => {
+    try {
+      await updateDoc(doc(db, "users", uid), {
+        scores: updatedScore,
+      });
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 // helpers
 const setSuccess = (state) => {
   state.status = "succeeded";
@@ -243,6 +256,9 @@ const membersSlice = createSlice({
     [addEventToAllMembers.fulfilled]: setSuccess,
     [addEventToAllMembers.rejected]: setError,
     [addEventToAllMembers.pending]: setLoading,
+    [addPointsToMember.fulfilled]: setSuccess,
+    [addPointsToMember.rejected]: setError,
+    [addPointsToMember.pending]: setLoading,
   },
 });
 export const { getMembers, addEvent, deleteEvent, toggleEvent, updateInfo } =

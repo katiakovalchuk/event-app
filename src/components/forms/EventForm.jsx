@@ -17,7 +17,7 @@ import "../../styles/form.scss";
 import { CustomInput, CustomTextarea, CustomButton } from "../elements";
 import PropTypes from "prop-types";
 
-const EventForm = ({requestData}) => {
+const EventForm = ({ requestData }) => {
   const { itemEdit, addRequireConfirm } = useDialog();
   const {
     register,
@@ -49,7 +49,7 @@ const EventForm = ({requestData}) => {
       <form
         className="form"
         autoComplete="off"
-        onSubmit={handleSubmit(data => {
+        onSubmit={handleSubmit((data) => {
           addRequireConfirm();
           requestData(data);
         })}
@@ -145,6 +145,7 @@ const EventForm = ({requestData}) => {
           />
         )}
         <CustomInput
+          disabled={itemEdit?.item?.membersList?.length > 0}
           version="number"
           label="Points for the event"
           type="number"

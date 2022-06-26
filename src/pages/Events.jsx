@@ -52,8 +52,9 @@ const Events = () => {
       eventDate: moment(data.eventDate).format("yyyy-MM-DD HH:mm"),
       membersList: [],
     };
+    const editedEvent = { ...event, membersList: itemEdit.item.membersList };
     itemEdit.edit
-      ? dispatch(updateNewEvent(event))
+      ? dispatch(updateNewEvent(editedEvent))
       : dispatch(addNewEvent(event));
     hideEdit();
   };
