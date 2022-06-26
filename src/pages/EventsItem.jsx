@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import React from "react";
+import { useSelector } from "react-redux";
 
-import { getNewEvent } from "../store/slices/eventSlice";
+import { ToastContainer } from "react-toastify";
 
 import AllMembers from "../components/events/AllMembers";
 import EventMembers from "../components/events/EventMembers";
@@ -13,13 +11,7 @@ import Spinner from "../components/Spinner";
 import "../styles/event-item.scss";
 
 const EventsItem = () => {
-  const { id } = useParams();
-  const dispatch = useDispatch();
   const { status } = useSelector((state) => state.eventSlice);
-
-  useEffect(() => {
-    dispatch(getNewEvent(id));
-  }, [id]);
 
   return (
     <>

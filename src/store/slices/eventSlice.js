@@ -78,9 +78,10 @@ export const deleteNewMembersList = createAsyncThunk(
 export const addAllUserEvent = createAsyncThunk(
   "eventSlice/addAllUserToMembersList",
   async (id, { rejectWithValue, dispatch, getState }) => {
-    const members = getState().membersSlice.members;
+    const state = getState();
+    const members = state.membersSlice.members;
 
-    const membersList = getState().eventSlice.event.membersList;
+    const membersList = state.eventSlice.event.membersList;
     const unregisteredMem = members.filter(
       (member) => !membersList.includes(member.id)
     );

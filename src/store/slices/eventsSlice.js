@@ -1,6 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { eventsCollectionRef } from "../../lib/firestore.collections";
-import { addDoc, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+  arrayRemove,
+} from "firebase/firestore";
 import { toast } from "react-toastify";
 
 import { db } from "../../lib/init-firebase.js";
@@ -71,6 +78,30 @@ export const updateNewEvent = createAsyncThunk(
   }
 );
 
+export const deleteMemberFromAllEvents = createAsyncThunk(
+  "eventsSlice/deleteMemberFromAllEvents",
+  async (id, { rejectWithValue, dispatch }) => {
+    const response = await getDocs(eventsCollectionRef);
+    const events = response.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    try {
+      for (let i = 0; i < events.length; i++) {
+        const currentMember = events[i].membersList.find(
+          (member) => member === id
+        );
+        await updateDoc(doc(db, "events", events[i].id), {
+          membersList: arrayRemove(currentMember),
+        });
+        dispatch(deleteMember({ id, eid: events[i].id }));
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 //helpers
 const setSuccess = (state) => {
   state.status = "succeeded";
@@ -106,6 +137,13 @@ const eventsSlice = createSlice({
         event.id === action.payload.id ? action.payload : event
       );
     },
+    deleteMember(state, action) {
+      const { id, eid } = action.payload;
+      const currentEvent = state.events.find((event) => event.id === eid);
+      currentEvent.membersList = currentEvent.membersList.filter(
+        (member) => member.id !== id
+      );
+    },
   },
   extraReducers: {
     [getNewEvents.pending]: setLoading,
@@ -120,9 +158,13 @@ const eventsSlice = createSlice({
     [updateNewEvent.pending]: setLoading,
     [updateNewEvent.fulfilled]: setSuccess,
     [updateNewEvent.rejected]: setError,
+    [deleteMemberFromAllEvents.pending]: setLoading,
+    [deleteMemberFromAllEvents.fulfilled]: setSuccess,
+    [deleteMemberFromAllEvents.rejected]: setError,
   },
 });
 
-const { getEvents, addEvent, deleteEvent, updateEvent } = eventsSlice.actions;
+const { getEvents, addEvent, deleteEvent, updateEvent, deleteMember } =
+  eventsSlice.actions;
 export const selectAllEvents = (state) => state.eventsSlice.events;
 export default eventsSlice.reducer;

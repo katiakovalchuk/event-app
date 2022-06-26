@@ -2,13 +2,26 @@ import PropTypes from "prop-types";
 import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { useDispatch } from "react-redux";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { doc, deleteDoc } from "firebase/firestore";
 import { getIndex } from "../../helpers/utils.js";
 
-const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, users }) => {
-  const deleteDocument = async (id) => {
-    await deleteDoc(doc(usersCollectionRef, id));
+import { deleteNewMember } from "../../store/slices/membersSlice.js";
+import { deleteMemberFromAllEvents } from "../../store/slices/eventsSlice.js";
+
+const DelUser = ({
+  modalOpenDel,
+  closeDel,
+  deleteUserToast,
+  delId,
+  setUsers,
+  users,
+}) => {
+  const dispatch = useDispatch();
+  const deleteDocument = (id) => {
+    dispatch(deleteMemberFromAllEvents(id));
+    dispatch(deleteNewMember(id));
   };
 
   function deleteUser() {
@@ -20,9 +33,16 @@ const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, use
   }
 
   return (
-    <Modal size="sm" show={modalOpenDel} onHide={closeDel} aria-labelledby="example-modal-sizes-title-sm">
+    <Modal
+      size="sm"
+      show={modalOpenDel}
+      onHide={closeDel}
+      aria-labelledby="example-modal-sizes-title-sm"
+    >
       <Modal.Header closeButton>
-        <Modal.Title id="example-modal-sizes-title-sm">Do You confirm deleting user?</Modal.Title>
+        <Modal.Title id="example-modal-sizes-title-sm">
+          Do You confirm deleting user?
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="d-flex justify-content-around">

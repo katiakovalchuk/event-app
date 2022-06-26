@@ -3,21 +3,29 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
 import { addUserToEvent } from "../../store/slices/eventSlice";
-import { addEventToMember } from "../../store/slices/membersSlice";
+import {
+  addEventToMember,
+  addNewPointsToMember,
+} from "../../store/slices/membersSlice";
 
 import { ListItem, CustomButton } from "../elements";
 import "../../styles/event-item.scss";
 
-const SingleMember = ({ fullName, image, id }) => {
+const SingleMember = ({ fullName, image, id, scores }) => {
   const dispatch = useDispatch();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const eventId = currentEvent.id;
-  const createList = (uid, id) => {
+  const points = currentEvent.points;
+
+  //updating user score
+  const updatedScore = +scores + +points;
+
+  const createList = (uid, id, updatedScore) => {
+    dispatch(addNewPointsToMember({ uid, id, updatedScore }));
     dispatch(
       addEventToMember({
         uid,
         id,
-        isPresent: false,
         comment: "",
         additionalPoints: 0,
       })
@@ -37,7 +45,9 @@ const SingleMember = ({ fullName, image, id }) => {
         </div>
         <h4 className="members__name">{fullName}</h4>
       </div>
-      <CustomButton onClick={() => createList(id, eventId)}>Add</CustomButton>
+      <CustomButton onClick={() => createList(id, eventId, updatedScore)}>
+        Register
+      </CustomButton>
     </ListItem>
   );
 };
@@ -46,6 +56,7 @@ SingleMember.propTypes = {
   id: PropTypes.string.isRequired,
   fullName: PropTypes.string.isRequired,
   image: PropTypes.string,
+  scores: PropTypes.number,
 };
 
 export default SingleMember;
