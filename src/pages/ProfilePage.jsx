@@ -374,15 +374,25 @@ const ProfilePage = () => {
                 className="card-img-top"
                 alt="profile"
               />
-              <img
-                className={styles.profileImg}
-                src={
-                  file
-                    ? URL.createObjectURL(file)
-                    : users.length && users[getIndex(users, user.email)].image
-                }
-                alt="profile"
-              />
+              <div className="p-1">
+                <label htmlFor="file">
+                  <img
+                    className={styles.profileImg}
+                    src={
+                      file
+                        ? URL.createObjectURL(file)
+                        : users.length && users[getIndex(users, user.email)].image
+                    }
+                    alt="profile"
+                  />
+                </label>
+                <input
+                  type="file"
+                  id="file"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  style={{ display: "none" }}
+                />
+              </div>
 
               <div className="card-body ">
                 <h5 className="card-title">
