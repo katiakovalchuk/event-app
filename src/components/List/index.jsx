@@ -18,7 +18,7 @@ const List = () => {
       );
       return result;
     }
-    return null;
+    return [];
   };
 
   const dispatch = useDispatch();
@@ -65,6 +65,7 @@ const List = () => {
             data={search(localusers)}
             handleSorting={handleSorting}
             columns={columns}
+            query={query}
           />
         </div>
       </Container>
