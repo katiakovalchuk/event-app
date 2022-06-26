@@ -18,11 +18,11 @@ const List = () => {
       );
       return result;
     }
-    return null;
+    return [];
   };
 
   const dispatch = useDispatch();
-  const { users } = useSelector((state) => state.usersSlice);
+  const { users, status } = useSelector((state) => state.usersSlice);
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
@@ -65,6 +65,8 @@ const List = () => {
             data={search(localusers)}
             handleSorting={handleSorting}
             columns={columns}
+            query={query}
+            status={status}
           />
         </div>
       </Container>
