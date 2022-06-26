@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  where,
-  query,
-} from "firebase/firestore";
+import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
+
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
@@ -26,11 +20,11 @@ import useModalDel from "../../hooks/useModalDel";
 
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
-import {useDialog} from "../../context/dialogContext";
+import { useDialog } from "../../context/dialogContext";
 
 const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
-  const [users, setUsers] = useState([]);
+
   const { sendLink } = useUserAuth();
   const [delId, setDelId] = useState("");
 
@@ -41,7 +35,9 @@ const Table = ({ showManagers }) => {
   const { modalOpenEdit, closeEdit, openEdit } = useModalEdit();
   const { modalOpenDel, closeDel, openDel } = useModalDel();
 
-  const {removeRequireConfirm} = useDialog();
+  const { removeRequireConfirm } = useDialog();
+
+  const [allUsers, setUsers] = useState([]);
 
   useEffect(() => {
     if (showManagers) {
@@ -51,6 +47,10 @@ const Table = ({ showManagers }) => {
     }
   });
 
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   const getUsers = () => {
     let q = "";
     if (showManagers) {
@@ -58,21 +58,18 @@ const Table = ({ showManagers }) => {
     } else {
       q = query(usersCollectionRef, where("role", "==", "user"));
     }
-    const keys = ["fullName", "company", "email", "phoneNumber"];
     getDocs(q).then((data) => {
       setUsers(
-        data.docs
-          .map((item) => {
-            return { ...item.data(), id: item.id };
-          })
-          .filter((item) =>
-            keys.some((key) =>
-              item[key].toLowerCase().includes(query_.toLowerCase())
-            )
-          )
+        data.docs.map((item) => {
+          return { ...item.data(), id: item.id };
+        })
       );
-      console.table(users);
     });
+  };
+
+  const searchData = (data) => {
+    const keys = ["fullName", "company", "email", "phoneNumber"];
+    return data.filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())));
   };
 
   const addUserToast = () => {
@@ -115,12 +112,6 @@ const Table = ({ showManagers }) => {
     setQuery(e.target.value);
   }, 350);
 
-  useEffect(() => {
-    if (query_.length === 0 || query_.length > 2) {
-      getUsers();
-    }
-  }, [query_]);
-
   const [editFormData, setEditFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -142,7 +133,7 @@ const Table = ({ showManagers }) => {
 
   const handleSorting = (sortField, sortOrder) => {
     if (sortField) {
-      const sorted = [...users].sort((a, b) => {
+      const sorted = [...allUsers].sort((a, b) => {
         if (a[sortField] === null) return 1;
         if (b[sortField] === null) return -1;
         if (a[sortField] === null && b[sortField] === null) return 0;
@@ -170,7 +161,7 @@ const Table = ({ showManagers }) => {
     setEditFormData(newFormData);
   };
 
-  const handleAddFormSubmit = async e => {
+  const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     closeAdd();
     sendLink(addFormData.email);
@@ -183,18 +174,15 @@ const Table = ({ showManagers }) => {
       birth: addFormData.birth,
       role: addFormData.role,
       rank: 0,
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
+      image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     };
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
     });
-    setUsers([...users, newUser]);
+    setUsers([...allUsers, newUser]);
     addUserToast();
     removeRequireConfirm();
-    if (showManagers) {
-      getUsers();
-    }
+    getUsers();
   };
 
   const handleDeleteClick = (data) => {
@@ -225,7 +213,7 @@ const Table = ({ showManagers }) => {
       })
       .catch((err) => console.log(err.message));
 
-    const newUsers = users.map((obj) => {
+    const newUsers = allUsers.map((obj) => {
       if (obj.email === editContactId) {
         return { ...user };
       }
@@ -256,21 +244,19 @@ const Table = ({ showManagers }) => {
       <Row>
         <Col md={12}>
           <div className="mt-5 d-flex justify-content-between">
-            <Button variant="primary" className="btn btn-primary " onClick={() => {
-              openAdd();
-              removeRequireConfirm();
-            }}>
+            <Button
+              variant="primary"
+              className="btn btn-primary "
+              onClick={() => {
+                openAdd();
+                removeRequireConfirm();
+              }}
+            >
               Add user
             </Button>
 
             <div>
-              <input
-                onChange={search}
-                className="form-control me-2"
-                type="search"
-                placeholder="Search..."
-                aria-label="Search"
-              ></input>
+              <input onChange={search} className="form-control me-2" type="search" placeholder="Search..." aria-label="Search"></input>
             </div>
           </div>
 
@@ -292,6 +278,7 @@ const Table = ({ showManagers }) => {
                 handleEditFormSubmit,
                 handleEditFormChange,
                 addFormData,
+                editFormData,
               }}
             />
           )}
@@ -300,11 +287,10 @@ const Table = ({ showManagers }) => {
               {...{
                 modalOpenDel,
                 closeDel,
-                getUsers,
                 deleteUserToast,
                 delId,
                 setUsers,
-                users,
+                allUsers,
               }}
             />
           }
@@ -314,7 +300,7 @@ const Table = ({ showManagers }) => {
               <table className="table table-admin">
                 <TableHead {...{ columns, handleSorting }} />
                 <TableBody
-                  tableData={users}
+                  tableData={searchData(allUsers)}
                   {...{
                     editContactId,
                     editFormData,
