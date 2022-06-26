@@ -22,7 +22,13 @@ import styles from "../styles/Profile.module.scss";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");
-  const [addFormData, setAddFormData] = useState({});
+  const [addFormData, setAddFormData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    company: "",
+    birth: "",
+  });
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const [loginData, setLoginData] = useState({});
@@ -42,9 +48,15 @@ const ProfilePage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm({
-    mode: "onBlur",
+    mode: "onChange",
+    defaultValues: {
+      fullName: "",
+      phoneNumber: "",
+      company: "",
+      birth: "",
+    },
   });
 
   useEffect(() => {
@@ -232,16 +244,10 @@ const ProfilePage = () => {
                 <input
                   type="email"
                   disabled
-                  {...register("email", {
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: "You need to specify a valid email address",
-                    },
-                    onChange: handleAddFormChange,
-                  })}
                   name="email"
                   id="email"
                   className="form-control"
+                  onChange={handleAddFormChange}
                   placeholder={users.length && users[getIndex(users, user.email)].email}
                 />
                 {<span className={styles.inputError}>{errors.email?.message}</span>}
@@ -274,13 +280,11 @@ const ProfilePage = () => {
                     },
                     minLength: {
                       value: 5,
-                      message:
-                        "This number is too short, not gotta fly, try again, at least 5 numbers",
+                      message: "This phone number is too short, try again, at least 5 numbers",
                     },
                     maxLength: {
                       value: 12,
-                      message:
-                        "...And now it's too damn long, make sure the number is right, would you?",
+                      message: "The phone number is too long, maximum 12 numbers, +380991332801",
                     },
                     onChange: handleAddFormChange,
                   })}
@@ -350,7 +354,9 @@ const ProfilePage = () => {
                 <input
                   name="birth"
                   value={addFormData.birth}
-                  onChange={handleAddFormChange}
+                  {...register("birth", {
+                    onChange: handleAddFormChange,
+                  })}
                   type="date"
                   id="birth"
                   className="form-control"
@@ -358,7 +364,7 @@ const ProfilePage = () => {
               </div>
               <div className="mb-4 text-center">
                 <button
-                  disabled={per !== null && per < 100}
+                  disabled={(per !== null && per < 100) || !isDirty || !isValid}
                   type="submit"
                   className="btn btn-secondary"
                 >

@@ -272,8 +272,8 @@ const EditUser = ({
                   </svg>
                 </span>
                 <input
-                  value={editFormData.birth}
                   name="birth"
+                  value={editFormData.birth}
                   {...register("birth", {
                     onChange: handleEditFormChange,
                   })}
