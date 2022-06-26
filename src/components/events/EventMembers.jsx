@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
 
 import {
   deleteAllMembersFromEvent,
   getNewMembers,
+  subtractPointsOfAllFromScore,
 } from "../../store/slices/membersSlice";
-import { deleteNewMembersList } from "../../store/slices/eventSlice";
+import {
+  getNewEvent,
+  deleteNewMembersList,
+} from "../../store/slices/eventSlice";
 import { search } from "../../helpers/utils";
 import { usePagination } from "../../hooks/usePagination";
 
@@ -16,6 +21,7 @@ import Pagination from "../elements/Pagination";
 
 const EventMembers = () => {
   const dispatch = useDispatch();
+  const { id } = useParams();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const { membersList } = currentEvent;
   const { members, status } = useSelector((state) => state.membersSlice);
@@ -31,10 +37,15 @@ const EventMembers = () => {
     usePagination({ query, status, data: searchedEventMembers });
 
   useEffect(() => {
+    dispatch(getNewEvent(id));
+  }, [id]);
+
+  useEffect(() => {
     dispatch(getNewMembers());
   }, [dispatch]);
 
-  const deleteAllMembers = (id) => {
+  const deleteAllMembers = (id, points, membersList) => {
+    dispatch(subtractPointsOfAllFromScore({ id, points, membersList }));
     dispatch(deleteNewMembersList(id));
     dispatch(deleteAllMembersFromEvent(id));
   };
@@ -59,7 +70,11 @@ const EventMembers = () => {
             <CustomButton
               variant="danger"
               onClick={() => {
-                deleteAllMembers(currentEvent.id);
+                deleteAllMembers(
+                  currentEvent.id,
+                  currentEvent.points,
+                  membersList
+                );
               }}
             >
               Delete All

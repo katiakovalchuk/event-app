@@ -19,7 +19,6 @@ const initialState = {
   status: null,
   error: null,
   members: [],
-  selectAll: false,
 };
 
 export const getNewMembers = createAsyncThunk(
@@ -52,6 +51,29 @@ export const getNewMembers = createAsyncThunk(
     }
   }
 );
+//deleting member with subcollection
+export const deleteNewMember = createAsyncThunk(
+  "membersSlice/deleteNewMember",
+  async (id, { rejectWithValue, dispatch }) => {
+    try {
+      const docRef = doc(db, "users", id);
+      const colRef = collection(docRef, "eventsList");
+      const response = await getDocs(colRef);
+      const allEvents = response.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      for (let i = 0; i < allEvents.length; i++) {
+        await deleteDoc(doc(colRef, allEvents[i].id));
+      }
+      await deleteDoc(doc(db, "users", id));
+
+      dispatch(deleteMember(id));
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 //connect
 export const addEventToMember = createAsyncThunk(
@@ -73,37 +95,14 @@ export const addEventToMember = createAsyncThunk(
 export const deleteEventFromMember = createAsyncThunk(
   "membersSlice/deleteEventFromMember",
   async ({ uid, id }, { rejectWithValue, dispatch }) => {
-    console.log(uid);
     try {
       const docRef = doc(db, "users", uid);
-      console.log(docRef);
       const colRef = collection(docRef, "eventsList");
       await deleteDoc(doc(colRef, id));
       dispatch(deleteEvent({ uid, id }));
     } catch (error) {
       toast.error("Sorry, can't delete user");
       return rejectWithValue(error);
-    }
-  }
-);
-
-export const toggleStatus = createAsyncThunk(
-  "membersSlice/toggleStatus",
-  async ({ uid, id }, { rejectWithValue, dispatch, getState }) => {
-    const currentMember = getState().membersSlice.members.find(
-      (member) => member.id === uid
-    );
-    const currentEvent = currentMember.eventsList.find(
-      (event) => event.id === id
-    );
-    try {
-      const docRef = doc(db, "users", uid);
-      const colRef = collection(docRef, "eventsList");
-      await updateDoc(doc(colRef, id), { isPresent: !currentEvent.isPresent });
-      dispatch(toggleEvent({ uid, id }));
-    } catch (error) {
-      toast.error("Sorry, can't check user");
-      return rejectWithValue(error.message);
     }
   }
 );
@@ -133,7 +132,8 @@ export const updateAdditionalInfo = createAsyncThunk(
 export const deleteEventFromAllUsers = createAsyncThunk(
   "membersSlice/deleteEventFromAllUsers",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    const events = getState().eventsSlice.events;
+    const state = getState();
+    const events = state.eventsSlice.events;
     const currentEvent = events.find((event) => event.id === id);
     const membersList = currentEvent.membersList;
 
@@ -154,7 +154,8 @@ export const deleteEventFromAllUsers = createAsyncThunk(
 export const deleteAllMembersFromEvent = createAsyncThunk(
   "membersSlice/deleteAllMembersFromEvent",
   async (id, { rejectWithValue, getState, dispatch }) => {
-    const membersList = getState().eventSlice.event.membersList;
+    const state = getState();
+    const membersList = state.eventSlice.event.membersList;
 
     try {
       for (let i = 0; i < membersList.length; i++) {
@@ -173,9 +174,10 @@ export const deleteAllMembersFromEvent = createAsyncThunk(
 export const addEventToAllMembers = createAsyncThunk(
   "membersSlice/addAllMembersToEvent",
   async (info, { rejectWithValue, getState, dispatch }) => {
-    const members = getState().membersSlice.members;
+    const state = getState();
+    const members = state.membersSlice.members;
 
-    const membersList = getState().eventSlice.event.membersList;
+    const membersList = state.eventSlice.event.membersList;
     const unregisteredMem = members.filter(
       (member) => !membersList.includes(member.id)
     );
@@ -191,6 +193,112 @@ export const addEventToAllMembers = createAsyncThunk(
       });
     } catch (error) {
       toast.error("Sorry, can't register all users");
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addNewPointsToMember = createAsyncThunk(
+  "membersSlice/addNewPointsToMember",
+  async ({ uid, updatedScore }, { rejectWithValue, dispatch }) => {
+    try {
+      await updateDoc(doc(db, "users", uid), {
+        scores: +updatedScore,
+      });
+      dispatch(changeScore({ uid, updatedScore }));
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addPointstoAllMembers = createAsyncThunk(
+  "membersSlice/addPointstoAllMembers",
+  async ({ points }, { rejectWithValue, dispatch, getState }) => {
+    const state = getState();
+    const members = state.membersSlice.members;
+
+    const membersList = state.eventSlice.event.membersList;
+    const unregisteredMem = members.filter(
+      (member) => !membersList.includes(member.id)
+    );
+    try {
+      for (let i = 0; i < unregisteredMem.length; i++) {
+        const updatedScore = +unregisteredMem[i].scores + points;
+        await updateDoc(doc(db, "users", unregisteredMem[i].id), {
+          scores: updatedScore,
+        });
+        dispatch(changeScore({ uid: unregisteredMem[i].id, updatedScore }));
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addAdditionalPointstoScore = createAsyncThunk(
+  "membersSlice/addAdditionalPointstoScore",
+  async (
+    { uid, additionalPoints },
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    const state = getState();
+    const members = state.membersSlice.members;
+    const currentMember = members.find((member) => member.id === uid);
+
+    const updatedScore = +currentMember.scores + +additionalPoints;
+    try {
+      await updateDoc(doc(db, "users", uid), {
+        scores: updatedScore,
+      });
+      dispatch(changeScore({ uid, updatedScore }));
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const subtractPointsFromScore = createAsyncThunk(
+  "membersSlice/subtractPointsFromScore",
+  async ({ uid, updatedScore }, { rejectWithValue, dispatch }) => {
+    try {
+      await updateDoc(doc(db, "users", uid), {
+        scores: +updatedScore,
+      });
+      dispatch(changeScore({ uid, updatedScore }));
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const subtractPointsOfAllFromScore = createAsyncThunk(
+  "membersSlice/subtractPointsOfAllFromScore",
+  async (
+    { id, points, membersList },
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    const state = getState();
+    const members = state.membersSlice.members;
+
+    const registeredMem = members.filter((member) =>
+      membersList.includes(member.id)
+    );
+
+    try {
+      for (let i = 0; i < registeredMem.length; i++) {
+        const currentEvent = registeredMem[i].eventsList.find(
+          (event) => event.id === id
+        );
+        const sumOfPoints = +points + +currentEvent.additionalPoints;
+        const updatedScore = +registeredMem[i].scores - +sumOfPoints;
+        await updateDoc(doc(db, "users", registeredMem[i].id), {
+          scores: updatedScore,
+        });
+        dispatch(changeScore({ uid: registeredMem[i].id, updatedScore }));
+      }
+    } catch (error) {
+      console.log(error);
       return rejectWithValue(error.message);
     }
   }
@@ -217,7 +325,11 @@ const membersSlice = createSlice({
     getMembers(state, action) {
       state.members = action.payload;
     },
-
+    deleteMember(state, action) {
+      state.members = state.members.filter(
+        (member) => member.id !== action.payload
+      );
+    },
     addEvent(state, action) {
       const { uid } = action.payload;
       const currentMember = state.members.find((member) => member.id === uid);
@@ -230,14 +342,6 @@ const membersSlice = createSlice({
         (member) => member.id !== id
       );
     },
-    toggleEvent(state, action) {
-      const { uid, id } = action.payload;
-      const currentMember = state.members.find((member) => member.id === uid);
-      const currentInfo = currentMember.eventsList.find(
-        (info) => info.id === id
-      );
-      currentInfo.isPresent = !currentInfo.isPresent;
-    },
     updateInfo(state, action) {
       const { uid, id, comment, additionalPoints } = action.payload;
       const currentMember = state.members.find((member) => member.id === uid);
@@ -248,20 +352,25 @@ const membersSlice = createSlice({
       currentInfo.comment = comment;
       currentInfo.additionalPoints = additionalPoints;
     },
+    changeScore(state, action) {
+      const { uid, updatedScore } = action.payload;
+      const currentMember = state.members.find((member) => member.id === uid);
+      currentMember.scores = +updatedScore;
+    },
   },
   extraReducers: {
     [getNewMembers.fulfilled]: setSuccess,
     [getNewMembers.rejected]: setError,
     [getNewMembers.pending]: setLoading,
+    [deleteNewMember.fulfilled]: setSuccess,
+    [deleteNewMember.rejected]: setError,
+    [deleteNewMember.pending]: setLoading,
     [addEventToMember.fulfilled]: setSuccess,
     [addEventToMember.rejected]: setError,
     [addEventToMember.pending]: setLoading,
     [deleteEventFromMember.fulfilled]: setSuccess,
     [deleteEventFromMember.rejected]: setError,
     [deleteEventFromMember.pending]: setLoading,
-    [toggleStatus.fulfilled]: setSuccess,
-    [toggleStatus.rejected]: setError,
-    [toggleStatus.pending]: setLoading,
     [updateAdditionalInfo.fulfilled]: setSuccess,
     [updateAdditionalInfo.rejected]: setError,
     [updateAdditionalInfo.pending]: setLoading,
@@ -274,8 +383,30 @@ const membersSlice = createSlice({
     [addEventToAllMembers.fulfilled]: setSuccess,
     [addEventToAllMembers.rejected]: setError,
     [addEventToAllMembers.pending]: setLoading,
+    [addNewPointsToMember.fulfilled]: setSuccess,
+    [addNewPointsToMember.rejected]: setError,
+    [addNewPointsToMember.pending]: setLoading,
+    [addPointstoAllMembers.fulfilled]: setSuccess,
+    [addPointstoAllMembers.rejected]: setError,
+    [addPointstoAllMembers.pending]: setLoading,
+    [addAdditionalPointstoScore.fulfilled]: setSuccess,
+    [addAdditionalPointstoScore.rejected]: setError,
+    [addAdditionalPointstoScore.pending]: setLoading,
+    [subtractPointsFromScore.fulfilled]: setSuccess,
+    [subtractPointsFromScore.rejected]: setError,
+    [subtractPointsFromScore.pending]: setLoading,
+    [subtractPointsOfAllFromScore.fulfilled]: setSuccess,
+    [subtractPointsOfAllFromScore.rejected]: setError,
+    [subtractPointsOfAllFromScore.pending]: setLoading,
   },
 });
-export const { getMembers, addEvent, deleteEvent, toggleEvent, updateInfo } =
-  membersSlice.actions;
+export const {
+  getMembers,
+  deleteMember,
+  addEvent,
+  deleteEvent,
+  toggleEvent,
+  updateInfo,
+  changeScore,
+} = membersSlice.actions;
 export default membersSlice.reducer;

@@ -54,6 +54,7 @@ export const eventSchema = yup.object().shape(
       .typeError("* Points is a required field")
       .positive("* Points should be a positive number")
       .integer("* Points should be an integer number")
+      .min(10, "* Maximum points are 10")
       .max(100, "* Maximum points are 100"),
   },
   [["eventDescription", "eventDescription"]]
@@ -93,8 +94,8 @@ export const additinalInfo = yup.object().shape(
         is: (value) => value?.length,
         then: yup
           .string()
-          .min(5, "* Min length is 20 characters")
-          .max(100, "* Max length is 600 characters"),
+          .min(5, "* Min length is 5 characters")
+          .max(100, "* Max length is 100 characters"),
         otherwise: yup.string().notRequired(),
       }),
     additionalPoints: yup
