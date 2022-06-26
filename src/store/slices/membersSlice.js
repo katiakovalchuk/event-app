@@ -51,6 +51,29 @@ export const getNewMembers = createAsyncThunk(
     }
   }
 );
+//deleting member with subcollection
+export const deleteNewMember = createAsyncThunk(
+  "membersSlice/deleteNewMember",
+  async (id, { rejectWithValue, dispatch }) => {
+    try {
+      const docRef = doc(db, "users", id);
+      const colRef = collection(docRef, "eventsList");
+      const response = await getDocs(colRef);
+      const allEvents = response.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      for (let i = 0; i < allEvents.length; i++) {
+        await deleteDoc(doc(colRef, allEvents[i].id));
+      }
+      await deleteDoc(doc(db, "users", id));
+
+      dispatch(deleteMember(id));
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 //connect
 export const addEventToMember = createAsyncThunk(
@@ -302,7 +325,11 @@ const membersSlice = createSlice({
     getMembers(state, action) {
       state.members = action.payload;
     },
-
+    deleteMember(state, action) {
+      state.members = state.members.filter(
+        (member) => member.id !== action.payload
+      );
+    },
     addEvent(state, action) {
       const { uid } = action.payload;
       const currentMember = state.members.find((member) => member.id === uid);
@@ -335,6 +362,9 @@ const membersSlice = createSlice({
     [getNewMembers.fulfilled]: setSuccess,
     [getNewMembers.rejected]: setError,
     [getNewMembers.pending]: setLoading,
+    [deleteNewMember.fulfilled]: setSuccess,
+    [deleteNewMember.rejected]: setError,
+    [deleteNewMember.pending]: setLoading,
     [addEventToMember.fulfilled]: setSuccess,
     [addEventToMember.rejected]: setError,
     [addEventToMember.pending]: setLoading,
@@ -372,6 +402,7 @@ const membersSlice = createSlice({
 });
 export const {
   getMembers,
+  deleteMember,
   addEvent,
   deleteEvent,
   toggleEvent,
