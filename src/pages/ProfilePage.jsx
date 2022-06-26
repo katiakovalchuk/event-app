@@ -49,6 +49,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     dispatch(getUsers());
+    const formValues = {
+      birth: users.length && users[getIndex(users, user.email)].birth,
+    };
+    setAddFormData(formValues);
   }, []);
 
   useEffect(() => {
@@ -89,8 +93,7 @@ const ProfilePage = () => {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setPerc(progress);
           switch (snapshot.state) {
             case "paused":
@@ -117,22 +120,14 @@ const ProfilePage = () => {
   const handleAdd = () => {
     const fullName =
       addFormData.fullName ||
-      (users.length &&
-        capitalizeFirstLetter(users[getIndex(users, user.email)].fullName));
-    const email =
-      addFormData.email ||
-      (users.length && users[getIndex(users, user.email)].email);
+      (users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].fullName));
+    const email = addFormData.email || (users.length && users[getIndex(users, user.email)].email);
     const phoneNumber =
-      addFormData.phoneNumber ||
-      (users.length && users[getIndex(users, user.email)].phoneNumber);
+      addFormData.phoneNumber || (users.length && users[getIndex(users, user.email)].phoneNumber);
     const company =
-      addFormData.company ||
-      (users.length && users[getIndex(users, user.email)].company);
-    const birth =
-      addFormData.birth ||
-      (users.length && users[getIndex(users, user.email)].birth);
-    const image =
-      data.img || (users.length && users[getIndex(users, user.email)].image);
+      addFormData.company || (users.length && users[getIndex(users, user.email)].company);
+    const birth = addFormData.birth || (users.length && users[getIndex(users, user.email)].birth);
+    const image = data.img || (users.length && users[getIndex(users, user.email)].image);
 
     const docRef = doc(usersCollectionRef, user.email);
     updateDoc(docRef, {
@@ -174,10 +169,7 @@ const ProfilePage = () => {
           form={<ConfirmForm handleConfirmation={handleSubmitConfirmation} />}
         />
       ) : (
-        <ModalForm
-          title="Change password"
-          form={<PasswordForm requestData={requestData} />}
-        />
+        <ModalForm title="Change password" form={<PasswordForm requestData={requestData} />} />
       )}
       <ToastContainer limit={5} />
       <Container fluid="xl">
@@ -206,8 +198,7 @@ const ProfilePage = () => {
                   {...register("fullName", {
                     pattern: {
                       value: /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/,
-                      message:
-                        "Username shouldn't include any special character or number!",
+                      message: "Username shouldn't include any special character or number!",
                     },
                     onChange: handleAddFormChange,
                   })}
@@ -216,16 +207,10 @@ const ProfilePage = () => {
                   className="form-control"
                   placeholder={
                     users.length &&
-                    capitalizeFirstLetter(
-                      users[getIndex(users, user.email)].fullName
-                    )
+                    capitalizeFirstLetter(users[getIndex(users, user.email)].fullName)
                   }
                 />
-                {
-                  <span className={styles.inputError}>
-                    {errors.fullName?.message}
-                  </span>
-                }
+                {<span className={styles.inputError}>{errors.fullName?.message}</span>}
               </div>
 
               <label htmlFor="email" className="form-label">
@@ -257,15 +242,9 @@ const ProfilePage = () => {
                   name="email"
                   id="email"
                   className="form-control"
-                  placeholder={
-                    users.length && users[getIndex(users, user.email)].email
-                  }
+                  placeholder={users.length && users[getIndex(users, user.email)].email}
                 />
-                {
-                  <span className={styles.inputError}>
-                    {errors.email?.message}
-                  </span>
-                }
+                {<span className={styles.inputError}>{errors.email?.message}</span>}
               </div>
               <label htmlFor="phoneNumber" className="form-label">
                 Phone number:
@@ -291,8 +270,7 @@ const ProfilePage = () => {
                   {...register("phoneNumber", {
                     pattern: {
                       value: /^[0-9+-]+$/,
-                      message:
-                        "This is not a valid mobile phone to me, try again!",
+                      message: "This is not a valid mobile phone to me, try again!",
                     },
                     minLength: {
                       value: 5,
@@ -309,16 +287,9 @@ const ProfilePage = () => {
                   name="phoneNumber"
                   id="phoneNumber"
                   className="form-control"
-                  placeholder={
-                    users.length &&
-                    users[getIndex(users, user.email)].phoneNumber
-                  }
+                  placeholder={users.length && users[getIndex(users, user.email)].phoneNumber}
                 />
-                {
-                  <span className={styles.inputError}>
-                    {errors.phoneNumber?.message}
-                  </span>
-                }
+                {<span className={styles.inputError}>{errors.phoneNumber?.message}</span>}
               </div>
               <label htmlFor="company" className="form-label">
                 Company:
@@ -354,16 +325,10 @@ const ProfilePage = () => {
                   className="form-control"
                   placeholder={
                     users.length &&
-                    capitalizeFirstLetter(
-                      users[getIndex(users, user.email)].company
-                    )
+                    capitalizeFirstLetter(users[getIndex(users, user.email)].company)
                   }
                 />
-                {
-                  <span className={styles.inputError}>
-                    {errors.company?.message}
-                  </span>
-                }
+                {<span className={styles.inputError}>{errors.company?.message}</span>}
               </div>
               <label htmlFor="birth" className="form-label">
                 Date of birth:
@@ -384,6 +349,7 @@ const ProfilePage = () => {
                 </span>
                 <input
                   name="birth"
+                  value={addFormData.birth}
                   onChange={handleAddFormChange}
                   type="date"
                   id="birth"
@@ -420,23 +386,11 @@ const ProfilePage = () => {
 
               <div className="card-body ">
                 <h5 className="card-title">
-                  {users.length &&
-                    capitalizeFirstLetter(
-                      users[getIndex(users, user.email)].role
-                    )}
+                  {users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].role)}
                 </h5>
-                <p>
-                  Rank:{" "}
-                  {users.length && users[getIndex(users, user.email)].rank}
-                </p>
-                <p>
-                  Scores:{" "}
-                  {users.length && users[getIndex(users, user.email)].scores}
-                </p>
-                <button
-                  className="btn btn-secondary mt-3"
-                  onClick={() => handleShowModal()}
-                >
+                <p>Rank: {users.length && users[getIndex(users, user.email)].rank}</p>
+                <p>Scores: {users.length && users[getIndex(users, user.email)].scores}</p>
+                <button className="btn btn-secondary mt-3" onClick={() => handleShowModal()}>
                   Change password
                 </button>
               </div>
@@ -462,9 +416,7 @@ const ProfilePage = () => {
                 </div>
                 <div className="p-1 pt-0">
                   <p className="mb-1 ps-2">Choose Image</p>
-                  <p className="text-muted mb-1 ms-2">
-                    JPG, GIF or PNG. MAX size of 800K
-                  </p>
+                  <p className="text-muted mb-1 ms-2">JPG, GIF or PNG. MAX size of 800K</p>
                 </div>
               </div>
             </div>
