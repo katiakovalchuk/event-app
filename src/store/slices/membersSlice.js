@@ -74,7 +74,6 @@ export const deleteEventFromMember = createAsyncThunk(
   async ({ uid, id }, { rejectWithValue, dispatch }) => {
     try {
       const docRef = doc(db, "users", uid);
-      console.log(docRef);
       const colRef = collection(docRef, "eventsList");
       await deleteDoc(doc(colRef, id));
       dispatch(deleteEvent({ uid, id }));
@@ -179,7 +178,6 @@ export const addEventToAllMembers = createAsyncThunk(
 export const addNewPointsToMember = createAsyncThunk(
   "membersSlice/addNewPointsToMember",
   async ({ uid, updatedScore }, { rejectWithValue, dispatch }) => {
-    console.log(updatedScore);
     try {
       await updateDoc(doc(db, "users", uid), {
         scores: +updatedScore,
@@ -203,7 +201,7 @@ export const addPointstoAllMembers = createAsyncThunk(
     );
     try {
       for (let i = 0; i < unregisteredMem.length; i++) {
-        let updatedScore = +unregisteredMem[i].scores + points;
+        const updatedScore = +unregisteredMem[i].scores + points;
         await updateDoc(doc(db, "users", unregisteredMem[i].id), {
           scores: updatedScore,
         });
@@ -246,6 +244,38 @@ export const subtractPointsFromScore = createAsyncThunk(
       });
       dispatch(changeScore({ uid, updatedScore }));
     } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const subtractPointsOfAllFromScore = createAsyncThunk(
+  "membersSlice/subtractPointsOfAllFromScore",
+  async (
+    { id, points, membersList },
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    const state = getState();
+    const members = state.membersSlice.members;
+
+    const registeredMem = members.filter((member) =>
+      membersList.includes(member.id)
+    );
+
+    try {
+      for (let i = 0; i < registeredMem.length; i++) {
+        const currentEvent = registeredMem[i].eventsList.find(
+          (event) => event.id === id
+        );
+        const sumOfPoints = +points + +currentEvent.additionalPoints;
+        const updatedScore = +registeredMem[i].scores - +sumOfPoints;
+        await updateDoc(doc(db, "users", registeredMem[i].id), {
+          scores: updatedScore,
+        });
+        dispatch(changeScore({ uid: registeredMem[i].id, updatedScore }));
+      }
+    } catch (error) {
+      console.log(error);
       return rejectWithValue(error.message);
     }
   }
@@ -335,6 +365,9 @@ const membersSlice = createSlice({
     [subtractPointsFromScore.fulfilled]: setSuccess,
     [subtractPointsFromScore.rejected]: setError,
     [subtractPointsFromScore.pending]: setLoading,
+    [subtractPointsOfAllFromScore.fulfilled]: setSuccess,
+    [subtractPointsOfAllFromScore.rejected]: setError,
+    [subtractPointsOfAllFromScore.pending]: setLoading,
   },
 });
 export const {

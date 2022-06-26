@@ -6,6 +6,7 @@ import { Container } from "react-bootstrap";
 import {
   deleteAllMembersFromEvent,
   getNewMembers,
+  subtractPointsOfAllFromScore,
 } from "../../store/slices/membersSlice";
 import {
   getNewEvent,
@@ -43,7 +44,8 @@ const EventMembers = () => {
     dispatch(getNewMembers());
   }, [dispatch]);
 
-  const deleteAllMembers = (id) => {
+  const deleteAllMembers = (id, points, membersList) => {
+    dispatch(subtractPointsOfAllFromScore({ id, points, membersList }));
     dispatch(deleteNewMembersList(id));
     dispatch(deleteAllMembersFromEvent(id));
   };
@@ -68,7 +70,11 @@ const EventMembers = () => {
             <CustomButton
               variant="danger"
               onClick={() => {
-                deleteAllMembers(currentEvent.id);
+                deleteAllMembers(
+                  currentEvent.id,
+                  currentEvent.points,
+                  membersList
+                );
               }}
             >
               Delete All
