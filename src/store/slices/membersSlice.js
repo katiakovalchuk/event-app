@@ -218,6 +218,28 @@ export const addPointstoAllMembers = createAsyncThunk(
   }
 );
 
+export const addAdditionalPointstoScore = createAsyncThunk(
+  "membersSlice/addAdditionalPointstoScore",
+  async (
+    { uid, additionalPoints },
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    const state = getState();
+    const members = state.membersSlice.members;
+    const currentMember = members.find((member) => member.id === uid);
+
+    const updatedScore = +currentMember.scores + +additionalPoints;
+    try {
+      await updateDoc(doc(db, "users", uid), {
+        scores: updatedScore,
+      });
+      dispatch(addPointsToMember({ uid, updatedScore }));
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 // helpers
 const setSuccess = (state) => {
   state.status = "succeeded";
@@ -296,6 +318,9 @@ const membersSlice = createSlice({
     [addPointstoAllMembers.fulfilled]: setSuccess,
     [addPointstoAllMembers.rejected]: setError,
     [addPointstoAllMembers.pending]: setLoading,
+    [addAdditionalPointstoScore.fulfilled]: setSuccess,
+    [addAdditionalPointstoScore.rejected]: setError,
+    [addAdditionalPointstoScore.pending]: setLoading,
   },
 });
 export const {

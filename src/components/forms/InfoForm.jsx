@@ -3,7 +3,10 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { updateAdditionalInfo } from "../../store/slices/membersSlice";
+import {
+  updateAdditionalInfo,
+  addAdditionalPointstoScore,
+} from "../../store/slices/membersSlice";
 
 import { CustomInput, CustomTextarea, CustomButton } from "../elements";
 import { useDialog } from "../../context/dialogContext";
@@ -35,6 +38,12 @@ const InfoForm = () => {
 
   const onSubmitInfo = (data) => {
     dispatch(updateAdditionalInfo(data));
+    dispatch(
+      addAdditionalPointstoScore({
+        uid: data.uid,
+        additionalPoints: data.additionalPoints,
+      })
+    );
     reset();
     hideEdit();
   };
