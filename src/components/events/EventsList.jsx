@@ -1,31 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer } from "react-toastify";
-import { GoTrashcan } from "react-icons/go";
-import { RiEdit2Fill } from "react-icons/ri";
-import { BiDownArrow, BiUpArrow } from "react-icons/bi";
+import {useDispatch, useSelector} from "react-redux";
+import {ToastContainer} from "react-toastify";
+import {GoTrashcan} from "react-icons/go";
+import {RiEdit2Fill} from "react-icons/ri";
+import {BiDownArrow, BiUpArrow} from "react-icons/bi";
+import PropTypes from "prop-types";
 
 import {useDialog} from "../../context/dialogContext";
-import { usePaginate2 } from "../../hooks/usePaginate2";
-import {
-  getNewEvents,
-  selectAllEvents,
-} from "../../store/slices/eventsSlice";
+import {getNewEvents, selectAllEvents,} from "../../store/slices/eventsSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
 import Pagination from "../Pagination";
 import SearchInput from "../elements/SearchInput";
 import {CustomButton, ListItem} from "../elements";
-import { search } from "../../helpers/utils";
-import PropTypes from "prop-types";
+import {search} from "../../helpers/utils";
+import {usePagination} from "../../hooks/usePagination";
 
 const EventsList = ({requestIdToDelete}) => {
-  const { startEdit, setDelete, handleShowModal, addRequireConfirm, removeRequireConfirm } = useDialog();
+  const {startEdit, setDelete, handleShowModal, addRequireConfirm, removeRequireConfirm} = useDialog();
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
-  const { status } = useSelector((state) => state.eventsSlice);
+  const {status} = useSelector((state) => state.eventsSlice);
 
   const [query, setQuery] = useState("");
   const [order, setOrder] = useState("asc");
@@ -48,24 +45,26 @@ const EventsList = ({requestIdToDelete}) => {
     filterBtn === "all"
       ? events
       : filterBtn === "future"
-      ? events.filter((event) => moment(event.eventDate).isAfter(today))
-      : events.filter((event) => moment(event.eventDate).isBefore(today));
+        ? events.filter((event) => moment(event.eventDate).isAfter(today))
+        : events.filter((event) => moment(event.eventDate).isBefore(today));
 
   const sortedEvents =
     order === "asc"
       ? [...filteredEvents].sort((a, b) =>
-          b.eventDate.localeCompare(a.eventDate)
-        )
+        b.eventDate.localeCompare(a.eventDate)
+      )
       : [...filteredEvents].sort((a, b) =>
-          a.eventDate.localeCompare(b.eventDate)
-        );
+        a.eventDate.localeCompare(b.eventDate)
+      );
 
   const searchedEvents = search(sortedEvents, keys, query);
 
-  const { pageCount, handlePageClick, displayItems } = usePaginate2({
-    data: searchedEvents,
-    itemsPerPage: 6,
-  });
+  const {
+    pageCount,
+    currentPage,
+    handlePageClick,
+    currentItems
+  } = usePagination({query, status, order, data: searchedEvents, filterBtn});
 
   //sort
   const handleOrder = () =>
@@ -84,8 +83,8 @@ const EventsList = ({requestIdToDelete}) => {
 
   return (
     <section className="event">
-      <ToastContainer limit={5} />
-      {status === "loading" && <Spinner />}
+      <ToastContainer limit={5}/>
+      {status === "loading" && <Spinner/>}
       <div className="event__func">
         <div className="event__filter">
           <CustomButton
@@ -112,14 +111,14 @@ const EventsList = ({requestIdToDelete}) => {
         />
       </div>
 
-      {displayItems?.length ? (
+      {currentItems?.length ? (
         <div className="mb-5">
           <div className="event__sort" onClick={handleOrder}>
             <span>Name</span>
-            {order === "asc" ? <BiDownArrow /> : <BiUpArrow />}
+            {order === "asc" ? <BiDownArrow/> : <BiUpArrow/>}
           </div>
           <ul className="event__list">
-            {displayItems.map((event) => (
+            {currentItems.map((event) => (
               <ListItem link key={event.id}>
                 <EventPart {...event} />
                 <div className="event__actions">
@@ -130,7 +129,7 @@ const EventsList = ({requestIdToDelete}) => {
                       removeRequireConfirm();
                     }}
                   >
-                    <RiEdit2Fill className="icon" />
+                    <RiEdit2Fill className="icon"/>
                   </CustomButton>
                   <CustomButton
                     className="action"
@@ -142,7 +141,7 @@ const EventsList = ({requestIdToDelete}) => {
                       requestIdToDelete(event.id);
                     }}
                   >
-                    <GoTrashcan className="icon" />
+                    <GoTrashcan className="icon"/>
                   </CustomButton>
                 </div>
               </ListItem>
@@ -151,6 +150,7 @@ const EventsList = ({requestIdToDelete}) => {
           <div className="mt-3">
             <Pagination
               pageCount={pageCount}
+              currentPage={currentPage}
               handlePageClick={handlePageClick}
             />
           </div>

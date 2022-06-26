@@ -1,30 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { Container } from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {Container} from "react-bootstrap";
 
-import {
-  addEventToAllMembers,
-  getNewMembers,
-  addPointstoAllMembers,
-} from "../../store/slices/membersSlice";
-import { getNewEvent, addAllUserEvent } from "../../store/slices/eventSlice";
-
-import { usePaginate2 } from "../../hooks/usePaginate2";
-import { search } from "../../helpers/utils";
+import {addEventToAllMembers, addPointstoAllMembers, getNewMembers,} from "../../store/slices/membersSlice";
+import {addAllUserEvent, getNewEvent} from "../../store/slices/eventSlice";
+import {search} from "../../helpers/utils";
 
 import SingleMember from "./SingleMember";
-import { CustomButton } from "../elements";
-import Pagination from "../elements/Pagination";
+import {CustomButton} from "../elements";
+import Pagination from "../Pagination";
+import {usePagination} from "../../hooks/usePagination";
 
 import "../../styles/event-item.scss";
 
 const AllMembers = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const {id} = useParams();
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const members = useSelector((state) => state.membersSlice.members);
-  const { membersList } = currentEvent;
+  const {membersList} = currentEvent;
   const points = currentEvent.points;
   const [query, setQuery] = useState("");
 
@@ -33,10 +28,8 @@ const AllMembers = () => {
   );
   const keys = ["fullName"];
   const searchedAllMembers = search(otherMembers, keys, query);
-  const { displayItems, handlePageClick, pageCount } = usePaginate2({
-    data: searchedAllMembers,
-    itemsPerPage: 4,
-  });
+  const {pageCount, currentPage, handlePageClick, currentItems} =
+    usePagination({query, data: searchedAllMembers, itemsPerPage: 4});
 
   useEffect(() => {
     dispatch(getNewEvent(id));
@@ -47,7 +40,7 @@ const AllMembers = () => {
   }, [dispatch]);
 
   const addAllMembers = (id, points) => {
-    dispatch(addPointstoAllMembers({ points }));
+    dispatch(addPointstoAllMembers({points}));
     dispatch(
       addEventToAllMembers({
         id,
@@ -89,16 +82,17 @@ const AllMembers = () => {
           )}
         </div>
 
-        {displayItems.length ? (
+        {currentItems.length ? (
           <>
             <ul className="members__list">
-              {displayItems?.map((member) => (
+              {currentItems?.map((member) => (
                 <SingleMember key={member.id} {...member} />
               ))}
             </ul>
             <div className="mt-3">
               <Pagination
                 pageCount={pageCount}
+                currentPage={currentPage}
                 handlePageClick={handlePageClick}
               />
             </div>
