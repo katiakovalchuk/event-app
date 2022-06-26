@@ -20,15 +20,14 @@ export const usePagination = ({
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
-    setCurrentItems(data.slice(itemOffset, endOffset));
+    setCurrentItems(data?.slice(itemOffset, endOffset));
     setCurrentPage(endOffset / itemsPerPage - 1);
-    setPageCount(Math.ceil(data.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage, data.length, status]);
+    setPageCount(Math.ceil(data?.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, data?.length, status]);
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % data.length;
     setItemOffset(newOffset);
-    console.log(newOffset);
   };
 
   return {

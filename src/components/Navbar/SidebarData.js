@@ -36,7 +36,7 @@ export const SidebarData = {
     {
       title: "Events",
       path: "/",
-      icon: <RiIcons.RiCalendarEventFill />,
+      icon: <RiIcons.RiCalendarEventFill size={28} />,
       cName: "nav-text",
     },
     {

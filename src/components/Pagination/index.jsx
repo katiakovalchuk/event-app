@@ -2,7 +2,6 @@ import ReactPaginate from "react-paginate";
 import PropTypes from "prop-types";
 
 const Pagination = ({pageCount, currentPage, handlePageClick}) => {
-
     return (
         <ReactPaginate
             breakLabel="..."
