@@ -6,6 +6,7 @@ import { Container } from "react-bootstrap";
 import {
   addEventToAllMembers,
   getNewMembers,
+  addPointstoAllMembers,
 } from "../../store/slices/membersSlice";
 import { getNewEvent, addAllUserEvent } from "../../store/slices/eventSlice";
 
@@ -24,6 +25,7 @@ const AllMembers = () => {
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const members = useSelector((state) => state.membersSlice.members);
   const { membersList } = currentEvent;
+  const points = currentEvent.points;
   const [query, setQuery] = useState("");
 
   const otherMembers = members.filter(
@@ -44,7 +46,8 @@ const AllMembers = () => {
     dispatch(getNewMembers());
   }, [dispatch]);
 
-  const addAllMembers = (id) => {
+  const addAllMembers = (id, points) => {
+    dispatch(addPointstoAllMembers({ points }));
     dispatch(
       addEventToAllMembers({
         id,
@@ -77,7 +80,7 @@ const AllMembers = () => {
               </span>
               <CustomButton
                 onClick={() => {
-                  addAllMembers(currentEvent.id);
+                  addAllMembers(currentEvent.id, points);
                 }}
               >
                 Register All

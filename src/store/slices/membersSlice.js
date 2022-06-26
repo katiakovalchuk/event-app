@@ -155,7 +155,7 @@ export const addEventToAllMembers = createAsyncThunk(
     const state = getState();
     const members = state.membersSlice.members;
 
-    const membersList = getState().eventSlice.event.membersList;
+    const membersList = state.eventSlice.event.membersList;
     const unregisteredMem = members.filter(
       (member) => !membersList.includes(member.id)
     );
@@ -176,13 +176,42 @@ export const addEventToAllMembers = createAsyncThunk(
   }
 );
 
-export const addPointsToMember = createAsyncThunk(
-  "membersSlice/addPointsToMember",
-  async ({ uid, updatedScore }, { rejectWithValue }) => {
+export const addNewPointsToMember = createAsyncThunk(
+  "membersSlice/addNewPointsToMember",
+  async ({ uid, updatedScore }, { rejectWithValue, dispatch }) => {
+    console.log(updatedScore);
     try {
       await updateDoc(doc(db, "users", uid), {
-        scores: updatedScore,
+        scores: +updatedScore,
       });
+      dispatch(addPointsToMember({ uid, updatedScore }));
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addPointstoAllMembers = createAsyncThunk(
+  "membersSlice/addPointstoAllMembers",
+  async ({ points }, { rejectWithValue, dispatch, getState }) => {
+    const state = getState();
+    const members = state.membersSlice.members;
+
+    const membersList = state.eventSlice.event.membersList;
+    const unregisteredMem = members.filter(
+      (member) => !membersList.includes(member.id)
+    );
+    try {
+      for (let i = 0; i < unregisteredMem.length; i++) {
+        let updatedScore = +unregisteredMem[i].scores + points;
+        await updateDoc(doc(db, "users", unregisteredMem[i].id), {
+          scores: updatedScore,
+        });
+        dispatch(
+          addPointsToMember({ uid: unregisteredMem[i].id, updatedScore })
+        );
+      }
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -233,6 +262,11 @@ const membersSlice = createSlice({
       currentInfo.comment = comment;
       currentInfo.additionalPoints = additionalPoints;
     },
+    addPointsToMember(state, action) {
+      const { uid, updatedScore } = action.payload;
+      const currentMember = state.members.find((member) => member.id === uid);
+      currentMember.scores = +updatedScore;
+    },
   },
   extraReducers: {
     [getNewMembers.fulfilled]: setSuccess,
@@ -256,11 +290,20 @@ const membersSlice = createSlice({
     [addEventToAllMembers.fulfilled]: setSuccess,
     [addEventToAllMembers.rejected]: setError,
     [addEventToAllMembers.pending]: setLoading,
-    [addPointsToMember.fulfilled]: setSuccess,
-    [addPointsToMember.rejected]: setError,
-    [addPointsToMember.pending]: setLoading,
+    [addNewPointsToMember.fulfilled]: setSuccess,
+    [addNewPointsToMember.rejected]: setError,
+    [addNewPointsToMember.pending]: setLoading,
+    [addPointstoAllMembers.fulfilled]: setSuccess,
+    [addPointstoAllMembers.rejected]: setError,
+    [addPointstoAllMembers.pending]: setLoading,
   },
 });
-export const { getMembers, addEvent, deleteEvent, toggleEvent, updateInfo } =
-  membersSlice.actions;
+export const {
+  getMembers,
+  addEvent,
+  deleteEvent,
+  toggleEvent,
+  updateInfo,
+  addPointsToMember,
+} = membersSlice.actions;
 export default membersSlice.reducer;

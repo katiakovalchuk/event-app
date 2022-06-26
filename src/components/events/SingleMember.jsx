@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { addUserToEvent } from "../../store/slices/eventSlice";
 import {
   addEventToMember,
-  addPointsToMember,
+  addNewPointsToMember,
 } from "../../store/slices/membersSlice";
 
 import { ListItem, CustomButton } from "../elements";
@@ -21,6 +21,7 @@ const SingleMember = ({ fullName, image, id, scores }) => {
   const updatedScore = +scores + +points;
 
   const createList = (uid, id, updatedScore) => {
+    dispatch(addNewPointsToMember({ uid, id, updatedScore }));
     dispatch(
       addEventToMember({
         uid,
@@ -29,14 +30,12 @@ const SingleMember = ({ fullName, image, id, scores }) => {
         additionalPoints: 0,
       })
     );
-
     dispatch(
       addUserToEvent({
         uid,
         id,
       })
     );
-    dispatch(addPointsToMember({ uid, id, updatedScore }));
   };
   return (
     <ListItem>
