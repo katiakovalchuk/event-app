@@ -278,6 +278,7 @@ const Table = ({ showManagers }) => {
                 handleEditFormSubmit,
                 handleEditFormChange,
                 addFormData,
+                editFormData,
               }}
             />
           )}
