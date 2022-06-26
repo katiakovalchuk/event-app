@@ -184,9 +184,8 @@ export const addNewPointsToMember = createAsyncThunk(
       await updateDoc(doc(db, "users", uid), {
         scores: +updatedScore,
       });
-      dispatch(addPointsToMember({ uid, updatedScore }));
+      dispatch(changeScore({ uid, updatedScore }));
     } catch (error) {
-      console.log(error);
       return rejectWithValue(error.message);
     }
   }
@@ -208,9 +207,7 @@ export const addPointstoAllMembers = createAsyncThunk(
         await updateDoc(doc(db, "users", unregisteredMem[i].id), {
           scores: updatedScore,
         });
-        dispatch(
-          addPointsToMember({ uid: unregisteredMem[i].id, updatedScore })
-        );
+        dispatch(changeScore({ uid: unregisteredMem[i].id, updatedScore }));
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -233,9 +230,23 @@ export const addAdditionalPointstoScore = createAsyncThunk(
       await updateDoc(doc(db, "users", uid), {
         scores: updatedScore,
       });
-      dispatch(addPointsToMember({ uid, updatedScore }));
+      dispatch(changeScore({ uid, updatedScore }));
     } catch (error) {
       return rejectWithValue(error);
+    }
+  }
+);
+
+export const subtractPointsFromScore = createAsyncThunk(
+  "membersSlice/subtractPointsFromScore",
+  async ({ uid, updatedScore }, { rejectWithValue, dispatch }) => {
+    try {
+      await updateDoc(doc(db, "users", uid), {
+        scores: +updatedScore,
+      });
+      dispatch(changeScore({ uid, updatedScore }));
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -284,7 +295,7 @@ const membersSlice = createSlice({
       currentInfo.comment = comment;
       currentInfo.additionalPoints = additionalPoints;
     },
-    addPointsToMember(state, action) {
+    changeScore(state, action) {
       const { uid, updatedScore } = action.payload;
       const currentMember = state.members.find((member) => member.id === uid);
       currentMember.scores = +updatedScore;
@@ -321,6 +332,9 @@ const membersSlice = createSlice({
     [addAdditionalPointstoScore.fulfilled]: setSuccess,
     [addAdditionalPointstoScore.rejected]: setError,
     [addAdditionalPointstoScore.pending]: setLoading,
+    [subtractPointsFromScore.fulfilled]: setSuccess,
+    [subtractPointsFromScore.rejected]: setError,
+    [subtractPointsFromScore.pending]: setLoading,
   },
 });
 export const {
@@ -329,6 +343,6 @@ export const {
   deleteEvent,
   toggleEvent,
   updateInfo,
-  addPointsToMember,
+  changeScore,
 } = membersSlice.actions;
 export default membersSlice.reducer;

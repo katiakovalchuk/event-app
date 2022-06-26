@@ -7,12 +7,15 @@ import { GoTrashcan } from "react-icons/go";
 
 import { useDialog } from "../../context/dialogContext";
 import { deleteUserFromEvent } from "../../store/slices/eventSlice";
-import { deleteEventFromMember } from "../../store/slices/membersSlice";
+import {
+  deleteEventFromMember,
+  subtractPointsFromScore,
+} from "../../store/slices/membersSlice";
 
 import InfoForm from "../forms/InfoForm";
 import { ModalForm, ListItem, CustomButton } from "../elements";
 
-const EventMember = ({ image, fullName, eventsList }) => {
+const EventMember = ({ image, fullName, eventsList, scores }) => {
   const dispatch = useDispatch();
   const { startEdit } = useDialog();
   const currentEvent = useSelector((state) => state.eventSlice.event);
@@ -21,7 +24,12 @@ const EventMember = ({ image, fullName, eventsList }) => {
   const currentInfo =
     eventsList.length > 0 && eventsList.find((event) => event.id === eventId);
 
-  const deleteUser = (uid, id) => {
+  //updatedScore
+  const updatedScore =
+    +scores - (+currentEvent.points + +currentInfo?.additionalPoints);
+
+  const deleteUser = (uid, id, updatedScore) => {
+    dispatch(subtractPointsFromScore({ uid, updatedScore }));
     dispatch(
       deleteUserFromEvent({
         id,
@@ -65,7 +73,9 @@ const EventMember = ({ image, fullName, eventsList }) => {
               <CustomButton
                 variant="danger"
                 className="action"
-                onClick={() => deleteUser(currentInfo.uid, currentInfo.id)}
+                onClick={() =>
+                  deleteUser(currentInfo.uid, currentInfo.id, updatedScore)
+                }
               >
                 <GoTrashcan />
               </CustomButton>
@@ -81,6 +91,7 @@ const EventMember = ({ image, fullName, eventsList }) => {
 EventMember.propTypes = {
   fullName: PropTypes.string,
   image: PropTypes.string,
+  scores: PropTypes.number,
   eventsList: PropTypes.arrayOf(
     PropTypes.shape({
       isPresent: PropTypes.bool,
