@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Table from "react-bootstrap/Table";
 import PropTypes from "prop-types";
 
@@ -9,12 +9,18 @@ import "./style.css";
 const TableForm = ({data, handleSorting, columns, query}) => {
   const [sortField, setSortField] = useState("");
   const [order, setOrder] = useState("asc");
+  const [status, setStatus] = useState(false);
+
+  useEffect(() => {
+    setStatus(prev => !prev);
+  }, [data]);
+
   const {
     pageCount,
     currentPage,
     handlePageClick,
     currentItems
-  } = usePagination({query, data, itemsPerPage: 8});
+  } = usePagination({query, data, status, itemsPerPage: 8});
 
   const handleSortingChange = (accessor) => {
     const sortOrder =
@@ -23,7 +29,6 @@ const TableForm = ({data, handleSorting, columns, query}) => {
     setOrder(sortOrder);
     handleSorting(accessor, sortOrder);
   };
-  console.log(currentItems);
 
   return (
     <div className="table-responsive-md">
@@ -76,5 +81,5 @@ TableForm.propTypes = {
   data: PropTypes.array,
   handleSorting: PropTypes.func,
   columns: PropTypes.array,
-  query: PropTypes.string
+  query: PropTypes.string,
 };

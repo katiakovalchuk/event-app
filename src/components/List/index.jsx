@@ -22,7 +22,7 @@ const List = () => {
   };
 
   const dispatch = useDispatch();
-  const { users } = useSelector((state) => state.usersSlice);
+  const { users, status } = useSelector((state) => state.usersSlice);
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
@@ -66,6 +66,7 @@ const List = () => {
             handleSorting={handleSorting}
             columns={columns}
             query={query}
+            status={status}
           />
         </div>
       </Container>
