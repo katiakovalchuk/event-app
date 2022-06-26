@@ -26,7 +26,7 @@ function Navbar() {
 
   const [theme, setTheme] = useState("light");
 
-  let themeToggle = () => {
+  const themeToggle = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
   };
 

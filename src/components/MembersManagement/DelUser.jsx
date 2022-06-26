@@ -3,8 +3,6 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch } from "react-redux";
-import { usersCollectionRef } from "../../lib/firestore.collections.js";
-import { doc, deleteDoc } from "firebase/firestore";
 import { getIndex } from "../../helpers/utils.js";
 
 import { deleteNewMember } from "../../store/slices/membersSlice.js";
