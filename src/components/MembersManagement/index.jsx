@@ -11,6 +11,7 @@ import EditUser from "./EditUser";
 import DelUser from "./DelUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
+import SearchInput from "../elements/SearchInput";
 
 import { useUserAuth } from "../../context/authContext";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
@@ -69,7 +70,9 @@ const Table = ({ showManagers }) => {
 
   const searchData = (data) => {
     const keys = ["fullName", "company", "email", "phoneNumber"];
-    return data.filter((item) => keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase())));
+    return data.filter((item) =>
+      keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase()))
+    );
   };
 
   const addUserToast = () => {
@@ -174,7 +177,8 @@ const Table = ({ showManagers }) => {
       birth: addFormData.birth,
       role: addFormData.role,
       rank: 0,
-      image: "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
+      image:
+        "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     };
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
@@ -256,7 +260,7 @@ const Table = ({ showManagers }) => {
             </Button>
 
             <div>
-              <input onChange={search} className="form-control me-2" type="search" placeholder="Search..." aria-label="Search"></input>
+              <SearchInput handleChange={search} />
             </div>
           </div>
 
