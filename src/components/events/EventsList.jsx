@@ -8,7 +8,7 @@ import {BiDownArrow, BiUpArrow} from "react-icons/bi";
 import PropTypes from "prop-types";
 
 import {useDialog} from "../../context/dialogContext";
-import {getNewEvents, selectAllEvents,} from "../../store/slices/eventsSlice";
+import {getNewEvents, selectAllEvents} from "../../store/slices/eventsSlice";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";

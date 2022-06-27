@@ -3,14 +3,15 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {Container} from "react-bootstrap";
 
-import {deleteAllMembersFromEvent, getNewMembers, subtractPointsOfAllFromScore,} from "../../store/slices/membersSlice";
-import {deleteNewMembersList, getNewEvent,} from "../../store/slices/eventSlice";
+import {getNewMembers} from "../../store/slices/membersSlice";
+import {getNewEvent,} from "../../store/slices/eventSlice";
 import {search} from "../../helpers/utils";
 import {usePagination} from "../../hooks/usePagination";
 
 import EventMember from "./EventMember";
 import {CustomButton} from "../elements";
 import Pagination from "../Pagination";
+import {useDialog} from "../../context/dialogContext";
 
 const EventMembers = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const EventMembers = () => {
   const {membersList} = currentEvent;
   const {members, status} = useSelector((state) => state.membersSlice);
   const [query, setQuery] = useState("");
+  const {handleShowModal, setUserModalMode} = useDialog();
 
   const eventMembers = members.filter((member) =>
     membersList.includes(member.id)
@@ -36,12 +38,6 @@ const EventMembers = () => {
   useEffect(() => {
     dispatch(getNewMembers());
   }, [dispatch]);
-
-  const deleteAllMembers = (id, points, membersList) => {
-    dispatch(subtractPointsOfAllFromScore({id, points, membersList}));
-    dispatch(deleteNewMembersList(id));
-    dispatch(deleteAllMembersFromEvent(id));
-  };
 
   return (
     <section className="members">
@@ -63,12 +59,10 @@ const EventMembers = () => {
             <CustomButton
               variant="danger"
               onClick={() => {
-                deleteAllMembers(
-                  currentEvent.id,
-                  currentEvent.points,
-                  membersList
-                );
-              }}
+                handleShowModal();
+                setUserModalMode("deleteAll");
+              }
+              }
             >
               Delete All
             </CustomButton>

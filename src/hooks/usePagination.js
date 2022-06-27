@@ -30,7 +30,7 @@ export const usePagination = ({
     setCurrentItems(data?.slice(itemOffset, endOffset));
     setCurrentPage(endOffset / itemsPerPage - 1);
     setPageCount(Math.ceil(data?.length / itemsPerPage));
-  }, [itemOffset, itemsPerPage, data?.length, status, order]);
+  }, [itemOffset, itemsPerPage, data?.length, status, order, filterBtn]);
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % data.length;
