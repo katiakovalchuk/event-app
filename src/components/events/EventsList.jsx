@@ -8,6 +8,8 @@ import PropTypes from "prop-types";
 
 import { useDialog } from "../../context/dialogContext";
 import { getNewEvents, selectAllEvents } from "../../store/slices/eventsSlice";
+import { search } from "../../helpers/utils";
+import { usePagination } from "../../hooks/usePagination";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
@@ -15,8 +17,6 @@ import Pagination from "../Pagination";
 import SearchInput from "../elements/SearchInput";
 import EventSort from "./EventSort";
 import { CustomButton, ListItem } from "../elements";
-import { search } from "../../helpers/utils";
-import { usePagination } from "../../hooks/usePagination";
 
 const EventsList = ({ requestIdToDelete }) => {
   const {
