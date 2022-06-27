@@ -10,7 +10,7 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
   return (
     <tr key={data.id}>
       {columns.map(({ accessor }) => {
-        const tData = data[accessor] ? data[accessor] : "——";
+        const tData = String(data[accessor]) ? data[accessor] : "——";
         if (accessor === "action") {
           return (
             <td className="text-center align-middle" key={accessor}>

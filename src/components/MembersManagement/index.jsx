@@ -174,7 +174,7 @@ const Table = ({ showManagers }) => {
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
       company: addFormData.company,
-      scores: addFormData.scores,
+      scores: 0,
       birth: addFormData.birth,
       role: addFormData.role,
       rank: 0,
