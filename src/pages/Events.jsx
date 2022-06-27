@@ -68,7 +68,7 @@ const Events = () => {
     <Container fluid="xl">
       <CustomButton
         variant="primary"
-        version="add"
+        className="add"
         onClick={() => {
           handleShowModal();
           removeRequireConfirm();

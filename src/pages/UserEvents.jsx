@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
-import { BiComment, BiDownArrow, BiUpArrow } from "react-icons/bi";
+import { BiComment } from "react-icons/bi";
 
 import { usePagination } from "../hooks/usePagination";
+import { useDialog } from "../context/dialogContext";
 
 import { getUserEventsList } from "../store/slices/userSlice";
 import { getNewEvents } from "../store/slices/eventsSlice";
@@ -13,6 +14,7 @@ import { search } from "../helpers/utils";
 import { ellipsify, capitalizeFirstLet } from "../helpers/string";
 
 import SearchInput from "../components/elements/SearchInput";
+import EventSort from "../components/events/EventSort";
 import Spinner from "../components/Spinner";
 import { ListItem } from "../components/elements";
 import Pagination from "../components/Pagination";
@@ -21,11 +23,11 @@ import "../styles/eventlist.scss";
 
 const UserEvents = () => {
   const dispatch = useDispatch();
+  const { order } = useDialog();
   const id = useSelector((state) => state.userSlice.user.email);
   const { eventsList, status } = useSelector((state) => state.userSlice);
   const { events } = useSelector((state) => state.eventsSlice);
   const [query, setQuery] = useState("");
-  const [order, setOrder] = useState("asc");
   const keys = [
     "eventDate",
     "eventName",
@@ -38,18 +40,20 @@ const UserEvents = () => {
     return eventsList.some((item) => item.id === event.id);
   });
 
-  const handleOrder = () =>
-    setOrder((prev) => (prev === "asc" ? "dsc" : "asc"));
-
   const sortedEvents =
     order === "asc"
       ? [...userEvents].sort((a, b) => b.eventDate.localeCompare(a.eventDate))
       : [...userEvents].sort((a, b) => a.eventDate.localeCompare(b.eventDate));
 
   const searchedEvents = search(sortedEvents, keys, query);
-
   const { pageCount, currentPage, handlePageClick, currentItems } =
-    usePagination({ query, status, order, data: searchedEvents });
+    usePagination({
+      query,
+      status,
+      order,
+      data: searchedEvents,
+      itemsPerPage: 6,
+    });
 
   useEffect(() => {
     dispatch(getUserEventsList(id));
@@ -64,7 +68,7 @@ const UserEvents = () => {
       {status === "loading" && <Spinner />}
       <article className="event">
         <Container fluid="xl">
-          <div className="mb-3">
+          <div className="mb-3 d-flex justify-content-end">
             <SearchInput
               className="event-search"
               handleChange={(e) => setQuery(e.target.value)}
@@ -72,10 +76,7 @@ const UserEvents = () => {
           </div>
           {currentItems?.length ? (
             <>
-              <div className="event__sort" onClick={handleOrder}>
-                <span>Name</span>
-                {order === "asc" ? <BiDownArrow /> : <BiUpArrow />}
-              </div>
+              <EventSort />
               <ul className="event__list">
                 {currentItems?.map((event) => {
                   const currentInfo = eventsList.find(
