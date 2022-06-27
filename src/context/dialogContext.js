@@ -7,6 +7,7 @@ const DialogContext = createContext();
 export const DialogContextProvider = ({ children }) => {
   const [showModal, setShowModal] = useState(false);
   const [requireConfirm, setRequireConfirm] = useState(false);
+  const [order, setOrder] = useState("asc");
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -15,11 +16,11 @@ export const DialogContextProvider = ({ children }) => {
   const removeRequireConfirm = () => setRequireConfirm(false);
 
   const [userMode, setUserMode] = useState(null);
-  const setUserModalMode = mode => setUserMode(mode);
+  const setUserModalMode = (mode) => setUserMode(mode);
 
   const [data, setData] = useState({});
   const requestData = () => data;
-  const addData = data => setData(data);
+  const addData = (data) => setData(data);
 
   const notifySuccess = (content) => {
     toast.success(content);
@@ -27,6 +28,9 @@ export const DialogContextProvider = ({ children }) => {
   const notifyError = (content) => {
     toast.error(content);
   };
+
+  const handleOrder = () =>
+    setOrder((prev) => (prev === "asc" ? "dsc" : "asc"));
 
   const defaultItemEdit = { item: {}, edit: false };
   const [itemEdit, setItemEdit] = useState(defaultItemEdit);
@@ -68,10 +72,12 @@ export const DialogContextProvider = ({ children }) => {
         deleteMode,
         setDelete,
         removeDelete,
+        order,
+        handleOrder,
         userMode,
         setUserModalMode,
         addData,
-        requestData
+        requestData,
       }}
     >
       {children}
