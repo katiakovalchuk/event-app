@@ -53,7 +53,7 @@ const EventDescription = () => {
               {eventPlace === "city" ? (
                 <h4 className="eventItem__text">{cityName}</h4>
               ) : (
-                <div className="eventItem__text">{eventPlace}</div>
+                <p className="eventItem__text">{eventPlace}</p>
               )}
             </div>
 

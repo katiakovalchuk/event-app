@@ -77,17 +77,20 @@
     @extend %fira-600;
     font-size: 22px;
     line-height: 32px;
+
     @media (max-width: 768px) {
       font-size: 20px;
       line-height: 26px;
       margin-bottom: 5px;
+      max-width: 400px;
     }
     @media (max-width: 540px) {
-      font-size: 18px;
-      line-height: 20px;
+      font-size: 20px;
+      line-height: 22px;
     }
   }
   &__descr {
+    font-size: 14px;
     text-align: justify;
     padding: 0 5px;
     @media (max-width: 1000px) {
@@ -107,11 +110,13 @@
   }
 
   &__place {
+    @extend %fira-600;
     @media (max-width: 768px) {
       display: none;
     }
   }
   &__date {
+    font-weight: 500;
   }
   &-search {
     width: 350px;
@@ -119,5 +124,55 @@
     @media (max-width: 540px) {
       width: 100%;
     }
+  }
+
+  &__userlink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    padding-left: 15px;
+    height: 90px;
+    &:hover {
+      color: inherit;
+    }
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: start;
+      justify-content: center;
+    }
+  }
+
+  &__userleft {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    @media (max-width: 1000px) {
+      width: auto;
+    }
+  }
+
+  &__usermiddle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+  }
+
+  &__points {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 26px;
+    margin-right: 5px;
+
+    @media (max-width: 540px) {
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
+
+  &__userright {
+    display: flex;
+    flex-direction: column;
   }
 }
