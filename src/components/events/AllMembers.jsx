@@ -63,7 +63,7 @@ const AllMembers = () => {
       <Container fluid="xl">
         <div className="members__statistic">
           {otherMembers.length > 0 && (
-            <SearchInput onChange={(e) => setQuery(e.target.value)} />
+            <SearchInput handleChange={(e) => setQuery(e.target.value)} />
           )}
           {otherMembers.length > 1 && (
             <div className="members__statistic-right">

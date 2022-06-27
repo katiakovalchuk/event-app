@@ -51,7 +51,7 @@ const EventMembers = () => {
       <Container fluid="xl">
         <div className="members__statistic">
           {eventMembers.length > 0 && (
-            <SearchInput onChange={(e) => setQuery(e.target.value)} />
+            <SearchInput handleChange={(e) => setQuery(e.target.value)} />
           )}
           {eventMembers.length > 1 && (
             <div className="members__statistic-right">
