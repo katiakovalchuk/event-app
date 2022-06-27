@@ -10,7 +10,7 @@ export const eventSchema = yup.object().shape(
         "Only alphabets and numbers are allowed for this field "
       )
       .min(4, "* Min length is 4 characters")
-      .max(50, "* Max length is 50 characters"),
+      .max(40, "* Max length is 40 characters"),
     eventDate: yup
       .date()
       .required("* Event Date is a required field")
@@ -95,7 +95,7 @@ export const additinalInfo = yup.object().shape(
         then: yup
           .string()
           .min(5, "* Min length is 5 characters")
-          .max(100, "* Max length is 100 characters"),
+          .max(200, "* Max length is 200 characters"),
         otherwise: yup.string().notRequired(),
       }),
     additionalPoints: yup

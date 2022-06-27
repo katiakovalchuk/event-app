@@ -83,15 +83,13 @@ const EventForm = ({ requestData }) => {
                   version="date"
                   label="Date of the Event"
                   icon={<AiOutlineClockCircle />}
+                  error={!!errors?.eventDate}
+                  errorText={errors?.eventDate?.message}
                 />
               }
             />
           )}
         />
-
-        <span className="error-text text-danger">
-          {errors?.eventDate?.message}
-        </span>
         <CustomTextarea
           label="Description of the event"
           name="eventDescription"
