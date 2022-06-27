@@ -87,7 +87,7 @@ const AddUser = ({
                   id="name"
                   name="fullName"
                   className="form-control"
-                  placeholder="Enter a name..."
+                  placeholder="Enter a name"
                 />
                 {<span className="inputError">{errors.fullName?.message}</span>}
               </div>
@@ -121,7 +121,7 @@ const AddUser = ({
                   name="email"
                   id="email"
                   className="form-control"
-                  placeholder="Enter an email..."
+                  placeholder="Enter an email"
                 />
                 {<span className="inputError">{errors.email?.message}</span>}
               </div>
@@ -166,7 +166,7 @@ const AddUser = ({
                   type="number"
                   id="number"
                   className="form-control"
-                  placeholder="Enter a phone number..."
+                  placeholder="Enter a phone number"
                 />
                 {<span className="inputError">{errors.phoneNumber?.message}</span>}
               </div>
@@ -204,7 +204,7 @@ const AddUser = ({
                   type="text"
                   id="firm"
                   className="form-control"
-                  placeholder="Enter a company name..."
+                  placeholder="Enter a company name"
                 />
                 {<span className="inputError">{errors.company?.message}</span>}
               </div>
@@ -234,7 +234,7 @@ const AddUser = ({
                     },
                     minLength: {
                       value: 1,
-                      message: "At least one number...",
+                      message: "At least one number",
                     },
                     maxLength: {
                       value: 4,
@@ -246,7 +246,7 @@ const AddUser = ({
                   type="number"
                   id="scores"
                   className="form-control"
-                  placeholder="Enter a score..."
+                  placeholder="Enter a score"
                 />
                 {<span className="inputError">{errors.scores?.message}</span>}
               </div>
@@ -270,7 +270,7 @@ const AddUser = ({
                 </span>
                 <input
                   name="birth"
-                  placeholder="Enter a birth date..."
+                  placeholder="Enter a birth date"
                   required
                   id="startDate"
                   className="form-control "
