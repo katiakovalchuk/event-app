@@ -19,6 +19,7 @@ import { getErrorMessage } from "../helpers/getErrorMessage";
 import { errMessages } from "../components/Login/messages";
 
 import styles from "../styles/Profile.module.scss";
+import Switch from "../components/Switch/Switch";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");
@@ -406,6 +407,7 @@ const ProfilePage = () => {
                 </h5>
                 <p>Rank: {users.length && users[getIndex(users, user.email)].rank}</p>
                 <p>Scores: {users.length && users[getIndex(users, user.email)].scores}</p>
+                <Switch label={"Show birthday"} />
                 <button className="btn btn-secondary mt-3" onClick={() => handleShowModal()}>
                   Change password
                 </button>
