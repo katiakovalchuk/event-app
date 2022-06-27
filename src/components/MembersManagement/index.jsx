@@ -178,6 +178,7 @@ const Table = ({ showManagers }) => {
       birth: addFormData.birth,
       role: addFormData.role,
       rank: 0,
+      isShowBirthday: false,
       image:
         "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     };
