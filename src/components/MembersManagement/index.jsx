@@ -125,6 +125,7 @@ const Table = ({ showManagers }) => {
   });
 
   const columns = [
+    { label: "User image", accessor: "image", sortable: false },
     { label: "Full Name", accessor: "fullName", sortable: true },
     { label: "Email", accessor: "email", sortable: true },
     { label: "Phone number", accessor: "phoneNumber", sortable: true },
@@ -227,6 +228,7 @@ const Table = ({ showManagers }) => {
     setEditContactId(null);
     editUserToast();
     removeRequireConfirm();
+    getUsers();
   };
 
   const handleEditClick = (event, contact) => {
