@@ -157,7 +157,7 @@ const AddUser = ({
                     },
                     maxLength: {
                       value: 12,
-                      message: "The phone number is too long, maximum 12 numbers, +380991332801?",
+                      message: "The phone number is too long, maximum 12 numbers, +380991332801",
                     },
                     onChange: handleAddFormChange,
                   })}

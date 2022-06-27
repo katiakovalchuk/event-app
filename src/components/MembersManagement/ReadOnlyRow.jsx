@@ -43,6 +43,12 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
               <img src={tData} className="profileImage" alt="User image" />
             </td>
           );
+        } else if (accessor === "birth") {
+          return (
+            <td className="align-middle" key={accessor}>
+              {data.isShowBirthDay ? tData : <span>Hidden by user</span>}
+            </td>
+          );
         } else {
           return (
             <td className="align-middle" key={accessor}>
