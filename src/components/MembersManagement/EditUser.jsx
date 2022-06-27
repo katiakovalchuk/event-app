@@ -91,7 +91,7 @@ const EditUser = ({
                   autoFocus
                   {...register("fullName", {
                     pattern: {
-                      value: /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/,
+                      value: /^(?=.{1,50}$)[a-z\u0400-\u04FF]+(?:['_.\s][a-z\u0400-\u04FF]+)*$/i,
                       message: "Username shouldn't include any special character or number!",
                     },
                     onChange: handleEditFormChange,
