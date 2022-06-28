@@ -25,7 +25,11 @@ const TableHead = ({ columns, handleSorting, getOrder }) => {
               : "default"
             : "";
           return (
-            <th key={label} onClick={sortable ? () => handleSortingChange(accessor) : null} className={cl}>
+            <th
+              key={label}
+              onClick={sortable ? () => handleSortingChange(accessor) : null}
+              className={`${cl} tablehead`}
+            >
               {label}
             </th>
           );

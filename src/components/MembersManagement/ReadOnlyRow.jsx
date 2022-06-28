@@ -11,7 +11,7 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
   return (
     <tr key={data.id}>
       {columns.map(({ accessor }) => {
-        const tData = data[accessor] ? data[accessor] : "——";
+        const tData = String(data[accessor]) ? data[accessor] : "——";
         if (accessor === "action") {
           return (
             <td className="text-center align-middle" key={accessor}>
@@ -42,6 +42,12 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
           return (
             <td className="imageField" key={accessor}>
               <img src={tData} className="profileImage" alt="User image" />
+            </td>
+          );
+        } else if (accessor === "birth") {
+          return (
+            <td className="align-middle" key={accessor}>
+              {data.isShowBirthday ? tData : <span>Hidden by user</span>}
             </td>
           );
         } else {
