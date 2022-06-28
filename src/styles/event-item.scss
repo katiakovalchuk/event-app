@@ -223,10 +223,14 @@
     border: 1px solid darken($bg-gray, 10%);
     margin-right: 20px;
 
-    @media (max-width: 540px) {
+    @media (max-width: 768px) {
       height: 40px;
       width: 40px;
       margin-right: 10px;
+    }
+
+    @media (max-width: 540px) {
+      display: none;
     }
   }
   &__img {
@@ -239,10 +243,16 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 22px;
+    width: 400px;
 
-    @media (max-width: 540px) {
+    @media (max-width: 768px) {
       font-size: 16px;
       line-height: 20px;
+      width: 250px;
+    }
+
+    @media (max-width: 540px) {
+      width: auto;
     }
   }
   &__content {
@@ -250,9 +260,13 @@
     align-items: center;
   }
   &__addInfo {
-    margin-left: 50px;
+    margin: 0 50px;
     display: flex;
     align-items: center;
+
+    @media (max-width: 768px) {
+      margin: 0 20px;
+    }
   }
   &__comment {
     display: flex;

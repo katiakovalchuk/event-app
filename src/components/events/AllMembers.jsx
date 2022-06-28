@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
@@ -28,9 +29,14 @@ const AllMembers = () => {
   const points = currentEvent.points;
   const [query, setQuery] = useState("");
 
+  //check date
+  const today = moment().format("yyyy-MM-DD HH:mm");
+  const check = moment(currentEvent.eventDate).isAfter(today);
+
   const otherMembers = members.filter(
     (member) => !membersList.includes(member.id)
   );
+
   const keys = ["firstName", "lastName"];
   const searchedAllMembers = search(otherMembers, keys, query);
   const { pageCount, currentPage, handlePageClick, currentItems } =
@@ -51,7 +57,6 @@ const AllMembers = () => {
         id,
         comment: "",
         additionalPoints: 0,
-        isPresent: false,
       })
     );
     dispatch(addAllUserEvent(id));
@@ -73,6 +78,7 @@ const AllMembers = () => {
             )}
             {otherMembers.length > 1 && (
               <CustomButton
+                disabled={check}
                 onClick={() => {
                   addAllMembers(currentEvent.id, points);
                 }}

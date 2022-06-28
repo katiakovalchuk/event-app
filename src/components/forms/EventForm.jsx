@@ -69,6 +69,7 @@ const EventForm = ({ requestData }) => {
           name="eventDate"
           render={({ field }) => (
             <DatePicker
+              disabled={itemEdit?.item?.membersList?.length > 0}
               className="input-input form-control"
               onChange={(date) => field.onChange(date)}
               selected={field.value}

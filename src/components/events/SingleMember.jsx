@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -16,6 +17,10 @@ const SingleMember = ({ firstName, lastName, image, id, scores }) => {
   const currentEvent = useSelector((state) => state.eventSlice.event);
   const eventId = currentEvent.id;
   const points = currentEvent.points;
+
+  //check date
+  const today = moment().format("yyyy-MM-DD HH:mm");
+  const check = moment(currentEvent.eventDate).isAfter(today);
 
   //updating user score
   const updatedScore = +scores + +points;
@@ -45,7 +50,10 @@ const SingleMember = ({ firstName, lastName, image, id, scores }) => {
         </div>
         <h4 className="members__name">{`${firstName} ${lastName}`}</h4>
       </div>
-      <CustomButton onClick={() => createList(id, eventId, updatedScore)}>
+      <CustomButton
+        disabled={check}
+        onClick={() => createList(id, eventId, updatedScore)}
+      >
         Register
       </CustomButton>
     </ListItem>

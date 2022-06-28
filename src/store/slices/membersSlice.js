@@ -293,10 +293,10 @@ export const subtractPointsOfAllFromScore = createAsyncThunk(
 
     try {
       for (let i = 0; i < registeredMem.length; i++) {
-        const currentEvent = registeredMem[i].eventsList.find(
+        const currentInfo = registeredMem[i].eventsList.find(
           (event) => event.id === id
         );
-        const sumOfPoints = +points + +currentEvent.additionalPoints;
+        const sumOfPoints = +points + +currentInfo.additionalPoints;
         const updatedScore = +registeredMem[i].scores - +sumOfPoints;
         await updateDoc(doc(db, "users", registeredMem[i].id), {
           scores: updatedScore,

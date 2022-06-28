@@ -22,54 +22,50 @@ const EventMember = ({ image, firstName, lastName, eventsList, scores }) => {
 
   return (
     <>
-      {eventsList.length && (
-        <>
-          {" "}
-          <ListItem>
-            <div className="members__content">
-              <div className="members__img-container">
-                <img className="members__img" src={image} alt={lastName} />
-              </div>
-              <h4 className="members__name">{`${firstName} ${lastName}`}</h4>
-              <div className="members__addInfo">
-                {currentInfo?.comment && (
-                  <span className="members__comment">
-                    <BiCommentCheck />
-                  </span>
-                )}
-                {currentInfo?.additionalPoints > 0 && (
-                  <span className="members__points">
-                    {currentInfo?.additionalPoints}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="members__actions">
-              <CustomButton
-                className="action"
-                onClick={() => {
-                  startEdit(currentInfo);
-                  setUserModalMode("comment");
-                }}
-              >
-                <BiCommentAdd />
-              </CustomButton>
+      {" "}
+      <ListItem>
+        <div className="members__content">
+          <div className="members__img-container">
+            <img className="members__img" src={image} alt={lastName} />
+          </div>
+          <h4 className="members__name">{`${firstName} ${lastName}`}</h4>
+          <div className="members__addInfo">
+            {currentInfo?.comment && (
+              <span className="members__comment">
+                <BiCommentCheck />
+              </span>
+            )}
+            {currentInfo?.additionalPoints > 0 && (
+              <span className="members__points">
+                {currentInfo?.additionalPoints}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="members__actions">
+          <CustomButton
+            className="action"
+            onClick={() => {
+              startEdit(currentInfo);
+              setUserModalMode("comment");
+            }}
+          >
+            <BiCommentAdd />
+          </CustomButton>
 
-              <CustomButton
-                variant="danger"
-                className="action"
-                onClick={() => {
-                  setUserModalMode("delete");
-                  handleShowModal();
-                  addData({ currentInfo, updatedScore });
-                }}
-              >
-                <GoTrashcan />
-              </CustomButton>
-            </div>
-          </ListItem>
-        </>
-      )}
+          <CustomButton
+            variant="danger"
+            className="action"
+            onClick={() => {
+              setUserModalMode("delete");
+              handleShowModal();
+              addData({ currentInfo, updatedScore });
+            }}
+          >
+            <GoTrashcan />
+          </CustomButton>
+        </div>
+      </ListItem>
     </>
   );
 };

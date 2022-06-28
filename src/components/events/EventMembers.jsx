@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
@@ -22,6 +23,10 @@ const EventMembers = () => {
   const { members, status } = useSelector((state) => state.membersSlice);
   const [query, setQuery] = useState("");
   const { handleShowModal, setUserModalMode } = useDialog();
+
+  //
+  const today = moment().format("yyyy-MM-DD HH:mm");
+  const check = moment(currentEvent.eventDate).isAfter(today);
 
   const eventMembers = members.filter((member) =>
     membersList.includes(member.id)
@@ -90,6 +95,10 @@ const EventMembers = () => {
               />
             </div>
           </>
+        ) : check ? (
+          <p className="check-text">
+            {`Sorry, can't register user before ${currentEvent.eventDate}`}{" "}
+          </p>
         ) : (
           <p className="check-text">Please register users to the Event</p>
         )}
