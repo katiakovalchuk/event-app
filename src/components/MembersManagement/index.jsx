@@ -43,11 +43,7 @@ const Table = ({ showManagers }) => {
   const [status, setStatus] = useState(false);
 
   useEffect(() => {
-    if (showManagers) {
-      document.title = "Managers Management";
-    } else {
-      document.title = "Members Management";
-    }
+    document.title = showManagers ? "Managers Management" : "Members Management";
   });
 
   useEffect(() => {
@@ -225,7 +221,7 @@ const Table = ({ showManagers }) => {
 
     const newUsers = allUsers.map((obj) => {
       if (obj.email === editContactId) {
-        return { ...user, image: obj.image};
+        return { ...user, image: obj.image };
       }
       return obj;
     });
@@ -234,7 +230,7 @@ const Table = ({ showManagers }) => {
     editUserToast();
     removeRequireConfirm();
     getUsers();
-    setStatus(prev => !prev);
+    setStatus((prev) => !prev);
   };
 
   const handleEditClick = (event, contact) => {
@@ -251,7 +247,7 @@ const Table = ({ showManagers }) => {
     setEditFormData(formValues);
   };
 
-  const getOrder = order => setOrder(order);
+  const getOrder = (order) => setOrder(order);
 
   return (
     <Container>
@@ -325,7 +321,7 @@ const Table = ({ showManagers }) => {
                     handleCancelClick,
                     query_,
                     order,
-                    status
+                    status,
                   }}
                 />
               </table>
