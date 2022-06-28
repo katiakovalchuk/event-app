@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import Table from "react-bootstrap/Table";
 import PropTypes from "prop-types";
 
@@ -9,18 +9,13 @@ import "./style.css";
 const TableForm = ({data, handleSorting, columns, query}) => {
   const [sortField, setSortField] = useState("");
   const [order, setOrder] = useState("asc");
-  const [status, setStatus] = useState(false);
-
-  useEffect(() => {
-    setStatus(prev => !prev);
-  }, [data]);
 
   const {
     pageCount,
     currentPage,
     handlePageClick,
     currentItems
-  } = usePagination({query, data, status, itemsPerPage: 8});
+  } = usePagination({query, data, order, itemsPerPage: 5});
 
   const handleSortingChange = (accessor) => {
     const sortOrder =

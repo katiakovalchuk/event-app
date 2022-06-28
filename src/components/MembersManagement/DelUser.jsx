@@ -3,21 +3,12 @@ import React from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch } from "react-redux";
-import { usersCollectionRef } from "../../lib/firestore.collections.js";
-import { doc, deleteDoc } from "firebase/firestore";
 import { getIndex } from "../../helpers/utils.js";
 
 import { deleteNewMember } from "../../store/slices/membersSlice.js";
 import { deleteMemberFromAllEvents } from "../../store/slices/eventsSlice.js";
 
-const DelUser = ({
-  modalOpenDel,
-  closeDel,
-  deleteUserToast,
-  delId,
-  setUsers,
-  users,
-}) => {
+const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, allUsers }) => {
   const dispatch = useDispatch();
   const deleteDocument = (id) => {
     dispatch(deleteMemberFromAllEvents(id));
@@ -25,9 +16,9 @@ const DelUser = ({
   };
 
   function deleteUser() {
-    const userIndex = getIndex(users, delId);
+    const userIndex = getIndex(allUsers, delId);
     deleteDocument(delId);
-    setUsers(users.filter((user, index) => index !== userIndex));
+    setUsers(allUsers.filter((user, index) => index !== userIndex));
     deleteUserToast();
     closeDel();
   }
@@ -40,9 +31,7 @@ const DelUser = ({
       aria-labelledby="example-modal-sizes-title-sm"
     >
       <Modal.Header closeButton>
-        <Modal.Title id="example-modal-sizes-title-sm">
-          Do You confirm deleting user?
-        </Modal.Title>
+        <Modal.Title id="example-modal-sizes-title-sm">Do You confirm deleting user?</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="d-flex justify-content-around">
@@ -64,7 +53,7 @@ DelUser.propTypes = {
   deleteUserToast: PropTypes.func.isRequired,
   delId: PropTypes.string.isRequired,
   setUsers: PropTypes.func.isRequired,
-  users: PropTypes.array.isRequired,
+  allUsers: PropTypes.array.isRequired,
 };
 
 export default DelUser;

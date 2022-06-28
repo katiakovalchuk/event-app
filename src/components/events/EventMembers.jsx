@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
 
-import {
-  deleteAllMembersFromEvent,
-  getNewMembers,
-  subtractPointsOfAllFromScore,
-} from "../../store/slices/membersSlice";
-import {
-  getNewEvent,
-  deleteNewMembersList,
-} from "../../store/slices/eventSlice";
+import { getNewMembers } from "../../store/slices/membersSlice";
+import { getNewEvent } from "../../store/slices/eventSlice";
 import { search } from "../../helpers/utils";
 import { usePagination } from "../../hooks/usePagination";
+import { useDialog } from "../../context/dialogContext";
 
 import EventMember from "./EventMember";
 import { CustomButton } from "../elements";
-import Pagination from "../elements/Pagination";
+import Pagination from "../Pagination";
+import SearchInput from "../elements/SearchInput";
 
 const EventMembers = () => {
   const dispatch = useDispatch();
@@ -26,6 +21,7 @@ const EventMembers = () => {
   const { membersList } = currentEvent;
   const { members, status } = useSelector((state) => state.membersSlice);
   const [query, setQuery] = useState("");
+  const { handleShowModal, setUserModalMode } = useDialog();
 
   const eventMembers = members.filter((member) =>
     membersList.includes(member.id)
@@ -34,7 +30,12 @@ const EventMembers = () => {
   const searchedEventMembers = search(eventMembers, keys, query);
 
   const { pageCount, currentPage, handlePageClick, currentItems } =
-    usePagination({ query, status, data: searchedEventMembers });
+    usePagination({
+      query,
+      status,
+      data: searchedEventMembers,
+      itemsPerPage: 4,
+    });
 
   useEffect(() => {
     dispatch(getNewEvent(id));
@@ -44,42 +45,30 @@ const EventMembers = () => {
     dispatch(getNewMembers());
   }, [dispatch]);
 
-  const deleteAllMembers = (id, points, membersList) => {
-    dispatch(subtractPointsOfAllFromScore({ id, points, membersList }));
-    dispatch(deleteNewMembersList(id));
-    dispatch(deleteAllMembersFromEvent(id));
-  };
-
   return (
     <section className="members">
       <h4 className="members__title">Registered Users</h4>
       <Container fluid="xl">
         <div className="members__statistic">
-          <input
-            className="event-search form-control"
-            type="search"
-            placeholder="Search..."
-            aria-label="Search"
-            onChange={(e) => setQuery(e.target.value)}
-          />
-
-          <div className="members__statistic-right">
-            <span className="members__amount">
-              Users: {eventMembers.length}
-            </span>
-            <CustomButton
-              variant="danger"
-              onClick={() => {
-                deleteAllMembers(
-                  currentEvent.id,
-                  currentEvent.points,
-                  membersList
-                );
-              }}
-            >
-              Delete All
-            </CustomButton>
-          </div>
+          {eventMembers.length > 0 && (
+            <SearchInput onChange={(e) => setQuery(e.target.value)} />
+          )}
+          {eventMembers.length > 1 && (
+            <div className="members__statistic-right">
+              <span className="members__amount">
+                Users: {eventMembers.length}
+              </span>
+              <CustomButton
+                variant="danger"
+                onClick={() => {
+                  handleShowModal();
+                  setUserModalMode("deleteAll");
+                }}
+              >
+                Delete All
+              </CustomButton>
+            </div>
+          )}
         </div>
 
         {currentItems.length ? (

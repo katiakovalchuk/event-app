@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  getDocs,
-  where,
-  query,
-} from "firebase/firestore";
+import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
+
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
@@ -17,6 +11,7 @@ import EditUser from "./EditUser";
 import DelUser from "./DelUser";
 import TableBody from "./TableBody";
 import TableHead from "./TableHead";
+import SearchInput from "../elements/SearchInput";
 
 import { useUserAuth } from "../../context/authContext";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
@@ -26,11 +21,11 @@ import useModalDel from "../../hooks/useModalDel";
 
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
-import {useDialog} from "../../context/dialogContext";
+import { useDialog } from "../../context/dialogContext";
 
 const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
-  const [users, setUsers] = useState([]);
+
   const { sendLink } = useUserAuth();
   const [delId, setDelId] = useState("");
 
@@ -41,7 +36,11 @@ const Table = ({ showManagers }) => {
   const { modalOpenEdit, closeEdit, openEdit } = useModalEdit();
   const { modalOpenDel, closeDel, openDel } = useModalDel();
 
-  const {removeRequireConfirm} = useDialog();
+  const { removeRequireConfirm } = useDialog();
+
+  const [allUsers, setUsers] = useState([]);
+  const [order, setOrder] = useState(null);
+  const [status, setStatus] = useState(false);
 
   useEffect(() => {
     if (showManagers) {
@@ -51,6 +50,10 @@ const Table = ({ showManagers }) => {
     }
   });
 
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   const getUsers = () => {
     let q = "";
     if (showManagers) {
@@ -58,21 +61,20 @@ const Table = ({ showManagers }) => {
     } else {
       q = query(usersCollectionRef, where("role", "==", "user"));
     }
-    const keys = ["fullName", "company", "email", "phoneNumber"];
     getDocs(q).then((data) => {
       setUsers(
-        data.docs
-          .map((item) => {
-            return { ...item.data(), id: item.id };
-          })
-          .filter((item) =>
-            keys.some((key) =>
-              item[key].toLowerCase().includes(query_.toLowerCase())
-            )
-          )
+        data.docs.map((item) => {
+          return { ...item.data(), id: item.id };
+        })
       );
-      console.table(users);
     });
+  };
+
+  const searchData = (data) => {
+    const keys = ["firstName", "lastName", "company", "email", "phoneNumber"];
+    return data.filter((item) =>
+      keys.some((key) => item[key]?.toLowerCase().includes(query_.toLowerCase()))
+    );
   };
 
   const addUserToast = () => {
@@ -115,34 +117,30 @@ const Table = ({ showManagers }) => {
     setQuery(e.target.value);
   }, 350);
 
-  useEffect(() => {
-    if (query_.length === 0 || query_.length > 2) {
-      getUsers();
-    }
-  }, [query_]);
-
   const [editFormData, setEditFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
     email: "",
     company: "",
-    scores: "",
     birth: "",
   });
 
   const columns = [
-    { label: "Full Name", accessor: "fullName", sortable: true },
+    { label: "User image", accessor: "image", sortable: false },
+    { label: "First name", accessor: "firstName", sortable: true },
+    { label: "Last name", accessor: "lastName", sortable: true },
     { label: "Email", accessor: "email", sortable: true },
     { label: "Phone number", accessor: "phoneNumber", sortable: true },
     { label: "Company", accessor: "company", sortable: true },
     { label: "Scores", accessor: "scores", sortable: true },
-    { label: "Date of birth", accessor: "birth", sortable: true },
+    { label: "Date of birth", accessor: "birth", sortable: false },
     { label: "Actions", accessor: "action", sortable: false },
   ];
 
   const handleSorting = (sortField, sortOrder) => {
     if (sortField) {
-      const sorted = [...users].sort((a, b) => {
+      const sorted = [...allUsers].sort((a, b) => {
         if (a[sortField] === null) return 1;
         if (b[sortField] === null) return -1;
         if (a[sortField] === null && b[sortField] === null) return 0;
@@ -170,31 +168,31 @@ const Table = ({ showManagers }) => {
     setEditFormData(newFormData);
   };
 
-  const handleAddFormSubmit = async e => {
+  const handleAddFormSubmit = async (e) => {
     e.preventDefault();
     closeAdd();
     sendLink(addFormData.email);
     const newUser = {
-      fullName: addFormData.fullName,
+      firstName: addFormData.firstName,
+      lastName: addFormData.lastName,
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
       company: addFormData.company,
-      scores: addFormData.scores,
+      scores: 0,
       birth: addFormData.birth,
       role: addFormData.role,
       rank: 0,
+      isShowBirthday: false,
       image:
         "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     };
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
     });
-    setUsers([...users, newUser]);
+    setUsers([...allUsers, newUser]);
     addUserToast();
     removeRequireConfirm();
-    if (showManagers) {
-      getUsers();
-    }
+    getUsers();
   };
 
   const handleDeleteClick = (data) => {
@@ -210,11 +208,11 @@ const Table = ({ showManagers }) => {
     closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     const user = {
-      fullName: editFormData.fullName,
+      firstName: editFormData.firstName,
+      lastName: editFormData.lastName,
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
       company: editFormData.company,
-      scores: editFormData.scores,
       birth: editFormData.birth,
     };
     updateDoc(docRef, {
@@ -225,9 +223,9 @@ const Table = ({ showManagers }) => {
       })
       .catch((err) => console.log(err.message));
 
-    const newUsers = users.map((obj) => {
+    const newUsers = allUsers.map((obj) => {
       if (obj.email === editContactId) {
-        return { ...user };
+        return { ...user, image: obj.image};
       }
       return obj;
     });
@@ -235,42 +233,44 @@ const Table = ({ showManagers }) => {
     setEditContactId(null);
     editUserToast();
     removeRequireConfirm();
+    getUsers();
+    setStatus(prev => !prev);
   };
 
   const handleEditClick = (event, contact) => {
     setEditContactId(contact.email);
     openEdit();
     const formValues = {
-      fullName: contact.fullName,
+      firstName: contact.firstName,
+      lastName: contact.lastName,
       phoneNumber: contact.phoneNumber,
       email: contact.email,
       company: contact.company,
-      scores: contact.scores,
       birth: contact.birth,
     };
     setEditFormData(formValues);
   };
+
+  const getOrder = order => setOrder(order);
 
   return (
     <Container>
       <Row>
         <Col md={12}>
           <div className="mt-5 d-flex justify-content-between">
-            <Button variant="primary" className="btn btn-primary " onClick={() => {
-              openAdd();
-              removeRequireConfirm();
-            }}>
+            <Button
+              variant="primary"
+              className="btn btn-primary "
+              onClick={() => {
+                openAdd();
+                removeRequireConfirm();
+              }}
+            >
               Add user
             </Button>
 
             <div>
-              <input
-                onChange={search}
-                className="form-control me-2"
-                type="search"
-                placeholder="Search..."
-                aria-label="Search"
-              ></input>
+              <SearchInput handleChange={search} />
             </div>
           </div>
 
@@ -292,6 +292,7 @@ const Table = ({ showManagers }) => {
                 handleEditFormSubmit,
                 handleEditFormChange,
                 addFormData,
+                editFormData,
               }}
             />
           )}
@@ -300,11 +301,10 @@ const Table = ({ showManagers }) => {
               {...{
                 modalOpenDel,
                 closeDel,
-                getUsers,
                 deleteUserToast,
                 delId,
                 setUsers,
-                users,
+                allUsers,
               }}
             />
           }
@@ -312,9 +312,9 @@ const Table = ({ showManagers }) => {
           <form onSubmit={handleEditFormSubmit}>
             <div className="table-responsive-lg">
               <table className="table table-admin">
-                <TableHead {...{ columns, handleSorting }} />
+                <TableHead {...{ columns, handleSorting, getOrder }} />
                 <TableBody
-                  tableData={users}
+                  tableData={searchData(allUsers)}
                   {...{
                     editContactId,
                     editFormData,
@@ -323,6 +323,9 @@ const Table = ({ showManagers }) => {
                     handleEditClick,
                     handleEditFormChange,
                     handleCancelClick,
+                    query_,
+                    order,
+                    status
                   }}
                 />
               </table>

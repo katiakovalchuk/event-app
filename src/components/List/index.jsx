@@ -57,10 +57,8 @@ const List = () => {
   return (
     <>
       <Container fluid="xl">
-        <div className="membersForm ">
-          <SearchInput
-            handleChange={(e) => setQuery(e.target.value)}
-          />
+        <div className="membersForm">
+          <SearchInput handleChange={(e) => setQuery(e.target.value)} />
           <TableForm
             data={search(localusers)}
             handleSorting={handleSorting}

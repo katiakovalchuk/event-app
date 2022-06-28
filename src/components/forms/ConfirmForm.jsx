@@ -10,9 +10,6 @@ const ConfirmForm = ({handleConfirmation}) => {
   let timerId;
 
   useEffect(() => {
-    if (!requireConfirm) {
-      handleCloseModal();
-    }
     return timerId;
   }, [requireConfirm]);
 

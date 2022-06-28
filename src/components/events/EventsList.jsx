@@ -4,33 +4,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { GoTrashcan } from "react-icons/go";
 import { RiEdit2Fill } from "react-icons/ri";
-import { BiDownArrow, BiUpArrow } from "react-icons/bi";
+import PropTypes from "prop-types";
 
-import {useDialog} from "../../context/dialogContext";
-import { usePaginate2 } from "../../hooks/usePaginate2";
-import {
-  getNewEvents,
-  selectAllEvents,
-} from "../../store/slices/eventsSlice";
+import { useDialog } from "../../context/dialogContext";
+import { getNewEvents, selectAllEvents } from "../../store/slices/eventsSlice";
+import { search } from "../../helpers/utils";
+import { usePagination } from "../../hooks/usePagination";
 
 import EventPart from "./EventPart";
 import Spinner from "../Spinner";
 import Pagination from "../Pagination";
 import SearchInput from "../elements/SearchInput";
-import {CustomButton, ListItem} from "../elements";
-import { search } from "../../helpers/utils";
-import PropTypes from "prop-types";
+import EventSort from "./EventSort";
+import { CustomButton, ListItem } from "../elements";
 
-const EventsList = ({requestIdToDelete}) => {
-  const { startEdit, setDelete, handleShowModal, addRequireConfirm, removeRequireConfirm } = useDialog();
+const EventsList = ({ requestIdToDelete }) => {
+  const {
+    order,
+    startEdit,
+    setDelete,
+    handleShowModal,
+    addRequireConfirm,
+    removeRequireConfirm,
+  } = useDialog();
   const dispatch = useDispatch();
   const events = useSelector(selectAllEvents);
   const { status } = useSelector((state) => state.eventsSlice);
 
   const [query, setQuery] = useState("");
-  const [order, setOrder] = useState("asc");
   const [filterBtn, setFilterBtn] = useState("all");
-  const today = moment().format("yyyy-MM-DD");
+  const today = moment().format("yyyy-MM-DD HH:mm");
 
   const keys = [
     "eventDate",
@@ -62,14 +65,15 @@ const EventsList = ({requestIdToDelete}) => {
 
   const searchedEvents = search(sortedEvents, keys, query);
 
-  const { pageCount, handlePageClick, displayItems } = usePaginate2({
-    data: searchedEvents,
-    itemsPerPage: 6,
-  });
-
-  //sort
-  const handleOrder = () =>
-    setOrder((prev) => (prev === "asc" ? "dsc" : "asc"));
+  const { pageCount, currentPage, handlePageClick, currentItems } =
+    usePagination({
+      query,
+      status,
+      order,
+      data: searchedEvents,
+      filterBtn,
+      itemsPerPage: 6,
+    });
 
   //filter
   const filterAll = () => {
@@ -86,40 +90,37 @@ const EventsList = ({requestIdToDelete}) => {
     <section className="event">
       <ToastContainer limit={5} />
       {status === "loading" && <Spinner />}
-      <div className="event__func">
-        <div className="event__filter">
-          <CustomButton
-            className={`tab ${filterBtn === "all" && "tab-active"}`}
-            onClick={filterAll}
-          >
-            All
-          </CustomButton>
-          <CustomButton
-            className={`tab ${filterBtn === "future" && "tab-active"}`}
-            onClick={filterFuture}
-          >
-            Future
-          </CustomButton>
-          <CustomButton
-            className={`tab ${filterBtn === "past" && "tab-active"}`}
-            onClick={filterPast}
-          >
-            Past
-          </CustomButton>
-        </div>
-        <SearchInput
-          handleChange={(e) => setQuery(e.target.value)}
-        />
-      </div>
-
-      {displayItems?.length ? (
-        <div className="mb-5">
-          <div className="event__sort" onClick={handleOrder}>
-            <span>Name</span>
-            {order === "asc" ? <BiDownArrow /> : <BiUpArrow />}
+      {events.length > 0 && (
+        <div className="event__func">
+          <div className="event__filter">
+            <CustomButton
+              className={`tab ${filterBtn === "all" && "tab-active"}`}
+              onClick={filterAll}
+            >
+              All
+            </CustomButton>
+            <CustomButton
+              className={`tab ${filterBtn === "future" && "tab-active"}`}
+              onClick={filterFuture}
+            >
+              Future
+            </CustomButton>
+            <CustomButton
+              className={`tab ${filterBtn === "past" && "tab-active"}`}
+              onClick={filterPast}
+            >
+              Past
+            </CustomButton>
           </div>
+          <SearchInput handleChange={(e) => setQuery(e.target.value)} />
+        </div>
+      )}
+
+      {currentItems?.length ? (
+        <div className="mb-5">
+          <EventSort />
           <ul className="event__list">
-            {displayItems.map((event) => (
+            {currentItems.map((event) => (
               <ListItem link key={event.id}>
                 <EventPart {...event} />
                 <div className="event__actions">
@@ -151,6 +152,7 @@ const EventsList = ({requestIdToDelete}) => {
           <div className="mt-3">
             <Pagination
               pageCount={pageCount}
+              currentPage={currentPage}
               handlePageClick={handlePageClick}
             />
           </div>

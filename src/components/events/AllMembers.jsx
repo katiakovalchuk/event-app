@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
 
 import {
   addEventToAllMembers,
-  getNewMembers,
   addPointstoAllMembers,
+  getNewMembers,
 } from "../../store/slices/membersSlice";
-import { getNewEvent, addAllUserEvent } from "../../store/slices/eventSlice";
-
-import { usePaginate2 } from "../../hooks/usePaginate2";
+import { addAllUserEvent, getNewEvent } from "../../store/slices/eventSlice";
+import { usePagination } from "../../hooks/usePagination";
 import { search } from "../../helpers/utils";
 
 import SingleMember from "./SingleMember";
 import { CustomButton } from "../elements";
-import Pagination from "../elements/Pagination";
+import Pagination from "../Pagination";
+import SearchInput from "../elements/SearchInput";
 
 import "../../styles/event-item.scss";
 
@@ -33,10 +33,8 @@ const AllMembers = () => {
   );
   const keys = ["fullName"];
   const searchedAllMembers = search(otherMembers, keys, query);
-  const { displayItems, handlePageClick, pageCount } = usePaginate2({
-    data: searchedAllMembers,
-    itemsPerPage: 4,
-  });
+  const { pageCount, currentPage, handlePageClick, currentItems } =
+    usePagination({ query, data: searchedAllMembers, itemsPerPage: 4 });
 
   useEffect(() => {
     dispatch(getNewEvent(id));
@@ -65,13 +63,7 @@ const AllMembers = () => {
       <Container fluid="xl">
         <div className="members__statistic">
           {otherMembers.length > 0 && (
-            <input
-              className="event-search form-control"
-              type="search"
-              placeholder="Search..."
-              aria-label="Search"
-              onChange={(e) => setQuery(e.target.value)}
-            />
+            <SearchInput onChange={(e) => setQuery(e.target.value)} />
           )}
           {otherMembers.length > 1 && (
             <div className="members__statistic-right">
@@ -89,16 +81,17 @@ const AllMembers = () => {
           )}
         </div>
 
-        {displayItems.length ? (
+        {currentItems.length ? (
           <>
             <ul className="members__list">
-              {displayItems?.map((member) => (
+              {currentItems?.map((member) => (
                 <SingleMember key={member.id} {...member} />
               ))}
             </ul>
             <div className="mt-3">
               <Pagination
                 pageCount={pageCount}
+                currentPage={currentPage}
                 handlePageClick={handlePageClick}
               />
             </div>
