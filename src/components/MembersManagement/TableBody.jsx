@@ -1,35 +1,37 @@
 /* eslint-disable react/prop-types */
 import Pagination from "../Pagination";
 import ReadOnlyRow from "./ReadOnlyRow";
-import {usePagination} from "../../hooks/usePagination";
+import { usePagination } from "../../hooks/usePagination";
 
-const TableBody = ({ tableData, columns, handleDeleteClick, handleEditClick, query_, order, status }) => {
-
-  const { pageCount, currentPage, handlePageClick, currentItems } =
-    usePagination({
-      query: query_,
-      status,
-      order,
-      data: tableData,
-      itemsPerPage: 6,
-    });
+const TableBody = ({
+  tableData,
+  columns,
+  handleDeleteClick,
+  handleEditClick,
+  query_,
+  order,
+  status,
+}) => {
+  const { pageCount, currentPage, handlePageClick, currentItems } = usePagination({
+    query: query_,
+    status,
+    order,
+    data: tableData,
+    itemsPerPage: 6,
+  });
 
   return (
     <>
       <tbody>
         {currentItems &&
-        currentItems
-            .map((data) => (
-              <ReadOnlyRow
-                key={data.id}
-                {...{ data, columns, handleDeleteClick, handleEditClick }}
-              />
-            ))}
+          currentItems.map((data) => (
+            <ReadOnlyRow key={data.id} {...{ data, columns, handleDeleteClick, handleEditClick }} />
+          ))}
       </tbody>
       <tfoot>
         {currentItems.length === 0 && (
           <tr className="text-center">
-            <td colSpan="7">
+            <td colSpan="9">
               <div className="text-center mt-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +50,7 @@ const TableBody = ({ tableData, columns, handleDeleteClick, handleEditClick, que
         )}
         {!!tableData.length && (
           <tr className="no-data">
-            <td colSpan="8">
+            <td colSpan="9">
               <Pagination
                 pageCount={pageCount || 1}
                 currentPage={currentPage}
