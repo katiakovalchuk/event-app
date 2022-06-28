@@ -249,7 +249,6 @@ const ProfilePage = () => {
                   </svg>
                 </span>
                 <input
-                  autoFocus
                   name="lastName"
                   {...register("lastName", {
                     pattern: {
