@@ -24,7 +24,8 @@ import Switch from "../components/Switch/Switch";
 const ProfilePage = () => {
   const [file, setFile] = useState("");
   const [addFormData, setAddFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
     email: "",
     company: "",
@@ -53,7 +54,8 @@ const ProfilePage = () => {
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
       phoneNumber: "",
       company: "",
       birth: "",
@@ -131,9 +133,12 @@ const ProfilePage = () => {
   }, [file]);
 
   const handleAdd = () => {
-    const fullName =
-      addFormData.fullName ||
-      (users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].fullName));
+    const firstName =
+      addFormData.firstName ||
+      (users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].firstName));
+    const lastName =
+      addFormData.lastName ||
+      (users.length && capitalizeFirstLetter(users[getIndex(users, user.email)].lastName));
     const email = addFormData.email || (users.length && users[getIndex(users, user.email)].email);
     const phoneNumber =
       addFormData.phoneNumber || (users.length && users[getIndex(users, user.email)].phoneNumber);
@@ -144,7 +149,8 @@ const ProfilePage = () => {
 
     const docRef = doc(usersCollectionRef, user.email);
     updateDoc(docRef, {
-      fullName,
+      firstName,
+      lastName,
       email,
       phoneNumber,
       company,
@@ -189,8 +195,8 @@ const ProfilePage = () => {
         <Row>
           <Col md={8}>
             <form onSubmit={handleSubmit(handleAdd)} className="profileForm">
-              <label htmlFor="fullName" className="form-label">
-                Name:
+              <label htmlFor="firstName" className="form-label">
+                First name:
               </label>
               <div className="mb-4 input-group w-75">
                 <span className="input-group-text ms-0">
@@ -207,23 +213,60 @@ const ProfilePage = () => {
                 </span>
                 <input
                   autoFocus
-                  name="fullName"
-                  {...register("fullName", {
+                  name="firstName"
+                  {...register("firstName", {
                     pattern: {
                       value: /^(?=.{1,50}$)[a-z\u0400-\u04FF]+(?:['_.\s][a-z\u0400-\u04FF]+)*$/i,
-                      message: "Username shouldn't include any special character or number!",
+                      message: "First name shouldn't include any special character or number!",
                     },
                     onChange: handleAddFormChange,
                   })}
                   type="text"
-                  id="fullName"
+                  id="firstName"
                   className="form-control"
                   placeholder={
                     users.length &&
-                    capitalizeFirstLetter(users[getIndex(users, user.email)].fullName)
+                    capitalizeFirstLetter(users[getIndex(users, user.email)].firstName)
                   }
                 />
-                {<span className={styles.inputError}>{errors.fullName?.message}</span>}
+                {<span className={styles.inputError}>{errors.firstName?.message}</span>}
+              </div>
+
+              <label htmlFor="lastName" className="form-label">
+                Last name:
+              </label>
+              <div className="mb-4 input-group w-75">
+                <span className="input-group-text ms-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-person-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                  </svg>
+                </span>
+                <input
+                  autoFocus
+                  name="lastName"
+                  {...register("lastName", {
+                    pattern: {
+                      value: /^(?=.{1,50}$)[a-z\u0400-\u04FF]+(?:['_.\s][a-z\u0400-\u04FF]+)*$/i,
+                      message: "Last name name shouldn't include any special character or number!",
+                    },
+                    onChange: handleAddFormChange,
+                  })}
+                  type="text"
+                  id="lastName"
+                  className="form-control"
+                  placeholder={
+                    users.length &&
+                    capitalizeFirstLetter(users[getIndex(users, user.email)].lastName)
+                  }
+                />
+                {<span className={styles.inputError}>{errors.lastName?.message}</span>}
               </div>
 
               <label htmlFor="email" className="form-label">
