@@ -210,7 +210,7 @@ const ProfilePage = () => {
     for (let i = 0; i < scores.length; i++){
       if (+currUser.scores === +scores[i]) {
         rank -= Math.floor(i / step);
-        return `${rank}`;
+        return `${rank}/10`;
       }
     }
   };
