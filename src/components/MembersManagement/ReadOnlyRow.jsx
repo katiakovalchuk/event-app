@@ -7,6 +7,7 @@ import { useDialog } from "../../context/dialogContext";
 const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
   const { user } = useUserAuth();
   const { removeRequireConfirm } = useDialog();
+
   return (
     <tr key={data.id}>
       {columns.map(({ accessor }) => {

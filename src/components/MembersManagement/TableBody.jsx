@@ -1,22 +1,24 @@
 /* eslint-disable react/prop-types */
-import Pagination from "../elements/Pagination";
+import Pagination from "../Pagination";
 import ReadOnlyRow from "./ReadOnlyRow";
-import { useState } from "react";
+import {usePagination} from "../../hooks/usePagination";
 
-const TableBody = ({ tableData, columns, handleDeleteClick, handleEditClick }) => {
-  const [pageNumber, setPageNumber] = useState(0);
-  const usersPerPage = 5; // show more?
-  const pageCount = Math.ceil(tableData && tableData.length / usersPerPage);
-  const pagesVisited = pageNumber * usersPerPage;
-  const changePage = ({ selected }) => {
-    setPageNumber(selected);
-  };
+const TableBody = ({ tableData, columns, handleDeleteClick, handleEditClick, query_, order, status }) => {
+
+  const { pageCount, currentPage, handlePageClick, currentItems } =
+    usePagination({
+      query: query_,
+      status,
+      order,
+      data: tableData,
+      itemsPerPage: 6,
+    });
+
   return (
     <>
       <tbody>
-        {tableData &&
-          tableData
-            .slice(pagesVisited, pagesVisited + usersPerPage)
+        {currentItems &&
+        currentItems
             .map((data) => (
               <ReadOnlyRow
                 key={data.id}
@@ -25,7 +27,7 @@ const TableBody = ({ tableData, columns, handleDeleteClick, handleEditClick }) =
             ))}
       </tbody>
       <tfoot>
-        {tableData.length === 0 && (
+        {currentItems.length === 0 && (
           <tr className="text-center">
             <td colSpan="7">
               <div className="text-center mt-3">
@@ -47,7 +49,11 @@ const TableBody = ({ tableData, columns, handleDeleteClick, handleEditClick }) =
         {!!tableData.length && (
           <tr className="no-data">
             <td colSpan="8">
-              <Pagination {...{ pageCount, changePage }} />
+              <Pagination
+                pageCount={pageCount || 1}
+                currentPage={currentPage}
+                handlePageClick={handlePageClick}
+              />
             </td>
           </tr>
         )}

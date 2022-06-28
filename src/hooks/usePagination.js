@@ -41,6 +41,6 @@ export const usePagination = ({
     pageCount,
     currentPage,
     handlePageClick,
-    currentItems,
+    currentItems
   };
 };

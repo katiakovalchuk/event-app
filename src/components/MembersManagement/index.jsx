@@ -39,6 +39,8 @@ const Table = ({ showManagers }) => {
   const { removeRequireConfirm } = useDialog();
 
   const [allUsers, setUsers] = useState([]);
+  const [order, setOrder] = useState(null);
+  const [status, setStatus] = useState(false);
 
   useEffect(() => {
     if (showManagers) {
@@ -71,7 +73,7 @@ const Table = ({ showManagers }) => {
   const searchData = (data) => {
     const keys = ["fullName", "company", "email", "phoneNumber"];
     return data.filter((item) =>
-      keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase()))
+      keys.some((key) => item[key]?.toLowerCase().includes(query_.toLowerCase()))
     );
   };
 
@@ -220,7 +222,7 @@ const Table = ({ showManagers }) => {
 
     const newUsers = allUsers.map((obj) => {
       if (obj.email === editContactId) {
-        return { ...user };
+        return { ...user, image: obj.image};
       }
       return obj;
     });
@@ -229,6 +231,7 @@ const Table = ({ showManagers }) => {
     editUserToast();
     removeRequireConfirm();
     getUsers();
+    setStatus(prev => !prev);
   };
 
   const handleEditClick = (event, contact) => {
@@ -244,6 +247,8 @@ const Table = ({ showManagers }) => {
     };
     setEditFormData(formValues);
   };
+
+  const getOrder = order => setOrder(order);
 
   return (
     <Container>
@@ -304,7 +309,7 @@ const Table = ({ showManagers }) => {
           <form onSubmit={handleEditFormSubmit}>
             <div className="table-responsive-lg">
               <table className="table table-admin">
-                <TableHead {...{ columns, handleSorting }} />
+                <TableHead {...{ columns, handleSorting, getOrder }} />
                 <TableBody
                   tableData={searchData(allUsers)}
                   {...{
@@ -315,6 +320,9 @@ const Table = ({ showManagers }) => {
                     handleEditClick,
                     handleEditFormChange,
                     handleCancelClick,
+                    query_,
+                    order,
+                    status
                   }}
                 />
               </table>
