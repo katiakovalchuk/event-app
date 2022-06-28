@@ -122,7 +122,6 @@ const EditUser = ({
                   </svg>
                 </span>
                 <input
-                  autoFocus
                   {...register("lastName", {
                     pattern: {
                       value: /^(?=.{1,50}$)[a-z\u0400-\u04FF]+(?:['_.\s][a-z\u0400-\u04FF]+)*$/i,
