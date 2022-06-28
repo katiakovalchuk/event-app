@@ -239,14 +239,20 @@ export const addPointstoAllMembers = createAsyncThunk(
 export const addAdditionalPointstoScore = createAsyncThunk(
   "membersSlice/addAdditionalPointstoScore",
   async (
-    { uid, additionalPoints },
+    { uid, id, additionalPoints },
     { rejectWithValue, getState, dispatch }
   ) => {
     const state = getState();
     const members = state.membersSlice.members;
     const currentMember = members.find((member) => member.id === uid);
+    const eventsList = currentMember.eventsList;
 
-    const updatedScore = +currentMember.scores + +additionalPoints;
+    const currentInfo = eventsList.find((event) => event.id === id);
+    const newAdditionalPoints =
+      +additionalPoints - +currentInfo.additionalPoints;
+
+    const updatedScore = +currentMember.scores + +newAdditionalPoints;
+
     try {
       await updateDoc(doc(db, "users", uid), {
         scores: updatedScore,
