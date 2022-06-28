@@ -116,7 +116,8 @@ const Table = ({ showManagers }) => {
   }, 350);
 
   const [editFormData, setEditFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
     email: "",
     company: "",
@@ -205,7 +206,8 @@ const Table = ({ showManagers }) => {
     closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     const user = {
-      fullName: editFormData.fullName,
+      firstName: editFormData.firstName,
+      lastName: editFormData.lastName,
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
       company: editFormData.company,
@@ -236,7 +238,8 @@ const Table = ({ showManagers }) => {
     setEditContactId(contact.email);
     openEdit();
     const formValues = {
-      fullName: contact.fullName,
+      firstName: contact.firstName,
+      lastName: contact.lastName,
       phoneNumber: contact.phoneNumber,
       email: contact.email,
       company: contact.company,

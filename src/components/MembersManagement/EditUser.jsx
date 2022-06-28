@@ -37,7 +37,8 @@ const EditUser = ({
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
       phoneNumber: "",
       company: "",
       birth: "",
@@ -70,8 +71,8 @@ const EditUser = ({
                 addRequireConfirm();
               })}
             >
-              <label htmlFor="name" className="form-label">
-                Name:
+              <label htmlFor="firstName" className="form-label">
+                First name:
               </label>
               <div className="mb-2 input-group ">
                 <span className="input-group-text ms-0">
@@ -88,20 +89,54 @@ const EditUser = ({
                 </span>
                 <input
                   autoFocus
-                  {...register("fullName", {
+                  {...register("firstName", {
                     pattern: {
                       value: /^(?=.{1,50}$)[a-z\u0400-\u04FF]+(?:['_.\s][a-z\u0400-\u04FF]+)*$/i,
-                      message: "Username shouldn't include any special character or number!",
+                      message: "First name shouldn't include any special character or number!",
                     },
                     onChange: handleEditFormChange,
                   })}
                   type="text"
                   id="name"
-                  name="fullName"
+                  name="firstName"
                   className="form-control"
-                  placeholder={users.length && users[getIndex(users, editContactId)].fullName}
+                  placeholder={users.length && users[getIndex(users, editContactId)].firstName}
                 />
-                {<span className="inputError">{errors.fullName?.message}</span>}
+                {<span className="inputError">{errors.firstName?.message}</span>}
+              </div>
+
+              <label htmlFor="lastName" className="form-label">
+                Last name:
+              </label>
+              <div className="mb-2 input-group ">
+                <span className="input-group-text ms-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-person-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                  </svg>
+                </span>
+                <input
+                  autoFocus
+                  {...register("lastName", {
+                    pattern: {
+                      value: /^(?=.{1,50}$)[a-z\u0400-\u04FF]+(?:['_.\s][a-z\u0400-\u04FF]+)*$/i,
+                      message: "Last name shouldn't include any special character or number!",
+                    },
+                    onChange: handleEditFormChange,
+                  })}
+                  type="text"
+                  id="name"
+                  name="lastName"
+                  className="form-control"
+                  placeholder={users.length && users[getIndex(users, editContactId)].lastName}
+                />
+                {<span className="inputError">{errors.lastName?.message}</span>}
               </div>
 
               <label htmlFor="email" className="form-label">
