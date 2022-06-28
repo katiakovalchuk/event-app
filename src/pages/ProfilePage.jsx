@@ -11,7 +11,7 @@ import { useDialog } from "../context/dialogContext";
 import { ModalForm } from "../components/elements";
 import PasswordForm from "../components/forms/PasswordForm";
 import ConfirmForm from "../components/forms/ConfirmForm";
-import { getUsers } from "../store/slices/usersSlice";
+import {getUsers, updateUser} from "../store/slices/usersSlice";
 import { storage } from "../lib/init-firebase.js";
 import { usersCollectionRef } from "../lib/firestore.collections.js";
 import { capitalizeFirstLetter, getIndex } from "../helpers/utils.js";
@@ -20,6 +20,7 @@ import { errMessages } from "../components/Login/messages";
 
 import styles from "../styles/Profile.module.scss";
 import Switch from "../components/Switch/Switch";
+import {ROLES} from "../store/data";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");
@@ -179,6 +180,49 @@ const ProfilePage = () => {
       notifyError(getErrorMessage(err.message, errMessages));
     }
   };
+
+  const getRank = () => {
+    let currUser;
+
+    for (const innerUser of users){
+      if (user.email === innerUser.email){
+        currUser = innerUser;
+      }
+    }
+    if (currUser.scores === 0) return 0;
+
+    const copy = JSON.parse(JSON.stringify(users));
+    const scores = [];
+
+    const filtered =
+      copy
+        .sort((a, b) => b.scores - a.scores)
+        .filter(user => +user.scores !== 0 && user.role === ROLES.user);
+
+    filtered.forEach(user => {
+      if (!scores.includes(user.scores)){
+        scores.push(user.scores);
+      }
+    });
+
+    const step = Math.ceil(scores.length/10);
+    let rank = 10;
+    for (const score of scores) {
+      if (+currUser.scores !== +score) {
+        rank -= step;
+      } else {
+        return `${rank}/10`;
+      }
+    }
+  };
+
+  const updateRank = () => {
+    dispatch(updateUser({id: user.email, rank: getRank()}));
+  };
+
+  useEffect(() => {
+    updateRank();
+  }, []);
 
   return (
     <section id="profile" className="pt-4">
