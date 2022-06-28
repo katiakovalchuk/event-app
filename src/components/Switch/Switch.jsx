@@ -11,7 +11,7 @@ const Switch = ({ label, user }) => {
     // eslint-disable-next-line react/prop-types
     const docRef = doc(usersCollectionRef, user.email);
     updateDoc(docRef, {
-      isShowBirthDay: checked,
+      isShowBirthday: checked,
     }).then((e) => {
       console.error(e);
     });

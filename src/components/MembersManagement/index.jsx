@@ -120,7 +120,6 @@ const Table = ({ showManagers }) => {
     phoneNumber: "",
     email: "",
     company: "",
-    scores: "",
     birth: "",
   });
 
@@ -131,7 +130,7 @@ const Table = ({ showManagers }) => {
     { label: "Phone number", accessor: "phoneNumber", sortable: true },
     { label: "Company", accessor: "company", sortable: true },
     { label: "Scores", accessor: "scores", sortable: true },
-    { label: "Date of birth", accessor: "birth", sortable: true },
+    { label: "Date of birth", accessor: "birth", sortable: false },
     { label: "Actions", accessor: "action", sortable: false },
   ];
 
@@ -208,7 +207,6 @@ const Table = ({ showManagers }) => {
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
       company: editFormData.company,
-      scores: editFormData.scores,
       birth: editFormData.birth,
     };
     updateDoc(docRef, {
@@ -240,7 +238,6 @@ const Table = ({ showManagers }) => {
       phoneNumber: contact.phoneNumber,
       email: contact.email,
       company: contact.company,
-      scores: contact.scores,
       birth: contact.birth,
     };
     setEditFormData(formValues);
