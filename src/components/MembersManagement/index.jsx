@@ -69,7 +69,7 @@ const Table = ({ showManagers }) => {
   };
 
   const searchData = (data) => {
-    const keys = ["fullName", "company", "email", "phoneNumber"];
+    const keys = ["firstName", "lastName", "company", "email", "phoneNumber"];
     return data.filter((item) =>
       keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase()))
     );
@@ -116,22 +116,23 @@ const Table = ({ showManagers }) => {
   }, 350);
 
   const [editFormData, setEditFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
     email: "",
     company: "",
-    scores: "",
     birth: "",
   });
 
   const columns = [
     { label: "User image", accessor: "image", sortable: false },
-    { label: "Full Name", accessor: "fullName", sortable: true },
+    { label: "First name", accessor: "firstName", sortable: true },
+    { label: "Last name", accessor: "lastName", sortable: true },
     { label: "Email", accessor: "email", sortable: true },
     { label: "Phone number", accessor: "phoneNumber", sortable: true },
     { label: "Company", accessor: "company", sortable: true },
     { label: "Scores", accessor: "scores", sortable: true },
-    { label: "Date of birth", accessor: "birth", sortable: true },
+    { label: "Date of birth", accessor: "birth", sortable: false },
     { label: "Actions", accessor: "action", sortable: false },
   ];
 
@@ -170,14 +171,16 @@ const Table = ({ showManagers }) => {
     closeAdd();
     sendLink(addFormData.email);
     const newUser = {
-      fullName: addFormData.fullName,
+      firstName: addFormData.firstName,
+      lastName: addFormData.lastName,
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
       company: addFormData.company,
-      scores: addFormData.scores,
+      scores: 0,
       birth: addFormData.birth,
       role: addFormData.role,
       rank: 0,
+      isShowBirthday: false,
       image:
         "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     };
@@ -203,11 +206,11 @@ const Table = ({ showManagers }) => {
     closeEdit();
     const docRef = doc(usersCollectionRef, editContactId);
     const user = {
-      fullName: editFormData.fullName,
+      firstName: editFormData.firstName,
+      lastName: editFormData.lastName,
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
       company: editFormData.company,
-      scores: editFormData.scores,
       birth: editFormData.birth,
     };
     updateDoc(docRef, {
@@ -235,11 +238,11 @@ const Table = ({ showManagers }) => {
     setEditContactId(contact.email);
     openEdit();
     const formValues = {
-      fullName: contact.fullName,
+      firstName: contact.firstName,
+      lastName: contact.lastName,
       phoneNumber: contact.phoneNumber,
       email: contact.email,
       company: contact.company,
-      scores: contact.scores,
       birth: contact.birth,
     };
     setEditFormData(formValues);
