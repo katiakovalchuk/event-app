@@ -15,7 +15,10 @@ import {
   updateNewEvent,
 } from "../store/slices/eventsSlice";
 import { useDialog } from "../context/dialogContext";
-import { deleteEventFromAllUsers } from "../store/slices/membersSlice";
+import {
+  deleteEventFromAllUsers,
+  subtractPointsOfAllFromScore,
+} from "../store/slices/membersSlice";
 
 const Events = () => {
   const {
@@ -59,7 +62,8 @@ const Events = () => {
     hideEdit();
   };
 
-  const deleteEvent = (id) => {
+  const deleteEvent = ({ id, points, membersList }) => {
+    dispatch(subtractPointsOfAllFromScore({ id, points, membersList }));
     dispatch(deleteEventFromAllUsers(id));
     dispatch(deleteNewEvent(id));
   };

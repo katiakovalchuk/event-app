@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
@@ -23,10 +24,14 @@ const EventMembers = () => {
   const [query, setQuery] = useState("");
   const { handleShowModal, setUserModalMode } = useDialog();
 
+  //
+  const today = moment().format("yyyy-MM-DD HH:mm");
+  const check = moment(currentEvent.eventDate).isAfter(today);
+
   const eventMembers = members.filter((member) =>
     membersList.includes(member.id)
   );
-  const keys = ["fullName"];
+  const keys = ["firstName", "lastName"];
   const searchedEventMembers = search(eventMembers, keys, query);
 
   const { pageCount, currentPage, handlePageClick, currentItems } =
@@ -51,13 +56,16 @@ const EventMembers = () => {
       <Container fluid="xl">
         <div className="members__statistic">
           {eventMembers.length > 0 && (
-            <SearchInput onChange={(e) => setQuery(e.target.value)} />
+            <SearchInput handleChange={(e) => setQuery(e.target.value)} />
           )}
-          {eventMembers.length > 1 && (
-            <div className="members__statistic-right">
+
+          <div className="members__statistic-right">
+            {eventMembers.length > 0 && (
               <span className="members__amount">
                 Users: {eventMembers.length}
               </span>
+            )}
+            {eventMembers.length > 1 && (
               <CustomButton
                 variant="danger"
                 onClick={() => {
@@ -67,8 +75,8 @@ const EventMembers = () => {
               >
                 Delete All
               </CustomButton>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {currentItems.length ? (
@@ -87,6 +95,10 @@ const EventMembers = () => {
               />
             </div>
           </>
+        ) : check ? (
+          <p className="check-text">
+            {`Sorry, can't register user before ${currentEvent.eventDate}`}{" "}
+          </p>
         ) : (
           <p className="check-text">Please register users to the Event</p>
         )}

@@ -140,7 +140,11 @@ const EventsList = ({ requestIdToDelete }) => {
                       addRequireConfirm();
                       setDelete();
                       handleShowModal();
-                      requestIdToDelete(event.id);
+                      requestIdToDelete({
+                        id: event.id,
+                        points: event.points,
+                        membersList: event.membersList,
+                      });
                     }}
                   >
                     <GoTrashcan className="icon" />

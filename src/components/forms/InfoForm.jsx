@@ -41,6 +41,7 @@ const InfoForm = () => {
     dispatch(
       addAdditionalPointstoScore({
         uid: data.uid,
+        id: data.id,
         additionalPoints: data.additionalPoints,
       })
     );

@@ -9,6 +9,8 @@ import { GoCalendar } from "react-icons/go";
 import { GiTrophy } from "react-icons/gi";
 import { HiArrowLeft } from "react-icons/hi";
 
+import { capitalizeFirstLet } from "../../helpers/string";
+
 import { getNewEvent } from "../../store/slices/eventSlice";
 
 import { CustomButton } from "../elements";
@@ -43,7 +45,9 @@ const EventDescription = () => {
         <div className="eventItem__inner">
           <h2 className="eventItem__title">{eventName}</h2>
           {eventDescription && (
-            <p className="eventItem__desc">{eventDescription}</p>
+            <p className="eventItem__desc">
+              {capitalizeFirstLet(eventDescription)}
+            </p>
           )}
           <div className="eventItem__info">
             <div className="eventItem__item">
@@ -51,7 +55,9 @@ const EventDescription = () => {
                 <MdLocationOn size="36px" />
               </span>
               {eventPlace === "city" ? (
-                <h4 className="eventItem__text">{cityName}</h4>
+                <h4 className="eventItem__text">
+                  {capitalizeFirstLet(cityName)}
+                </h4>
               ) : (
                 <p className="eventItem__text">{eventPlace}</p>
               )}

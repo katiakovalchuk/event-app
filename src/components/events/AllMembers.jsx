@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Container } from "react-bootstrap";
@@ -28,10 +29,15 @@ const AllMembers = () => {
   const points = currentEvent.points;
   const [query, setQuery] = useState("");
 
+  //check date
+  const today = moment().format("yyyy-MM-DD HH:mm");
+  const check = moment(currentEvent.eventDate).isAfter(today);
+
   const otherMembers = members.filter(
     (member) => !membersList.includes(member.id)
   );
-  const keys = ["fullName"];
+
+  const keys = ["firstName", "lastName"];
   const searchedAllMembers = search(otherMembers, keys, query);
   const { pageCount, currentPage, handlePageClick, currentItems } =
     usePagination({ query, data: searchedAllMembers, itemsPerPage: 4 });
@@ -51,7 +57,6 @@ const AllMembers = () => {
         id,
         comment: "",
         additionalPoints: 0,
-        isPresent: false,
       })
     );
     dispatch(addAllUserEvent(id));
@@ -63,22 +68,25 @@ const AllMembers = () => {
       <Container fluid="xl">
         <div className="members__statistic">
           {otherMembers.length > 0 && (
-            <SearchInput onChange={(e) => setQuery(e.target.value)} />
+            <SearchInput handleChange={(e) => setQuery(e.target.value)} />
           )}
-          {otherMembers.length > 1 && (
-            <div className="members__statistic-right">
+          <div className="members__statistic-right">
+            {otherMembers.length > 0 && (
               <span className="members__amount">
                 Users: {otherMembers.length}
               </span>
+            )}
+            {otherMembers.length > 1 && (
               <CustomButton
+                disabled={check}
                 onClick={() => {
                   addAllMembers(currentEvent.id, points);
                 }}
               >
                 Register All
               </CustomButton>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {currentItems.length ? (
