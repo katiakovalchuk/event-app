@@ -69,7 +69,7 @@ const Table = ({ showManagers }) => {
   };
 
   const searchData = (data) => {
-    const keys = ["fullName", "company", "email", "phoneNumber"];
+    const keys = ["firstName", "lastName", "company", "email", "phoneNumber"];
     return data.filter((item) =>
       keys.some((key) => item[key].toLowerCase().includes(query_.toLowerCase()))
     );
@@ -125,7 +125,8 @@ const Table = ({ showManagers }) => {
 
   const columns = [
     { label: "User image", accessor: "image", sortable: false },
-    { label: "Full Name", accessor: "fullName", sortable: true },
+    { label: "First name", accessor: "firstName", sortable: true },
+    { label: "Last name", accessor: "lastName", sortable: true },
     { label: "Email", accessor: "email", sortable: true },
     { label: "Phone number", accessor: "phoneNumber", sortable: true },
     { label: "Company", accessor: "company", sortable: true },
@@ -169,7 +170,8 @@ const Table = ({ showManagers }) => {
     closeAdd();
     sendLink(addFormData.email);
     const newUser = {
-      fullName: addFormData.fullName,
+      firstName: addFormData.firstName,
+      lastName: addFormData.lastName,
       phoneNumber: addFormData.phoneNumber,
       email: addFormData.email,
       company: addFormData.company,

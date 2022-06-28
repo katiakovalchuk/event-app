@@ -141,6 +141,10 @@ tfoot tr td {
   border: 2px solid #d6d4d4;
 }
 
+.tablehead {
+  border-right: 1px solid #d6d4d4 !important;
+}
+
 .inputError {
   width: 100%;
   color: red;
