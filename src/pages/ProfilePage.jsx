@@ -207,11 +207,10 @@ const ProfilePage = () => {
 
     const step = Math.ceil(scores.length/10);
     let rank = 10;
-    for (const score of scores) {
-      if (+currUser.scores !== +score) {
-        rank -= step;
-      } else {
-        return `${rank}/10`;
+    for (let i = 0; i < scores.length; i++){
+      if (+currUser.scores === +scores[i]) {
+        rank -= Math.floor(i / step);
+        return `${rank}`;
       }
     }
   };
