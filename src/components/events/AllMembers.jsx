@@ -31,7 +31,7 @@ const AllMembers = () => {
   const otherMembers = members.filter(
     (member) => !membersList.includes(member.id)
   );
-  const keys = ["fullName"];
+  const keys = ["firstName", "lastName"];
   const searchedAllMembers = search(otherMembers, keys, query);
   const { pageCount, currentPage, handlePageClick, currentItems } =
     usePagination({ query, data: searchedAllMembers, itemsPerPage: 4 });
@@ -63,13 +63,15 @@ const AllMembers = () => {
       <Container fluid="xl">
         <div className="members__statistic">
           {otherMembers.length > 0 && (
-            <SearchInput onChange={(e) => setQuery(e.target.value)} />
+            <SearchInput handleChange={(e) => setQuery(e.target.value)} />
           )}
-          {otherMembers.length > 1 && (
-            <div className="members__statistic-right">
+          <div className="members__statistic-right">
+            {otherMembers.length > 0 && (
               <span className="members__amount">
                 Users: {otherMembers.length}
               </span>
+            )}
+            {otherMembers.length > 1 && (
               <CustomButton
                 onClick={() => {
                   addAllMembers(currentEvent.id, points);
@@ -77,8 +79,8 @@ const AllMembers = () => {
               >
                 Register All
               </CustomButton>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {currentItems.length ? (

@@ -26,7 +26,7 @@ const EventMembers = () => {
   const eventMembers = members.filter((member) =>
     membersList.includes(member.id)
   );
-  const keys = ["fullName"];
+  const keys = ["firstName", "lastName"];
   const searchedEventMembers = search(eventMembers, keys, query);
 
   const { pageCount, currentPage, handlePageClick, currentItems } =
@@ -51,13 +51,16 @@ const EventMembers = () => {
       <Container fluid="xl">
         <div className="members__statistic">
           {eventMembers.length > 0 && (
-            <SearchInput onChange={(e) => setQuery(e.target.value)} />
+            <SearchInput handleChange={(e) => setQuery(e.target.value)} />
           )}
-          {eventMembers.length > 1 && (
-            <div className="members__statistic-right">
+
+          <div className="members__statistic-right">
+            {eventMembers.length > 0 && (
               <span className="members__amount">
                 Users: {eventMembers.length}
               </span>
+            )}
+            {eventMembers.length > 1 && (
               <CustomButton
                 variant="danger"
                 onClick={() => {
@@ -67,8 +70,8 @@ const EventMembers = () => {
               >
                 Delete All
               </CustomButton>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {currentItems.length ? (
