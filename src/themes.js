@@ -31,6 +31,7 @@ export const darkTheme = {
   buttonHoverColor: "#30363d !important",
   buttonHoverBorder: "1px solid #8b949e !important",
   fontBtn: "#000",
+  appDesc: "#000000c7",
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -90,5 +91,12 @@ export const GlobalStyles = createGlobalStyle`
   }
   .form-label {
     color: ${(props) => props.theme.tableHoverColor}
+  }
+  .app-description {
+    background-color: ${(props) => props.theme.appDesc};
+  }
+  .form-check-input:checked {
+    background-color: ${(props) => props.theme.appDesc};
+    border: ${(props) => props.theme.none}
   }
 `;
