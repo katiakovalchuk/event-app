@@ -449,7 +449,7 @@ const ProfilePage = () => {
               </div>
               <div className="mb-4 text-center">
                 <button
-                  disabled={(per !== null && per < 100) || !isDirty || !isValid}
+                  disabled={(per !== null && per < 100) || (file === "" && (!isDirty || !isValid))}
                   type="submit"
                   className="btn btn-secondary"
                 >
