@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {useLocation} from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { getIndex } from "../../helpers/utils.js";
@@ -22,7 +23,6 @@ import useModalDel from "../../hooks/useModalDel";
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
 import { useDialog } from "../../context/dialogContext";
-import { useSelector } from "react-redux";
 import { ROLES } from "../../store/data";
 
 const Table = ({ showManagers }) => {
@@ -43,10 +43,7 @@ const Table = ({ showManagers }) => {
   const [allUsers, setUsers] = useState([]);
   const [order, setOrder] = useState(null);
   const [status, setStatus] = useState(false);
-
-  const {
-    user: { role: userRole },
-  } = useSelector((state) => state.userSlice);
+  const {pathname} = useLocation();
 
   useEffect(() => {
     document.title = showManagers ? "Managers Management" : "Members Management";
@@ -200,12 +197,13 @@ const Table = ({ showManagers }) => {
       company: addFormData.company,
       scores: 0,
       birth: addFormData.birth || "",
-      role: userRole === ROLES.manager ? ROLES.user : addFormData.role,
+      role: pathname.startsWith("/managers-management") ? ROLES.manager : ROLES.user,
       rank: 0,
       isShowBirthday: false,
       image:
         "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
     };
+    console.log(newUser);
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
     });
@@ -287,7 +285,7 @@ const Table = ({ showManagers }) => {
                 removeRequireConfirm();
               }}
             >
-              Add user
+              {pathname.startsWith("/managers-management") ? "Add manager" : "Add user"}
             </Button>
 
             <div>

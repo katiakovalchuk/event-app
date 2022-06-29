@@ -8,6 +8,7 @@ import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { getIndex } from "../../helpers/utils.js";
 import ConfirmForm from "../forms/ConfirmForm";
 import { useDialog } from "../../context/dialogContext";
+import {useLocation} from "react-router-dom";
 
 const EditUser = ({
   modalOpenEdit,
@@ -19,6 +20,7 @@ const EditUser = ({
 }) => {
   const [users, setUsers] = useState([]);
   const { requireConfirm, addRequireConfirm } = useDialog();
+  const {pathname} = useLocation();
 
   const getUsers = () => {
     getDocs(usersCollectionRef).then((data) => {
@@ -63,7 +65,9 @@ const EditUser = ({
       ) : (
         <>
           <Modal.Header closeButton className="bg-light">
-            <Modal.Title>Update user data:</Modal.Title>
+            <Modal.Title>
+              {pathname.startsWith("/managers-management") ? "Update manager data" : "Update user data"}
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form

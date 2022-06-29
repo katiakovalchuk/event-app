@@ -3,10 +3,17 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { useUserAuth } from "../../context/authContext";
 import { useDialog } from "../../context/dialogContext";
+import {useSelector} from "react-redux";
+import {ROLES} from "../../store/data";
+import {useLocation} from "react-router-dom";
 
 const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
   const { user } = useUserAuth();
   const { removeRequireConfirm } = useDialog();
+  const {pathname} = useLocation();
+  const {
+    user: { role },
+  } = useSelector((state) => state.userSlice);
 
   return (
     <tr key={data.id}>
@@ -50,6 +57,8 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
               {data.isShowBirthday ? tData : <span>🚫</span>}
             </td>
           );
+        } else if (accessor === "scores" && role === ROLES.admin && pathname.startsWith("/managers-management")) {
+          return null;
         } else {
           return (
             <td className="align-middle" key={accessor}>
