@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
-
+import { getIndex } from "../../helpers/utils.js";
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
@@ -216,6 +216,7 @@ const Table = ({ showManagers }) => {
       email: editFormData.email,
       company: editFormData.company,
       birth: editFormData.birth,
+      isShowBirthday: allUsers[getIndex(allUsers, editContactId)].isShowBirthday,
     };
     updateDoc(docRef, {
       ...user,

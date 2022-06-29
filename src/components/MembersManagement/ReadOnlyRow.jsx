@@ -46,8 +46,8 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
           );
         } else if (accessor === "birth") {
           return (
-            <td className="align-middle" key={accessor}>
-              {data.isShowBirthday ? tData : <span>Hidden by user</span>}
+            <td className="align-middle text-center" key={accessor}>
+              {data.isShowBirthday ? tData : <span>🚫</span>}
             </td>
           );
         } else {
