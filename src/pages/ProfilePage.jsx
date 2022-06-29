@@ -23,7 +23,7 @@ import Switch from "../components/Switch/Switch";
 import { ROLES } from "../store/data";
 
 const ProfilePage = () => {
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
   const [addFormData, setAddFormData] = useState({
     firstName: "",
     lastName: "",
@@ -47,6 +47,7 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.usersSlice.users);
   let timerId;
+  const isEmptyObject = Object.prototype.hasOwnProperty.call(data, "img");
 
   const {
     register,
@@ -62,6 +63,8 @@ const ProfilePage = () => {
       birth: "",
     },
   });
+
+  const isDisabled = (!isValid || !isDirty) && !isEmptyObject;
 
   useEffect(() => {
     dispatch(getUsers());
@@ -109,7 +112,8 @@ const ProfilePage = () => {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
           setPerc(progress);
           switch (snapshot.state) {
             case "paused":
@@ -161,6 +165,7 @@ const ProfilePage = () => {
       console.error(e);
       editUserToast();
     });
+    setData({});
   };
 
   const requestData = (data) => {
@@ -448,11 +453,7 @@ const ProfilePage = () => {
                 />
               </div>
               <div className="mb-4 text-center">
-                <button
-                  disabled={(per !== null && per < 100) || (file === "" && (!isDirty || !isValid))}
-                  type="submit"
-                  className="btn btn-secondary"
-                >
+                <button disabled={isDisabled} type="submit" className="btn btn-secondary">
                   Save
                 </button>
               </div>
@@ -465,24 +466,30 @@ const ProfilePage = () => {
                 className="card-img-top"
                 alt="profile"
               />
-              <div className="p-1">
-                <label htmlFor="file">
-                  <img
-                    className={styles.profileImg}
-                    src={
-                      file
-                        ? URL.createObjectURL(file)
-                        : users.length && users[getIndex(users, user.email)].image
-                    }
-                    alt="profile"
-                  />
-                </label>
-                <input
-                  type="file"
-                  id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
+              <div className={styles.imageContainer}>
+                {per > 0 && per < 100 ? (
+                  <div className={styles.innerbar}>per</div>
+                ) : (
+                  <>
+                    <label htmlFor="file" style={{ width: "100%", height: "100%" }}>
+                      <img
+                        className={styles.profileImg}
+                        src={
+                          file
+                            ? URL.createObjectURL(file)
+                            : users.length && users[getIndex(users, user.email)].image
+                        }
+                        alt="profile"
+                      />
+                    </label>
+                    <input
+                      type="file"
+                      id="file"
+                      onChange={(e) => setFile(e.target.files[0])}
+                      style={{ display: "none" }}
+                    />
+                  </>
+                )}
               </div>
 
               <div className="card-body ">

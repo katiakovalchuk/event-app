@@ -1,14 +1,41 @@
+// .profileImg {
+//   position: relative;
+//   display: block;
+//   margin-left: auto;
+//   margin-right: auto;
+//   z-index: 1;
+//   width: 140px;
+//   height: 140px;
+//   border-radius: 50%;
+//   border: 7px solid #fff;
+//   margin-top: -80px;
+// }
+
 .profileImg {
-  position: relative;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
+  height: 100%;
   z-index: 1;
+  border-radius: 50%;
+}
+
+.imageContainer {
   width: 140px;
   height: 140px;
+  border: 4px solid #fff;
   border-radius: 50%;
-  border: 7px solid #fff;
   margin-top: -80px;
+  background-color: #e9ecef;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.innerbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
 
 .profileImg:hover {
