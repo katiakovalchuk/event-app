@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
-
+import { getIndex } from "../../helpers/utils.js";
 import { debounce } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import PropTypes from "prop-types";
@@ -22,8 +22,8 @@ import useModalDel from "../../hooks/useModalDel";
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
 import { useDialog } from "../../context/dialogContext";
-import {useSelector} from "react-redux";
-import {ROLES} from "../../store/data";
+import { useSelector } from "react-redux";
+import { ROLES } from "../../store/data";
 
 const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
@@ -103,6 +103,18 @@ const Table = ({ showManagers }) => {
     });
   };
 
+  const sameEmailToast = () => {
+    toast.success("User with this email already exists", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   const editUserToast = () => {
     toast.success("Your data has been successfully saved!", {
       position: "top-center",
@@ -172,6 +184,12 @@ const Table = ({ showManagers }) => {
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
+    const isUserEmail = allUsers.some((user) => user.email === addFormData.email);
+    if (isUserEmail) {
+      sameEmailToast();
+      removeRequireConfirm();
+      return;
+    }
     closeAdd();
     sendLink(addFormData.email);
     const newUser = {
@@ -181,7 +199,7 @@ const Table = ({ showManagers }) => {
       email: addFormData.email,
       company: addFormData.company,
       scores: 0,
-      birth: addFormData.birth,
+      birth: addFormData.birth || "",
       role: userRole === ROLES.manager ? ROLES.user : addFormData.role,
       rank: 0,
       isShowBirthday: false,
@@ -216,6 +234,7 @@ const Table = ({ showManagers }) => {
       email: editFormData.email,
       company: editFormData.company,
       birth: editFormData.birth,
+      isShowBirthday: allUsers[getIndex(allUsers, editContactId)].isShowBirthday,
     };
     updateDoc(docRef, {
       ...user,

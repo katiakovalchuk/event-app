@@ -11,7 +11,7 @@ import { useDialog } from "../context/dialogContext";
 import { ModalForm } from "../components/elements";
 import PasswordForm from "../components/forms/PasswordForm";
 import ConfirmForm from "../components/forms/ConfirmForm";
-import {getUsers, updateUser} from "../store/slices/usersSlice";
+import { getUsers, updateUser } from "../store/slices/usersSlice";
 import { storage } from "../lib/init-firebase.js";
 import { usersCollectionRef } from "../lib/firestore.collections.js";
 import { capitalizeFirstLetter, getIndex } from "../helpers/utils.js";
@@ -20,7 +20,7 @@ import { errMessages } from "../components/Login/messages";
 
 import styles from "../styles/Profile.module.scss";
 import Switch from "../components/Switch/Switch";
-import {ROLES} from "../store/data";
+import { ROLES } from "../store/data";
 
 const ProfilePage = () => {
   const [file, setFile] = useState("");
@@ -184,8 +184,8 @@ const ProfilePage = () => {
   const getRank = () => {
     let currUser;
 
-    for (const innerUser of users){
-      if (user.email === innerUser.email){
+    for (const innerUser of users) {
+      if (user.email === innerUser.email) {
         currUser = innerUser;
       }
     }
@@ -194,20 +194,19 @@ const ProfilePage = () => {
     const copy = JSON.parse(JSON.stringify(users));
     const scores = [];
 
-    const filtered =
-      copy
-        .sort((a, b) => b.scores - a.scores)
-        .filter(user => +user.scores !== 0 && user.role === ROLES.user);
+    const filtered = copy
+      .sort((a, b) => b.scores - a.scores)
+      .filter((user) => +user.scores !== 0 && user.role === ROLES.user);
 
-    filtered.forEach(user => {
-      if (!scores.includes(user.scores)){
+    filtered.forEach((user) => {
+      if (!scores.includes(user.scores)) {
         scores.push(user.scores);
       }
     });
 
-    const step = Math.ceil(scores.length/10);
+    const step = Math.ceil(scores.length / 10);
     let rank = 10;
-    for (let i = 0; i < scores.length; i++){
+    for (let i = 0; i < scores.length; i++) {
       if (+currUser.scores === +scores[i]) {
         rank -= Math.floor(i / step);
         return `${rank}/10`;
@@ -216,7 +215,7 @@ const ProfilePage = () => {
   };
 
   const updateRank = () => {
-    dispatch(updateUser({id: user.email, rank: getRank()}));
+    dispatch(updateUser({ id: user.email, rank: getRank() }));
   };
 
   useEffect(() => {
@@ -450,7 +449,7 @@ const ProfilePage = () => {
               </div>
               <div className="mb-4 text-center">
                 <button
-                  disabled={(per !== null && per < 100) || !isDirty || !isValid}
+                  disabled={(per !== null && per < 100) || (file === "" && (!isDirty || !isValid))}
                   type="submit"
                   className="btn btn-secondary"
                 >
@@ -492,7 +491,7 @@ const ProfilePage = () => {
                 </h5>
                 <p>Rank: {users.length && users[getIndex(users, user.email)].rank}</p>
                 <p>Scores: {users.length && users[getIndex(users, user.email)].scores}</p>
-                <Switch label={"Show birthday"} user={user} />
+                <Switch label={"Show birthday"} user={users[getIndex(users, user.email)]} />
                 <button className="btn btn-secondary mt-3" onClick={() => handleShowModal()}>
                   Change password
                 </button>

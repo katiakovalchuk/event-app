@@ -1,21 +1,25 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { usersCollectionRef } from "../../lib/firestore.collections.js";
-// eslint-disable-next-line react/prop-types
+
 const Switch = ({ label, user }) => {
-  const [checked, setChecked] = useState(true);
+  const { isShowBirthday, email } = user;
+  const [checked, setChecked] = useState(isShowBirthday);
+
   const handleChange = (e) => {
     const { checked } = e.target;
     setChecked(checked);
-    // eslint-disable-next-line react/prop-types
-    const docRef = doc(usersCollectionRef, user.email);
+    const docRef = doc(usersCollectionRef, email);
+
     updateDoc(docRef, {
       isShowBirthday: checked,
-    }).then((e) => {
-      console.error(e);
+    }).catch((e) => {
+      console.error("e", e);
     });
   };
+
   return (
     <div className="form-check form-switch">
       <input

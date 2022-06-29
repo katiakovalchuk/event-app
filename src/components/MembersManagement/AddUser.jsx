@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useDialog } from "../../context/dialogContext";
 import ConfirmForm from "../forms/ConfirmForm";
-import {useSelector} from "react-redux";
-import {ROLES} from "../../store/data";
+import { useSelector } from "react-redux";
+import { ROLES } from "../../store/data";
 
 const AddUser = ({
   modalOpenAdd,
@@ -268,7 +268,6 @@ const AddUser = ({
                 <input
                   name="birth"
                   placeholder="Enter a birth date"
-                  required
                   id="startDate"
                   className="form-control "
                   type="date"
@@ -276,7 +275,7 @@ const AddUser = ({
                 />
               </div>
 
-              { role === ROLES.admin &&
+              {role === ROLES.admin && (
                 <fieldset className="form-group mb-2">
                   <legend>User status:</legend>
                   <div className="form-check">
@@ -309,7 +308,7 @@ const AddUser = ({
                     </label>
                   </div>
                 </fieldset>
-              }
+              )}
               <div className="container  text-center">
                 <Button type="submit" variant="success" disabled={!isDirty || !isValid}>
                   Save Changes
