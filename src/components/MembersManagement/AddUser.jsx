@@ -202,7 +202,7 @@ const AddUser = ({
                     onChange: handleAddFormChange,
                   })}
                   name="phoneNumber"
-                  type="number"
+                  type="tel"
                   id="number"
                   className="form-control"
                   placeholder="Enter a phone number"

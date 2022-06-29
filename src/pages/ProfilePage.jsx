@@ -263,7 +263,7 @@ const ProfilePage = () => {
                     },
                     onChange: handleAddFormChange,
                   })}
-                  type="text"
+                  type="tel"
                   id="firstName"
                   className="form-control"
                   placeholder={
