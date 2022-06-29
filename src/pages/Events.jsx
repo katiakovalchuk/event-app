@@ -64,7 +64,7 @@ const Events = () => {
 
   const deleteEvent = ({ id, points, membersList }) => {
     dispatch(subtractPointsOfAllFromScore({ id, points, membersList }));
-    dispatch(deleteEventFromAllUsers(id));
+    dispatch(deleteEventFromAllUsers({ id, membersList }));
     dispatch(deleteNewEvent(id));
   };
 
