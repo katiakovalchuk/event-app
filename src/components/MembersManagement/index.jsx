@@ -204,7 +204,7 @@ const Table = ({ showManagers }) => {
       rank: 0,
       isShowBirthday: false,
       image:
-        "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/default.png?alt=media&token=ae160ba0-243b-48d9-bc24-c87d990b0cb7",
+        "https://firebasestorage.googleapis.com/v0/b/event-app-98f7d.appspot.com/o/Circle-icons-profile.svg?alt=media&token=d038c042-4cdf-493d-9a79-157127867e65",
     };
     await setDoc(doc(usersCollectionRef, addFormData.email), {
       ...newUser,
