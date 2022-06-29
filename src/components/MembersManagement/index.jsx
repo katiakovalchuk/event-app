@@ -22,8 +22,8 @@ import useModalDel from "../../hooks/useModalDel";
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
 import { useDialog } from "../../context/dialogContext";
-import {useSelector} from "react-redux";
-import {ROLES} from "../../store/data";
+import { useSelector } from "react-redux";
+import { ROLES } from "../../store/data";
 
 const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
@@ -181,7 +181,7 @@ const Table = ({ showManagers }) => {
       email: addFormData.email,
       company: addFormData.company,
       scores: 0,
-      birth: addFormData.birth,
+      birth: addFormData.birth || "",
       role: userRole === ROLES.manager ? ROLES.user : addFormData.role,
       rank: 0,
       isShowBirthday: false,
