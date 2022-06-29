@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
 import React from "react";
-import { Button } from "react-bootstrap";
 import { useUserAuth } from "../../context/authContext";
 import { useDialog } from "../../context/dialogContext";
+import { GoTrashcan } from "react-icons/go";
+import { RiEdit2Fill } from "react-icons/ri";
+import { CustomButton } from "../elements";
 
 const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
   const { user } = useUserAuth();
@@ -15,27 +17,25 @@ const ReadOnlyRow = ({ data, columns, handleDeleteClick, handleEditClick }) => {
         if (accessor === "action") {
           return (
             <td className="text-center align-middle" key={accessor}>
-              <Button
-                className="btn me-2"
-                type="button"
-                onClick={(event) => {
-                  handleEditClick(event, data);
-                  removeRequireConfirm();
-                }}
-                variant="primary"
-                size="sm"
-              >
-                Edit
-              </Button>
-              <Button
-                disabled={data.id === user.uid}
-                type="button"
-                onClick={() => handleDeleteClick(data)}
-                variant="danger"
-                size="sm"
-              >
-                Delete
-              </Button>
+              <div className="event__actions">
+                <CustomButton
+                  className="action"
+                  onClick={(event) => {
+                    handleEditClick(event, data);
+                    removeRequireConfirm();
+                  }}
+                >
+                  <RiEdit2Fill className="icon" />
+                </CustomButton>
+                <CustomButton
+                  disabled={data.id === user.uid}
+                  className="action"
+                  variant="danger"
+                  onClick={() => handleDeleteClick(data)}
+                >
+                  <GoTrashcan className="icon" />
+                </CustomButton>
+              </div>
             </td>
           );
         } else if (accessor === "image") {
