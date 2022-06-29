@@ -22,6 +22,8 @@ import useModalDel from "../../hooks/useModalDel";
 import "./style.scss";
 import "react-toastify/dist/ReactToastify.css";
 import { useDialog } from "../../context/dialogContext";
+import {useSelector} from "react-redux";
+import {ROLES} from "../../store/data";
 
 const Table = ({ showManagers }) => {
   const [query_, setQuery] = useState("");
@@ -41,6 +43,10 @@ const Table = ({ showManagers }) => {
   const [allUsers, setUsers] = useState([]);
   const [order, setOrder] = useState(null);
   const [status, setStatus] = useState(false);
+
+  const {
+    user: { role: userRole },
+  } = useSelector((state) => state.userSlice);
 
   useEffect(() => {
     document.title = showManagers ? "Managers Management" : "Members Management";
@@ -176,7 +182,7 @@ const Table = ({ showManagers }) => {
       company: addFormData.company,
       scores: 0,
       birth: addFormData.birth,
-      role: addFormData.role,
+      role: userRole === ROLES.manager ? ROLES.user : addFormData.role,
       rank: 0,
       isShowBirthday: false,
       image:

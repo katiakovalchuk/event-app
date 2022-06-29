@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useDialog } from "../../context/dialogContext";
 import ConfirmForm from "../forms/ConfirmForm";
+import {useSelector} from "react-redux";
+import {ROLES} from "../../store/data";
 
 const AddUser = ({
   modalOpenAdd,
@@ -29,6 +31,9 @@ const AddUser = ({
     },
   });
   const { requireConfirm, addRequireConfirm } = useDialog();
+  const {
+    user: { role },
+  } = useSelector((state) => state.userSlice);
 
   // function submit() {
   //   reset();
@@ -271,39 +276,40 @@ const AddUser = ({
                 />
               </div>
 
-              <fieldset className="form-group mb-2">
-                <legend>User status:</legend>
+              { role === ROLES.admin &&
+                <fieldset className="form-group mb-2">
+                  <legend>User status:</legend>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      name="role"
+                      type="radio"
+                      id="user"
+                      value="user"
+                      checked={addFormData.role === "user"}
+                      onChange={handleAddFormChange}
+                    />
+                    <label className="form-check-label" htmlFor="user">
+                      User
+                    </label>
+                  </div>
 
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    name="role"
-                    type="radio"
-                    id="user"
-                    value="user"
-                    checked={addFormData.role === "user"}
-                    onChange={handleAddFormChange}
-                  />
-                  <label className="form-check-label" htmlFor="user">
-                    User
-                  </label>
-                </div>
-
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    name="role"
-                    type="radio"
-                    id="manager"
-                    value="manager"
-                    checked={addFormData.role === "manager"}
-                    onChange={handleAddFormChange}
-                  />
-                  <label className="form-check-label" htmlFor="manager">
-                    Manager
-                  </label>
-                </div>
-              </fieldset>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      name="role"
+                      type="radio"
+                      id="manager"
+                      value="manager"
+                      checked={addFormData.role === "manager"}
+                      onChange={handleAddFormChange}
+                    />
+                    <label className="form-check-label" htmlFor="manager">
+                      Manager
+                    </label>
+                  </div>
+                </fieldset>
+              }
               <div className="container  text-center">
                 <Button type="submit" variant="success" disabled={!isDirty || !isValid}>
                   Save Changes
