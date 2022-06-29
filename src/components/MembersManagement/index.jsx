@@ -103,6 +103,18 @@ const Table = ({ showManagers }) => {
     });
   };
 
+  const sameEmailToast = () => {
+    toast.success("User with this email already exists", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   const editUserToast = () => {
     toast.success("Your data has been successfully saved!", {
       position: "top-center",
@@ -172,6 +184,12 @@ const Table = ({ showManagers }) => {
 
   const handleAddFormSubmit = async (e) => {
     e.preventDefault();
+    const isUserEmail = allUsers.some((user) => user.email === addFormData.email);
+    if (isUserEmail) {
+      sameEmailToast();
+      removeRequireConfirm();
+      return;
+    }
     closeAdd();
     sendLink(addFormData.email);
     const newUser = {
