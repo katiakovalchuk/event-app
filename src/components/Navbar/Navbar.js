@@ -12,6 +12,7 @@ import "./Navbar.css";
 import { useSelector } from "react-redux";
 import styled, { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme, GlobalStyles } from "../../themes";
+import logo from "../../assets/images/podija-nobg.png";
 
 const StyledApp = styled.div`
   color: ${(props) => props.theme.fontColor};
@@ -42,9 +43,6 @@ function Navbar() {
                   <Link to="#" className="menu-bars">
                     <FaIcons.FaBars onClick={showSidebar} />
                   </Link>
-                  {/* <Link to="/" className="app-logo">
-                    <img src={logo} alt="app-logo" />
-                  </Link> */}
                 </div>
                 <div className="menu-profile">
                   {role === ROLES.user && (
@@ -52,9 +50,6 @@ function Navbar() {
                       <CgIcons.CgProfile />
                     </Link>
                   )}
-                  <span className="logout-btn">
-                    <AiIcons.AiOutlineLogout onClick={logout} />
-                  </span>
                   <span className="toggle-btn">
                     {theme === "light" && (
                       <BsIcons.BsToggleOff onClick={() => themeToggle()} />
@@ -62,6 +57,9 @@ function Navbar() {
                     {theme === "dark" && (
                       <BsIcons.BsToggleOn onClick={() => themeToggle()} />
                     )}
+                  </span>
+                  <span className="logout-btn">
+                    <AiIcons.AiOutlineLogout onClick={logout} />
                   </span>
                 </div>
               </div>
@@ -71,6 +69,7 @@ function Navbar() {
                     <Link to="#" className="menu-bars">
                       <AiIcons.AiOutlineClose />
                     </Link>
+                    <img src={logo} alt="app-logo" className="logo" />
                   </li>
                   {SidebarData[role].map((item, index) => {
                     return (

@@ -33,7 +33,7 @@ export const AppStack = () => {
   if (!status || status === "pending") {
     return (
       <div className="loader">
-        <Circles color="#060b26" height={200} width={200} />
+        <Circles color="#212529" height={200} width={200} />
       </div>
     );
   }
