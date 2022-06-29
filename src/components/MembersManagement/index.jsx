@@ -232,6 +232,7 @@ const Table = ({ showManagers }) => {
       lastName: editFormData.lastName,
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
+      scores: allUsers[getIndex(allUsers, editContactId)].scores,
       company: editFormData.company,
       birth: editFormData.birth,
       isShowBirthday: allUsers[getIndex(allUsers, editContactId)].isShowBirthday,
