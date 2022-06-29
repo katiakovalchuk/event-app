@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ToastContainer } from "react-toastify";
@@ -32,6 +32,10 @@ const EventsItem = () => {
   const { userMode, requestData, handleCloseModal } = useDialog();
   const { currentInfo, updatedScore } = requestData();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = "Event Page";
+  }, []);
 
   const deleteAllMembers = (id, points, membersList) => {
     dispatch(subtractPointsOfAllFromScore({ id, points, membersList }));

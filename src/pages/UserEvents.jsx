@@ -63,6 +63,10 @@ const UserEvents = () => {
     dispatch(getNewEvents());
   }, []);
 
+  useEffect(() => {
+    document.title = "Events page";
+  }, []);
+
   return (
     <>
       {status === "loading" && <Spinner />}
