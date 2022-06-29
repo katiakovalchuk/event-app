@@ -131,12 +131,7 @@ export const updateAdditionalInfo = createAsyncThunk(
 
 export const deleteEventFromAllUsers = createAsyncThunk(
   "membersSlice/deleteEventFromAllUsers",
-  async (id, { rejectWithValue, getState, dispatch }) => {
-    const state = getState();
-    const events = state.eventsSlice.events;
-    const currentEvent = events.find((event) => event.id === id);
-    const membersList = currentEvent.membersList;
-
+  async ({ id, membersList }, { rejectWithValue, dispatch }) => {
     try {
       for (let i = 0; i < membersList.length; i++) {
         const docRef = doc(db, "users", membersList[i]);
@@ -153,10 +148,7 @@ export const deleteEventFromAllUsers = createAsyncThunk(
 
 export const deleteAllMembersFromEvent = createAsyncThunk(
   "membersSlice/deleteAllMembersFromEvent",
-  async (id, { rejectWithValue, getState, dispatch }) => {
-    const state = getState();
-    const membersList = state.eventSlice.event.membersList;
-
+  async ({ id, membersList }, { rejectWithValue, dispatch }) => {
     try {
       for (let i = 0; i < membersList.length; i++) {
         const docRef = doc(db, "users", membersList[i]);
@@ -165,6 +157,7 @@ export const deleteAllMembersFromEvent = createAsyncThunk(
         dispatch(deleteEvent({ uid: membersList[i], id }));
       }
     } catch (error) {
+      console.log(error);
       toast.error("Sorry, can't unregister all users");
       return rejectWithValue(error.message);
     }
@@ -173,11 +166,10 @@ export const deleteAllMembersFromEvent = createAsyncThunk(
 
 export const addEventToAllMembers = createAsyncThunk(
   "membersSlice/addAllMembersToEvent",
-  async (info, { rejectWithValue, getState, dispatch }) => {
+  async ({ info, membersList }, { rejectWithValue, getState, dispatch }) => {
     const state = getState();
     const members = state.membersSlice.members;
 
-    const membersList = state.eventSlice.event.membersList;
     const unregisteredMem = members.filter(
       (member) => !membersList.includes(member.id)
     );
