@@ -50,16 +50,19 @@ const AllMembers = () => {
     dispatch(getNewMembers());
   }, [dispatch]);
 
-  const addAllMembers = (id, points) => {
+  const addAllMembers = (id, points, membersList) => {
     dispatch(addPointstoAllMembers({ points }));
     dispatch(
       addEventToAllMembers({
-        id,
-        comment: "",
-        additionalPoints: 0,
+        info: {
+          id,
+          comment: "",
+          additionalPoints: 0,
+        },
+        membersList,
       })
     );
-    dispatch(addAllUserEvent(id));
+    dispatch(addAllUserEvent({ id, membersList }));
   };
 
   return (
@@ -80,7 +83,11 @@ const AllMembers = () => {
               <CustomButton
                 disabled={check}
                 onClick={() => {
-                  addAllMembers(currentEvent.id, points);
+                  addAllMembers(
+                    currentEvent.id,
+                    points,
+                    currentEvent.membersList
+                  );
                 }}
               >
                 Register All
