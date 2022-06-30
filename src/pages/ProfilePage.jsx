@@ -52,6 +52,7 @@ const ProfilePage = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isDirty, isValid },
   } = useForm({
     mode: "onChange",
@@ -165,6 +166,8 @@ const ProfilePage = () => {
       editUserToast();
     });
     setData({});
+    reset();
+    dispatch(getUsers());
   };
 
   const requestData = (data) => {
