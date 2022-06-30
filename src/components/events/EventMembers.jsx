@@ -28,8 +28,8 @@ const EventMembers = () => {
   const today = moment().format("yyyy-MM-DD HH:mm");
   const check = moment(currentEvent.eventDate).isAfter(today);
 
-  const eventMembers = members.filter((member) =>
-    membersList.includes(member.id)
+  const eventMembers = members?.filter((member) =>
+    membersList?.includes(member.id)
   );
   const keys = ["firstName", "lastName"];
   const searchedEventMembers = search(eventMembers, keys, query);
@@ -97,7 +97,7 @@ const EventMembers = () => {
           </>
         ) : check ? (
           <p className="check-text">
-            {`Sorry, can't register user before ${currentEvent.eventDate}`}{" "}
+            {`Sorry, can't register users before ${currentEvent.eventDate}`}{" "}
           </p>
         ) : (
           <p className="check-text">Please register users to the Event</p>
