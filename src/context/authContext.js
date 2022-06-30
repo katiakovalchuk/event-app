@@ -7,6 +7,7 @@ import {
   sendPasswordResetEmail,
   sendSignInLinkToEmail,
   signInWithEmailAndPassword,
+  signInWithEmailLink,
   signOut,
   updatePassword
 } from "firebase/auth";
@@ -42,6 +43,13 @@ export const AuthContextProvider = ({children}) => {
   const reauthenticate = (user, cred) => reauthenticateWithCredential(user, cred);
   const changePassword = (user, newPassword) => updatePassword(user, newPassword);
 
+  function signin(email, code) {
+    return signInWithEmailLink(auth, email, code).then((result) => {
+      setUser(result.user);
+      return true;
+    });
+  }
+
   function sendLink(email) {
     return sendSignInLinkToEmail(auth, email, {
       url: "http://localhost:3000/confirm",
@@ -55,6 +63,7 @@ export const AuthContextProvider = ({children}) => {
     user,
     users,
     login,
+    signin,
     logout,
     changePassword,
     reauthenticate,
