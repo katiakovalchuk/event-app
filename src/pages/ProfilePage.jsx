@@ -112,7 +112,6 @@ const ProfilePage = () => {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
           setPerc(progress);
           switch (snapshot.state) {
