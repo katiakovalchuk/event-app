@@ -140,7 +140,7 @@ export const deleteEventFromAllUsers = createAsyncThunk(
         dispatch(deleteEvent({ uid: membersList[i], id }));
       }
     } catch (error) {
-      toast.error("Sorry, can't delete event");
+      console.log(error);
       return rejectWithValue(error.message);
     }
   }
