@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { doc, setDoc, updateDoc, getDocs, where, query } from "firebase/firestore";
 import { getIndex } from "../../helpers/utils.js";
@@ -43,7 +43,7 @@ const Table = ({ showManagers }) => {
   const [allUsers, setUsers] = useState([]);
   const [order, setOrder] = useState(null);
   const [status, setStatus] = useState(false);
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     document.title = showManagers ? "Managers Management" : "Members Management";
@@ -101,7 +101,7 @@ const Table = ({ showManagers }) => {
   };
 
   const sameEmailToast = () => {
-    toast.success("User with this email already exists", {
+    toast.error("User with this email already exists", {
       position: "top-center",
       autoClose: 3000,
       hideProgressBar: false,
