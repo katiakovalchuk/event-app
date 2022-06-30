@@ -42,7 +42,9 @@ const AddUser = ({
       {requireConfirm ? (
         <>
           <Modal.Header closeButton className="bg-light">
-            <Modal.Title>Do You confirm adding new user?</Modal.Title>
+            <Modal.Title>
+              {pathname.startsWith("/managers-management") ? "Confirm adding new manager?" : "Confirm adding new user?"}
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <ConfirmForm handleConfirmation={handleAddFormSubmit} />
