@@ -4,14 +4,12 @@ import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useDialog } from "../../context/dialogContext";
 import ConfirmForm from "../forms/ConfirmForm";
-import { useSelector } from "react-redux";
-import { ROLES } from "../../store/data";
+import {useLocation} from "react-router-dom";
 
 const AddUser = ({
   modalOpenAdd,
   closeAdd,
   handleAddFormSubmit,
-  addFormData,
   handleAddFormChange,
 }) => {
   const {
@@ -31,9 +29,8 @@ const AddUser = ({
     },
   });
   const { requireConfirm, addRequireConfirm } = useDialog();
-  const {
-    user: { role },
-  } = useSelector((state) => state.userSlice);
+
+  const {pathname} = useLocation();
 
   // function submit() {
   //   reset();
@@ -54,7 +51,7 @@ const AddUser = ({
       ) : (
         <>
           <Modal.Header closeButton className="bg-light">
-            <Modal.Title>Add user</Modal.Title>
+            <Modal.Title>{pathname.startsWith("/managers-management") ? "Add manager" : "Add user"}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <form
@@ -274,42 +271,7 @@ const AddUser = ({
                   onChange={handleAddFormChange}
                 />
               </div>
-
-              {role === ROLES.admin && (
-                <fieldset className="form-group mb-2">
-                  <legend>User status:</legend>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      name="role"
-                      type="radio"
-                      id="user"
-                      value="user"
-                      checked={addFormData.role === "user"}
-                      onChange={handleAddFormChange}
-                    />
-                    <label className="form-check-label" htmlFor="user">
-                      User
-                    </label>
-                  </div>
-
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      name="role"
-                      type="radio"
-                      id="manager"
-                      value="manager"
-                      checked={addFormData.role === "manager"}
-                      onChange={handleAddFormChange}
-                    />
-                    <label className="form-check-label" htmlFor="manager">
-                      Manager
-                    </label>
-                  </div>
-                </fieldset>
-              )}
-              <div className="container  text-center">
+              <div className="container text-center mt-3">
                 <Button type="submit" variant="success" disabled={!isDirty || !isValid}>
                   Save Changes
                 </Button>

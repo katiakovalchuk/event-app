@@ -7,6 +7,7 @@ import { getIndex } from "../../helpers/utils.js";
 
 import { deleteNewMember } from "../../store/slices/membersSlice.js";
 import { deleteMemberFromAllEvents } from "../../store/slices/eventsSlice.js";
+import {useLocation} from "react-router-dom";
 
 const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, allUsers }) => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, all
     dispatch(deleteMemberFromAllEvents(id));
     dispatch(deleteNewMember(id));
   };
+  const {pathname} = useLocation();
 
   function deleteUser() {
     const userIndex = getIndex(allUsers, delId);
@@ -31,7 +33,9 @@ const DelUser = ({ modalOpenDel, closeDel, deleteUserToast, delId, setUsers, all
       aria-labelledby="example-modal-sizes-title-sm"
     >
       <Modal.Header closeButton>
-        <Modal.Title id="example-modal-sizes-title-sm">Do You confirm deleting user?</Modal.Title>
+        <Modal.Title id="example-modal-sizes-title-sm">
+          {pathname.startsWith("/managers-management") ? "You confirm deleting manager?" : "You confirm deleting user?"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="d-flex justify-content-around">
