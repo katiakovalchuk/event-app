@@ -468,7 +468,7 @@ const ProfilePage = () => {
               />
               <div className={styles.imageContainer}>
                 {per > 0 && per < 100 ? (
-                  <div className={styles.innerbar}>per</div>
+                  <div className={styles.innerbar}>{per}%</div>
                 ) : (
                   <>
                     <label htmlFor="file" style={{ width: "100%", height: "100%" }}>
