@@ -8,7 +8,7 @@ import { usersCollectionRef } from "../../lib/firestore.collections.js";
 import { getIndex } from "../../helpers/utils.js";
 import ConfirmForm from "../forms/ConfirmForm";
 import { useDialog } from "../../context/dialogContext";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const EditUser = ({
   modalOpenEdit,
@@ -20,7 +20,7 @@ const EditUser = ({
 }) => {
   const [users, setUsers] = useState([]);
   const { requireConfirm, addRequireConfirm } = useDialog();
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
 
   const getUsers = () => {
     getDocs(usersCollectionRef).then((data) => {
@@ -66,7 +66,9 @@ const EditUser = ({
         <>
           <Modal.Header closeButton className="bg-light">
             <Modal.Title>
-              {pathname.startsWith("/managers-management") ? "Update manager data" : "Update user data"}
+              {pathname.startsWith("/managers-management")
+                ? "Update manager data"
+                : "Update user data"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -119,10 +121,10 @@ const EditUser = ({
                     width="16"
                     height="16"
                     fill="currentColor"
-                    className="bi bi-person-fill"
+                    className="bi bi-person-lines-fill"
                     viewBox="0 0 16 16"
                   >
-                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                    <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
                   </svg>
                 </span>
                 <input
