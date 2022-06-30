@@ -11,11 +11,11 @@ const EventTable = () => {
           users. We have a lot of benefits:
         </p>
         <ul>
-          <li> - personal account;</li>
-          <li> - different roles for users;</li>
-          <li> - for different type of roles;</li>
-          <li> - unique permissions;</li>
-          <li> - scores for events.</li>
+          <li> - personal account</li>
+          <li> - different roles for users</li>
+          <li> - for different type of roles</li>
+          <li> - unique permissions</li>
+          <li> - scores for events</li>
         </ul>
       </div>
     </div>
