@@ -8,7 +8,7 @@ import SearchInput from "../elements/SearchInput";
 const List = () => {
   const [query, setQuery] = useState("");
   const [localusers, setLocalusers] = useState([]);
-  const keys = ["fullName", "image", "email", "score"];
+  const keys = ["fullName", "lastName", "image", "email", "score"];
   const search = (data) => {
     if (data.length) {
       const result = data.filter((item) =>
@@ -33,7 +33,8 @@ const List = () => {
 
   const columns = [
     { label: "User image", accessor: "image", sortable: false },
-    { label: "Full Name", accessor: "fullName", sortable: true },
+    { label: "First Name", accessor: "firstName", sortable: true },
+    { label: "Last Name", accessor: "lastName", sortable: true },
     { label: "Email", accessor: "email", sortable: true },
     { label: "Scores", accessor: "scores", sortable: true },
   ];

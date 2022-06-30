@@ -31,6 +31,10 @@ export const darkTheme = {
   buttonHoverColor: "#30363d !important",
   buttonHoverBorder: "1px solid #8b949e !important",
   fontBtn: "#000",
+  appDesc: "#000000c7",
+  transparent: "transparent !important",
+  radioColor: "2px solid #fff !important",
+  borderLeftBlack: "1px solid #000 !important",
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -89,6 +93,51 @@ export const GlobalStyles = createGlobalStyle`
     color: ${(props) => props.theme.fontBtn}
   }
   .form-label {
+    color: ${(props) => props.theme.tableHoverColor}
+  }
+  .app-description {
+    background-color: ${(props) => props.theme.appDesc};
+  }
+  .form-check-input:checked {
+    background-color: ${(props) => props.theme.appDesc};
+    border: ${(props) => props.theme.none}
+  }
+  .modal-content {
+    background-color: ${(props) => props.theme.tableBg};
+  }
+  .radio-title, .radio-label, .modal-title {
+    color: ${(props) => props.theme.tableHoverColor};
+  }
+  .radio-style {
+    border: ${(props) => props.theme.radioColor};
+  }
+  .radio-input:checked + .radio-style::before {
+    background-color: ${(props) => props.theme.tableHoverColor};
+  }
+  .modal-header button {
+    background-color: ${(props) => props.theme.tableHoverColor};
+  }
+  .modal-header, .modal-footer {
+    background-color: ${(props) => props.theme.tableBg};
+  }
+  .react-datepicker__close-icon, .react-datepicker__close-icon:hover  {
+    background-color: ${(props) => props.theme.transparent};
+    border: ${(props) => props.theme.none};
+  }
+  .react-datepicker__header {
+    border: ${(props) => props.theme.none};
+    border-bottom: ${(props) => props.theme.borderLeftBlack};
+  }
+  .react-datepicker button {
+    background-color: ${(props) => props.theme.transparent};
+  }
+  .react-datepicker__close-icon::after {
+    background-color: ${(props) => props.theme.tableBg};
+  }
+  .react-datepicker__time-container {
+    border-left: ${(props) => props.theme.borderLeftBlack};
+  }
+  .form-check-label {
     color: ${(props) => props.theme.tableHoverColor}
   }
 `;

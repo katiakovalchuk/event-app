@@ -40,6 +40,10 @@ const Events = () => {
     return timerId;
   }, []);
 
+  useEffect(() => {
+    document.title = "Events Page";
+  }, []);
+
   const requestData = (data) => {
     setFormData(data);
   };

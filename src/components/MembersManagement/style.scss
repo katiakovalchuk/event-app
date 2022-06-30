@@ -7,6 +7,10 @@
 .table th.default {
   background-image: url("../../assets/images/admin-table/default.png");
 }
+.table th {
+  font-size: 14px;
+}
+
 th.up,
 th.default,
 th.down {
@@ -150,4 +154,11 @@ tfoot tr td {
   color: red;
   font-size: 12px;
   padding: 3px;
+}
+
+@media (max-width: 992px) {
+  .table th {
+    min-width: 105px;
+    font-size: 12px;
+  }
 }

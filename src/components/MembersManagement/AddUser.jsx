@@ -60,7 +60,7 @@ const AddUser = ({
               })}
             >
               <label htmlFor="firstName" className="form-label">
-                First Name:
+                First name:
               </label>
               <div className="mb-2 input-group ">
                 <span className="input-group-text ms-0">
@@ -199,7 +199,7 @@ const AddUser = ({
                     onChange: handleAddFormChange,
                   })}
                   name="phoneNumber"
-                  type="number"
+                  type="tel"
                   id="number"
                   className="form-control"
                   placeholder="Enter a phone number"

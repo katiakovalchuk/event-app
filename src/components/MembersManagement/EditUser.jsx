@@ -205,7 +205,7 @@ const EditUser = ({
                     },
                     onChange: handleEditFormChange,
                   })}
-                  type="number"
+                  type="tel"
                   id="number"
                   className="form-control"
                   placeholder={users.length && users[getIndex(users, editContactId)].phoneNumber}

@@ -43,6 +43,10 @@ const UserEvent = () => {
     dispatch(getUserEventsList(userId));
   }, []);
 
+  useEffect(() => {
+    document.title = "Event page";
+  }, []);
+
   const goBack = () => {
     navigate(-1);
   };
