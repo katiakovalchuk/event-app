@@ -5,7 +5,8 @@ import {Events, MembersManagement} from "./index";
 import {ROLES} from "../store/data";
 
 const Home = () => {
-    const {user: {role}} = useSelector((state) => state.userSlice);
+    const {user} = useSelector((state) => state.userSlice);
+    const role = user?.role;
 
     return <>
         {
