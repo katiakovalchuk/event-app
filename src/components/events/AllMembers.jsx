@@ -33,8 +33,8 @@ const AllMembers = () => {
   const today = moment().format("yyyy-MM-DD HH:mm");
   const check = moment(currentEvent.eventDate).isAfter(today);
 
-  const otherMembers = members.filter(
-    (member) => !membersList.includes(member.id)
+  const otherMembers = members?.filter(
+    (member) => !membersList?.includes(member.id)
   );
 
   const keys = ["firstName", "lastName"];

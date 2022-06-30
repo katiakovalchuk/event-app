@@ -186,9 +186,6 @@
   &:not(:last-child) {
     margin-right: 10px;
   }
-  &.tab-active {
-    background-color: darken($blue, 25%);
-  }
 }
 
 .react-datepicker {

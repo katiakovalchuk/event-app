@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 
 import { useDialog } from "../../context/dialogContext";
 import { getNewEvents, selectAllEvents } from "../../store/slices/eventsSlice";
+import { getNewMembers } from "../../store/slices/membersSlice";
 import { search } from "../../helpers/utils";
 import { usePagination } from "../../hooks/usePagination";
 
@@ -45,6 +46,10 @@ const EventsList = ({ requestIdToDelete }) => {
 
   useEffect(() => {
     dispatch(getNewEvents());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getNewMembers());
   }, [dispatch]);
 
   const filteredEvents =
@@ -87,84 +92,85 @@ const EventsList = ({ requestIdToDelete }) => {
   };
 
   return (
-    <section className="event">
-      <ToastContainer limit={5} />
+    <>
       {status === "loading" && <Spinner />}
-      {events.length > 0 && (
-        <div className="event__func">
-          <div className="event__filter">
-            <CustomButton
-              className={`tab ${filterBtn === "all" && "tab-active"}`}
-              onClick={filterAll}
-            >
-              All
-            </CustomButton>
-            <CustomButton
-              className={`tab ${filterBtn === "future" && "tab-active"}`}
-              onClick={filterFuture}
-            >
-              Future
-            </CustomButton>
-            <CustomButton
-              className={`tab ${filterBtn === "past" && "tab-active"}`}
-              onClick={filterPast}
-            >
-              Past
-            </CustomButton>
+      <section className="event">
+        <ToastContainer limit={5} />
+        {events.length > 0 && (
+          <div className="event__func">
+            <div className="event__filter">
+              <CustomButton className="tab" onClick={filterAll}>
+                All
+              </CustomButton>
+              <CustomButton
+                variant="success"
+                className="tab"
+                onClick={filterFuture}
+              >
+                Future
+              </CustomButton>
+              <CustomButton
+                variant="danger"
+                className="tab"
+                onClick={filterPast}
+              >
+                Past
+              </CustomButton>
+            </div>
+            <SearchInput handleChange={(e) => setQuery(e.target.value)} />
           </div>
-          <SearchInput handleChange={(e) => setQuery(e.target.value)} />
-        </div>
-      )}
+        )}
 
-      {currentItems?.length ? (
-        <div className="mb-5">
-          <EventSort />
-          <ul className="event__list">
-            {currentItems.map((event) => (
-              <ListItem link key={event.id}>
-                <EventPart {...event} />
-                <div className="event__actions">
-                  <CustomButton
-                    className="action"
-                    onClick={() => {
-                      startEdit(event);
-                      removeRequireConfirm();
-                    }}
-                  >
-                    <RiEdit2Fill className="icon" />
-                  </CustomButton>
-                  <CustomButton
-                    className="action"
-                    variant="danger"
-                    onClick={() => {
-                      addRequireConfirm();
-                      setDelete();
-                      handleShowModal();
-                      requestIdToDelete({
-                        id: event.id,
-                        points: event.points,
-                        membersList: event.membersList,
-                      });
-                    }}
-                  >
-                    <GoTrashcan className="icon" />
-                  </CustomButton>
-                </div>
-              </ListItem>
-            ))}
-          </ul>
-          <div className="mt-3">
-            <Pagination
-              pageCount={pageCount}
-              currentPage={currentPage}
-              handlePageClick={handlePageClick}
-            />
+        {currentItems?.length ? (
+          <div className="mb-5">
+            <EventSort />
+            <ul className="event__list">
+              {currentItems.map((event) => (
+                <ListItem link key={event.id}>
+                  <EventPart {...event} />
+                  <div className="event__actions">
+                    <CustomButton
+                      className="action"
+                      onClick={() => {
+                        startEdit(event);
+                        removeRequireConfirm();
+                      }}
+                    >
+                      <RiEdit2Fill className="icon" />
+                    </CustomButton>
+                    <CustomButton
+                      className="action"
+                      variant="danger"
+                      onClick={() => {
+                        addRequireConfirm();
+                        setDelete();
+                        handleShowModal();
+                        requestIdToDelete({
+                          id: event.id,
+                          points: event.points,
+                          membersList: event.membersList,
+                        });
+                      }}
+                    >
+                      <GoTrashcan className="icon" />
+                    </CustomButton>
+                  </div>
+                </ListItem>
+              ))}
+            </ul>
+            <div className="mt-3">
+              <Pagination
+                pageCount={pageCount}
+                currentPage={currentPage}
+                handlePageClick={handlePageClick}
+              />
+            </div>
           </div>
-        </div>
-      ) : (
-        <h3 className="check-text my-5">Sorry, there are no events</h3>
-      )}
-    </section>
+        ) : (
+          <h3 className="check-text my-5">Sorry, there are no events</h3>
+        )}
+      </section>
+    </>
   );
 };
 
