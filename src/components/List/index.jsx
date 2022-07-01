@@ -28,7 +28,10 @@ const List = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (users && !localusers.length) setLocalusers(users);
+    const newUsers = users.filter(
+      (item) => item.role != "admin" && item.role != "manager"
+    );
+    if (users && !localusers.length) setLocalusers(newUsers);
   }, [users]);
 
   const columns = [
