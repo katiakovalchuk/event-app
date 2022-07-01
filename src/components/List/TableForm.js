@@ -47,7 +47,7 @@ const TableForm = ({ data, handleSorting, columns, query }) => {
               );
             })}
           </tr>
-          {currentItems.map((user, idx) => (
+          {currentItems.map((user) => (
             <tr key={user.id}>
               <td className="imageField">
                 <img
@@ -56,9 +56,7 @@ const TableForm = ({ data, handleSorting, columns, query }) => {
                   alt="User image"
                 />
               </td>
-              <td>
-                {idx + 1}. {user.firstName}
-              </td>
+              <td>{user.firstName}</td>
               <td>{user.lastName}</td>
               <td>{user.email}</td>
               <td>{user.scores}</td>
