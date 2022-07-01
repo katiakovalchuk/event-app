@@ -1,18 +1,8 @@
-import {useEffect} from "react";
-import {Link, useNavigate} from "react-router-dom";
-
-import {useUserAuth} from "../context/authContext";
+import {Link} from "react-router-dom";
 
 import "../styles/NotFoundPage.scss";
 
 const NotFoundPage = () => {
-    const {user} = useUserAuth();
-    const navigate = useNavigate();
-    useEffect(() => {
-        if (user) {
-            navigate("/");
-        }
-    }, []);
     return (
         <>
             <div className="wrapper">
